@@ -7,7 +7,6 @@ import { LogoutOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons
 import Link from "next/link";
 import { Content } from "antd/es/layout/layout";
 
-
 /**
  * Metadata for the Remote Lab application
  * @type {Metadata}
@@ -29,6 +28,10 @@ const dropdownItems: MenuProps['items'] = [
     icon: <UserOutlined />,
   },
   {
+    key: 'change-theme',
+    label: 'Alterar tema',
+  },
+  {
     key: 'settings',
     label: 'Configurações',
     icon: <SettingOutlined />,
@@ -47,8 +50,15 @@ const dropdownItems: MenuProps['items'] = [
 const menuItems: MenuProps['items'] = [
   {
     key: 'logo',
-    label: 'RL',
-    style: { fontSize: 24, fontWeight: 'bold' },
+    label: (
+      <Link
+        href="/"
+        style={{ color: 'black' }}
+      >
+        RL
+      </Link>
+    ),
+    style: { fontSize: 24, fontWeight: 'bold'},
   },
   {
     key: 'options',
