@@ -1,5 +1,10 @@
+/**
+ * This is the page that will be rendered when the user access the URL /lab/:id
+ * @param param0 The parameters of the page
+ * @returns The page content
+ */
 export default async function LabPage({ params }: { params: { id: string } }) {
-    const { id } = params;
+    const { id } = params
     return (
       <div>
         <h1>Laboratório: {id}</h1>

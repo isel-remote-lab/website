@@ -79,21 +79,54 @@ const optionsItem = {
  * @returns {MenuProps['items']} The menu items
  */
 function MenuItems() {
+    // Start with the logo item
     let items = [logoItem];
 
     const path = usePathname();
-    console.log(path);
-    if (path?.includes('/lab')) {
-        const labItems = [
-            {
-                key: 'calendar',
-                label: 'Calendário',
-            },
-        ];
 
-        items = items.concat(labItems);
+    if (path === null) {
+        return items;
     }
 
+    const labId = path.split('/lab/')[1]?.split('/')[0];
+
+    // If the path en /calendar, add the calendar items to the menu
+    if (path.endsWith('/calendar')) {
+      const returnToLabItems = [
+          {
+              key: 'return-to-lab',
+              label: (
+                  <Link href={path.replace('/calendar', '')}>
+                      Lab {labId}
+                  </Link>
+              )
+          },
+      ];
+
+      // Add the calendar items to the menu
+      items = items.concat(returnToLabItems);
+    }
+
+    // If the path is /lab/:id, add the lab items to the menu
+    if (path.startsWith('/lab/')) {
+      const labItems = [
+          {
+              key: 'calendar',
+              label: (
+                  <Link href={path + "/calendar"}>
+                      Calendário
+                  </Link>
+              )
+          },
+      ];
+
+      // Add the lab items to the menu
+      items = items.concat(labItems);
+    }
+
+    
+
+    // Add the options item to the menu
     return items.concat([optionsItem]);
 }
 
