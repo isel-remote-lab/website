@@ -1,11 +1,11 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Dropdown, Avatar, Menu, MenuProps } from "antd";
 import React from "react";
-import { LogoutOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons";
-import Link from "next/link";
 import { Content } from "antd/es/layout/layout";
+import CheckLogin from "./checkLogin";
+import { SessionProvider } from "next-auth/react";
+import ClientMenu from "./ClientMenu";
 
 /**
  * Metadata for the Remote Lab application
@@ -18,77 +18,25 @@ export const metadata: Metadata = {
 };
 
 /**
- * Dropdown items for the user menu
- * @type {MenuProps['items']}
- */
-const dropdownItems: MenuProps['items'] = [
-  {
-    key: 'account',
-    label: 'Perfil',
-    icon: <UserOutlined />,
-  },
-  {
-    key: 'change-theme',
-    label: 'Alterar tema',
-  },
-  {
-    key: 'settings',
-    label: 'Configurações',
-    icon: <SettingOutlined />,
-  },
-  {
-    key: 'logout',
-    label: 'Sair',
-    icon: <LogoutOutlined />,
-  },
-];
-
-/**
- * Menu items for the Remote Lab application
- * @type {MenuProps['items']}
- */
-const menuItems: MenuProps['items'] = [
-  {
-    key: 'logo',
-    label: (
-      <Link
-        href="/"
-        style={{ color: 'black' }}
-      >
-        RL
-      </Link>
-    ),
-    style: { fontSize: 24, fontWeight: 'bold'},
-  },
-  {
-    key: 'options',
-    label: (
-      <Dropdown menu={{ items: dropdownItems }} trigger={['click']}>
-          <Avatar>
-            <UserOutlined />
-          </Avatar>
-      </Dropdown>
-    ),
-    style: { marginLeft: 'auto' },
-  },
-];
-
-/**
  * Root layout for the Remote Lab application
  * @param {Object} props - The props object
  * @param {React.ReactNode} props.children - The child components to be rendered
  * @returns {React.ReactNode} The root layout component
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html>
       <body style={{ backgroundColor: "#f5f5f5" }}>
-        <Menu mode="horizontal" items={menuItems}/>
-        <Content style={{ padding: 24 }}>
-          {children}
-        </Content>
+      <SessionProvider>
+        <CheckLogin>
+            <ClientMenu/>
+            <Content style={{ padding: 24 }}>
+              {children}
+            </Content>
+        </CheckLogin>
+      </SessionProvider>
       </body>
     </html>
   );
