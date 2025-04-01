@@ -27,7 +27,7 @@ const CheckLogin = ({ children }: CheckLoginProps) => {
   useEffect(() => {
     if (status === 'unauthenticated') {
       // Uncomment to enable redirect to login page when unauthenticated
-      // router.push('/api/auth/signin');
+      router.push('/api/auth/signin');
     }
   }, [status, router]);
 
