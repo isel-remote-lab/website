@@ -4,7 +4,7 @@
 
 /* Custom styles */
 /* Remove border-bottom from selected menu item */
-.ant-menu-item-selected::after, 
+/* .ant-menu-item-selected::after, 
 .ant-menu-item-selected, 
 .ant-menu-item:hover::after, 
 .ant-menu-item{
@@ -12,3 +12,4 @@
     border-bottom-color: transparent !important;
     color: black !important;
 }
+    */

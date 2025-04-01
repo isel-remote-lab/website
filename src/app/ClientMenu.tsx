@@ -1,8 +1,19 @@
 'use client'
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { LeftOutlined, LogoutOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, type MenuProps } from "antd";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import router from "next/router";
+
+/**
+ * Back item for the menu
+ * @type {MenuProps['items'][0]}
+ */
+const backItem = {
+  key: 'back',
+  label: <button onClick={() => router.back()}/>,
+  icon: <LeftOutlined />
+}
 
 /**
  * Logo item for the menu
@@ -11,9 +22,8 @@ import { usePathname } from "next/navigation";
 const logoItem = {
   key: 'logo',
   label: (
-      <Link
-      href="/"
-      style={{ color: 'black' }}
+      <Link href="/" 
+      //style={{ color: 'black' }}
       >
       RL
       </Link>
@@ -48,6 +58,11 @@ const dropdownItems: MenuProps['items'] = [
     },
     */
     {
+      key: 'change-role',
+      label: 'Mudar de Role', // TODO: Melhorar a label e adicionar logica de roles
+      icon: <UserSwitchOutlined/>
+    },
+    {
       key: 'logout',
       label: (
         <Link href="/api/auth/signout">
@@ -80,32 +95,23 @@ const optionsItem = {
  */
 function MenuItems() {
     // Start with the logo item
-    let items = [logoItem];
+    let items: MenuProps['items'] = []
 
-    const path = usePathname();
+    const path = usePathname()
 
     if (path === null) {
-        return items;
+      return items.concat(logoItem)
     }
 
-    const labId = path.split('/lab/')[1]?.split('/')[0];
+    if (path.endsWith('/create')) {
+      return items.concat(logoItem)
+    }
 
-    // If the path en /calendar, add the calendar items to the menu
     if (path.endsWith('/calendar')) {
-      const returnToLabItems = [
-          {
-              key: 'return-to-lab',
-              label: (
-                  <Link href={path.replace('/calendar', '')}>
-                      Lab {labId}
-                  </Link>
-              )
-          },
-      ];
-
-      // Add the calendar items to the menu
-      items = items.concat(returnToLabItems);
+      //items = items.concat(backItem)
     }
+
+    items = items.concat(logoItem);
 
     // If the path is /lab/:id, add the lab items to the menu
     if (path.startsWith('/lab/')) {
@@ -116,18 +122,17 @@ function MenuItems() {
                   <Link href={path + "/calendar"}>
                       Calendário
                   </Link>
-              )
+              ),
+              active: !path.endsWith('/calendar'),
           },
       ];
 
       // Add the lab items to the menu
-      items = items.concat(labItems);
+      items = items.concat(labItems)
     }
 
-    
-
     // Add the options item to the menu
-    return items.concat([optionsItem]);
+    return items.concat([optionsItem])
 }
 
 /**
