@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id";
-
+import '../../envConfig.ts';
+ 
 export const { handlers } = NextAuth({
   providers: [
     MicrosoftEntraID({
