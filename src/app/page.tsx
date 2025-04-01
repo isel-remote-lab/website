@@ -1,5 +1,8 @@
+import { PlusOutlined } from '@ant-design/icons';
 import { Card, Flex, Layout } from 'antd';
 import Link from 'next/link';
+
+const labsWidth = 300;
 
 const labs = [
   {
@@ -12,6 +15,11 @@ const labs = [
   }
 ];
 
+const createLabButton = {
+  title: 'Create Lab',
+  description: 'Create a new lab',
+};
+
 export default function Dashboard() {
   return (
     <Layout>
@@ -22,12 +30,17 @@ export default function Dashboard() {
             <Card
               key={labId}
               title={lab.title}
-              style={{ width: 300}}
+              style={{ width: labsWidth }}
             >
               <p>{lab.description}</p>
             </Card>
           </Link>
         })}
+        <Link href="/lab/create">
+          <Card>
+            <PlusOutlined/>
+          </Card>
+        </Link>
       </Flex>
     </Layout>
   );
