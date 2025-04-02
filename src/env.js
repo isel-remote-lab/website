@@ -1,6 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod"
-import "./envConfig.js"
+import pkg from '@next/env'
+import path from 'path'
+
+const { loadEnvConfig } = pkg
+const internalDir = path.resolve(process.cwd(), '../internal/frontend')
+loadEnvConfig(internalDir)
 
 export const env = createEnv({
   /**
