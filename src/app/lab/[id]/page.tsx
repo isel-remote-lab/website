@@ -1,4 +1,4 @@
-import DefaultBreadcrumb from "~/app/DefaultBreadcrumb";
+import DefaultBreadcrumb from "~/app/components/DefaultBreadcrumb";
 
 /**
  * This is the page that will be rendered when the user access the URL /lab/:id

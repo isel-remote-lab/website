@@ -1,11 +1,11 @@
-import "~/styles/globals.css";
+import "~/styles/globals.css"
 
-import { type Metadata } from "next";
-import React from "react";
-import { Content } from "antd/es/layout/layout";
-import CheckLogin from "./checkLogin";
-import { SessionProvider } from "next-auth/react";
-import Menu from "./Menu";
+import { type Metadata } from "next"
+import React from "react"
+import { Content } from "antd/es/layout/layout"
+import CheckLogin from "./checkLogin"
+import { SessionProvider } from "next-auth/react"
+import Menu from "./components/Menu"
 
 /**
  * Metadata for the Remote Lab application
@@ -39,5 +39,5 @@ export default async function RootLayout({
       </SessionProvider>
       </body>
     </html>
-  );
+  )
 }
