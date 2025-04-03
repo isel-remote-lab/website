@@ -1,6 +1,8 @@
 import { LogoutOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, type MenuProps } from "antd";
-import Link from "next/link";
+import Link from "next/link"
+import CustomBreadcrumb from "./CustomBreadcrumb";
+import UserImage from "./UserImage";
 
 /**
  * Dropdown items for the user menu
@@ -44,6 +46,8 @@ const dropdownItems: MenuProps['items'] = [
   },
 ];
 
+
+
 /**
  * Menu items for the client menu
  * @type {MenuProps['items']}
@@ -59,15 +63,19 @@ const menuItems = [
         </Link>
     ),
     style: { fontSize: 24, fontWeight: 'bold'},
-    disabled: true
+  },
+  {
+    key: 'breadcrumb',
+    label: (
+        <CustomBreadcrumb />
+    ),
+    style: {fontSize: 18, fontWeight: 'bold'},
   },
   {
     key: 'options',
     label: (
         <Dropdown menu={{ items: dropdownItems }} trigger={['click']}>
-            <Avatar>
-            <UserOutlined />
-            </Avatar>
+          <Avatar icon={<UserImage />} size={45}/>
         </Dropdown>
     ),
     style: { marginLeft: 'auto' },
@@ -79,5 +87,6 @@ const menuItems = [
  * @returns The client menu component
  */
 export default function ClientMenu() {
-    return <Menu mode="horizontal" items={menuItems}/>
+    return <Menu mode="horizontal" style={{ lineHeight: '500%' }} items={menuItems}/>
 }
+

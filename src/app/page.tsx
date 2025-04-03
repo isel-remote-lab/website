@@ -15,10 +15,11 @@ const labs = [
   }
 ];
 
-const createLabButton = {
-  title: 'Create Lab',
-  description: 'Create a new lab',
-};
+const cardSyle = {
+  width: labsWidth,
+  height: "100%",
+  hoverable: true
+}
 
 export default function Dashboard() {
   return (
@@ -30,17 +31,12 @@ export default function Dashboard() {
             <Card
               key={labId}
               title={lab.title}
-              style={{ width: labsWidth }}
+              style={cardSyle}
             >
               <p>{lab.description}</p>
             </Card>
           </Link>
         })}
-        <Link href="/lab/create">
-          <Card>
-            <PlusOutlined/>
-          </Card>
-        </Link>
       </Flex>
     </Layout>
   );
