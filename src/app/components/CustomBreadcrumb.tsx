@@ -3,7 +3,7 @@
 import { Breadcrumb, Divider } from "antd"
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb"
 import { usePathname } from "next/navigation"
-import { itemRender } from "~/server/BrowserHistoryItemRender"
+import { itemRender } from "~/server/browserHistoryItemRender"
 
 /**
  * The breadcrumb item for the dashboard
@@ -63,27 +63,16 @@ function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
         for (let i = 0; i < pathnames.length; i++) {
             const pathname = pathnames[i]
             
-            // Se o segmento for somente números, junta com o item anterior
-            if (/^\d+$/.test(pathname!)) {
-            if (items.length > 0) {
-                // Atualiza o título do último item, concatenando com um espaço e o número
-                (items[items.length - 1]!.title as string) += ` ${pathname}`
-                // Atualiza a URL (href) do último item, adicionando o número
-                items[items.length - 1]!.href += `/${pathname}`
+            // Check if the pathname is a number (lab ID)
+            if (i === pathnames.length - 1 && /^\d+$/.test(pathname!)) {
+                const labId = pathname
+                // TODO : Add logic to get the name of the lab
+                const labName = "FPGA " + labId
+                items[items.length - 1]!.title = labName
             } else {
-                // Caso não haja item anterior, cria um novo (cuidado: cenário incomum)
-                items.push({
-                title: pathname,
-                path: `/${pathname}`,
-                })
-            }
-            } else {
-            // Trata o segmento normalmente:
-            // Aplica tradução se disponível, senão capitaliza a primeira letra
-            const title = translations[pathname!.toLowerCase()] ?? (pathname!.charAt(0).toUpperCase() + pathname!.slice(1))
-            // Constrói a URL (href) até o segmento atual
-            const href = '/' + pathnames.slice(0, i + 1).join('/')
-            items.push({ title, href })
+                const title = translations[pathname!] ?? (pathname!.charAt(0).toUpperCase() + pathname!.slice(1))
+                const href = '/' + pathnames.slice(0, i + 1).join('/')
+                items.push({ title, href })
             }
         }
     }
@@ -103,10 +92,9 @@ export default function CustomBreadcrumb() {
     }
 
     return (
-        <div id = 'breadcrumb'>
+        <>
             <Breadcrumb itemRender={itemRender} items={generateBreadcrumbItems(pathname)} style={{padding: 24}}/>
-            <Divider style={{margin: 0}}/>
-        </div>
+        </>
     )
 }
 

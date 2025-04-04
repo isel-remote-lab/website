@@ -5,7 +5,7 @@ import React from "react"
 import { Content } from "antd/es/layout/layout"
 import CheckLogin from "./checkLogin"
 import { SessionProvider } from "next-auth/react"
-import Menu from "./components/Menu"
+import Menu from "./components/CustomMenu"
 
 /**
  * Metadata for the Remote Lab application
@@ -14,7 +14,7 @@ import Menu from "./components/Menu"
 export const metadata: Metadata = {
   title: "Remote Lab",
   description: "Remote Lab",
-  //icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 /**
@@ -29,14 +29,14 @@ export default async function RootLayout({
   return (
     <html>
       <body style={{ backgroundColor: "#f5f5f5" }}>
-      <SessionProvider>
-        <CheckLogin>
-            <Menu/>
-            <Content style={{ padding: 24 }}>
-              {children}
-            </Content>
-        </CheckLogin>
-      </SessionProvider>
+        <SessionProvider>
+          <CheckLogin>
+              <Menu/>
+              <Content style={{ padding: 24 }}>
+                {children}
+              </Content>
+          </CheckLogin>
+        </SessionProvider>
       </body>
     </html>
   )

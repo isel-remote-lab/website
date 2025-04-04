@@ -12,14 +12,9 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string
-      // ...other properties
-      // role: UserRole;
+      role: string
     } & DefaultSession["user"]
     accessToken: string
-  }
-
-  interface User {
-    role: string
   }
 }
 
@@ -85,7 +80,12 @@ export const authConfig = {
 
       session.accessToken = token.accessToken as string;
 
+      // Add custom role logic here to fetch a previous role from the database or use a default value
+      // TODO - Fetch the role from the database 
+      session.user.role = "admin"
+      //session.user.email?.startsWith("a") ? "student" : "teacher"
+
       return session
     }
-  },
+  }
 } satisfies NextAuthConfig

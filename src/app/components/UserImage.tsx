@@ -5,7 +5,7 @@ import { auth } from "~/server/auth"
  * User avatar component
  * @returns The user avatar component
  */
-export default async function UserImage(): Promise<JSX.Element | null> {
+export default async function UserImage() {
     const session = await auth()
    
     if (!session?.user) return null
