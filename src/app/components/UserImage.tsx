@@ -7,8 +7,5 @@ import { auth } from "~/server/auth"
  */
 export default async function UserImage() {
     const session = await auth()
-   
-    if (!session?.user) return null
-  
     return <Image src={session.user.image!} alt="User Avatar" width="0" height="0"/>
 }

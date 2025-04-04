@@ -6,10 +6,7 @@ import ProfilePage from "../components/pages/ProfilePage";
  */
 export default async function AccountPage() {
     const session = await auth();
-
-    if (!session?.user) return null;
-
-    const { name, email, role, image} = session.user;
+    const { name, email, role, image} = session!.user;
     
     if (!name || !email) return null;
 

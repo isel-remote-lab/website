@@ -2,6 +2,7 @@ import { MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Card, Flex, Image } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
+import DefaultPage from "./DefaultPage";
 
 const avatarSize = 250;
 
@@ -23,36 +24,30 @@ interface profilePageProps {
  */
 export default function ProfilePage({name, email, role, image}: profilePageProps) {
     return (
-    <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
-        <Avatar size={avatarSize}>
-            <Image
-            src={image ?? undefined}
-            alt="User Avatar"
-            width={avatarSize}
-            height={avatarSize}
-            />
-        </Avatar>
-        <Card>
-            <Title level={1} style={{ margin: 0 }}>{name}</Title>
-        </Card>
-        <Flex gap="middle">
-        <Card style={{ textAlign: "center", width: "fit-content" }}>
-            <Flex gap="small">
-                <UserOutlined/>
-                <Title level={5} style={{ margin: 0 }}>{role.charAt(0).toUpperCase() + role.slice(1)}</Title>
+        <DefaultPage>
+            <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
+                <Avatar size={avatarSize}>
+                    <Image
+                    src={image ?? undefined}
+                    alt="User Avatar"
+                    width={avatarSize}
+                    height={avatarSize}
+                    />
+                </Avatar>
+                <Title level={1} style={{ margin: 0 }}>{name}</Title>
+                <Flex gap="small">
+                    <UserOutlined/>
+                    <Title level={5} style={{ margin: 0 }}>{role.charAt(0).toUpperCase() + role.slice(1)}</Title>
+                </Flex>
+                <Flex gap="small">
+                    <Link href={`mailto:${email}`}>
+                        <MailOutlined/>
+                    </Link>
+                    <Title level={4}>
+                        {email}
+                    </Title>
+                </Flex>
             </Flex>
-        </Card>
-        <Card style={{ textAlign: "center" }}>
-            <Flex gap="small">
-                <Link href={`mailto:${email}`}>
-                    <MailOutlined/>
-                </Link>
-                <Title level={4}>
-                    {email}
-                </Title>
-            </Flex>
-        </Card>
-        </Flex>
-    </Flex>
-      )
+        </DefaultPage>
+    )
 }

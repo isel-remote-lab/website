@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Form, Input, TimePicker } from "antd";
+import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import DefaultPage from "~/app/components/pages/DefaultPage";
 
 const formItems = [
@@ -8,13 +8,40 @@ const formItems = [
     label: "Nome",
     name: "name",
     rules: [{ required: true, message: "Por favor insira um nome!" }],
-    component: <Input autoFocus={true} autoSave="true" autoCorrect="true" placeholder="Nome do laboratório" />,
+    component: 
+      <Input 
+        autoFocus={true} 
+        autoSave="true" 
+        autoCorrect="true" 
+        placeholder="Nome do laboratório" 
+      />,
   },
   {
     label: "Duração das sessões",
     name: "duration",
     rules: [{ required: true, message: "Por favor insira a duração!" }],
-    component: <TimePicker autoSave="true" minuteStep={15} showSecond={false} showNow={false} changeOnScroll needConfirm={false} placeholder="Duração das sessões" />
+    component: 
+      <TimePicker
+        autoSave="true" 
+        minuteStep={15} 
+        showSecond={false}
+        showNow={false}
+        changeOnScroll 
+        needConfirm={false} 
+        placeholder="Duração das sessões"
+      />
+  },
+  {
+    label: "Limite da fila de espera",
+    name: "queueLimit",
+    rules: [{ required: true, message: "Por favor insira o limite!" }],
+    component:
+      <InputNumber
+        autoSave="true"
+        defaultValue={1}
+        min={1} 
+        placeholder="Limite da fila de espera"
+      />
   }
 ]
 

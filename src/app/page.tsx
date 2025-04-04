@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Layout, Tooltip } from 'antd';
 import Title from 'antd/es/typography/Title';
 import Link from 'next/link';
+import { auth } from '~/server/auth';
 
 const labsWidth = 300;
 
@@ -23,9 +24,12 @@ const cardStyle = {
   border: "none"
 }
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const session = await auth();
+  const { tempRole } = session!.user;
+
   return (
-    <Layout>
+    <Layout style={{ padding: "1%" }}>
       <Title level={2}>Os meus laboratórios</Title>
       <Flex wrap gap="small">
         {labs.map((lab, index) => {
@@ -44,11 +48,13 @@ export default function Dashboard() {
             </Tooltip>
           )
         })}
-        <Tooltip title="Criar laboratório">
-          <Link href="/lab/create">
-            <Button style={cardStyle} icon={<PlusOutlined />} size="large"/>
-          </Link>
-        </Tooltip>
+        {tempRole === "teacher" && (
+          <Tooltip title="Criar laboratório">
+            <Link href="/lab/create">
+              <Button style={cardStyle} icon={<PlusOutlined />} size="large"/>
+            </Link>
+          </Tooltip>
+        )}
       </Flex>
     </Layout>
   );

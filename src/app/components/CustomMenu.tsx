@@ -1,10 +1,11 @@
-import { LogoutOutlined, PlusOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { LogoutOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, Tooltip, type MenuProps } from "antd";
 import Link from "next/link"
 import CustomBreadcrumb from "./CustomBreadcrumb";
 import UserImage from "./UserImage";
 import { auth } from "~/server/auth";
-import Image from "next/image";
+import RoleDropdown from "./RoleDropdown";
+import LogoSwitch from "./LogoSwitch";
 
 /**
  * Client menu component
@@ -12,8 +13,7 @@ import Image from "next/image";
  */
 export default async function CustomMenu() {
     const session = await auth();
-    if (!session?.user) return false;
-    const { role } = session.user;
+    const { role, tempRole } = session!.user;
 
     /**
      * Dropdown items for the user menu
@@ -53,53 +53,6 @@ export default async function CustomMenu() {
       },
     ]
 
-    const roleChangeItems: MenuProps['items'] = [
-      // If the user is watching the page as a student, don't show it as an option
-      ...(role !== "student"
-        ? [ {
-              key: 'student',
-              label: (
-                <Tooltip title="Mudar para estudante">
-                  <div>
-                    Estudante
-                  </div>
-                </Tooltip>
-              ),
-            } 
-          ]
-        : []),
-      // If the user is watching the page as a teacher, don't show it as an option
-      ...(role !== "teacher"
-        ? [
-            {
-              key: 'teacher',
-              label: (
-                <Tooltip title="Mudar para professor">
-                  <div>
-                    Professor
-                  </div>
-                </Tooltip>
-              ),
-            },
-            // If the user is watching the page as an admin, don't show it as an option
-            ...(role !== "admin"
-              ? [
-                  {
-                    key: 'admin',
-                    label: (
-                      <Tooltip title="Mudar para administrador">
-                        <div>
-                          Administrador
-                        </div>
-                      </Tooltip>
-                    ),
-                  },
-              ]
-              : []),
-          ]
-        : []),
-    ]
-
     /**
      * Menu items for the client menu
      * @type {MenuProps['items']}
@@ -107,16 +60,7 @@ export default async function CustomMenu() {
     const menuItems = [
       {
         key: 'logo',
-        label: (
-          <Link href="/">
-            <Image
-              src="/logo.svg"
-              alt="RL"
-              width={40}
-              height={40}
-              />
-          </Link>
-        )
+        label: <LogoSwitch />,
       },
       {
         key: 'breadcrumb',
@@ -128,31 +72,30 @@ export default async function CustomMenu() {
       // If the user is either an admin or a teacher, show the create lab and the change role options
       ...(role !== "student"
         ? [
-            // If the user is a teacher, show the create lab option
-            ...(role === "teacher"
+            // If the user is watching the page as a teacher, show the create lab option
+            ...(tempRole === "teacher"
               ? [ {
                     key: 'create-lab',
                     label: (
-                      <Tooltip title="Criar laboratório" placement="bottom">
+                      <Tooltip title="Criar laboratório">
                         <Link href="/lab/create">
                           <PlusOutlined style={{fontSize: "125%"}}/>
                         </Link>
                       </Tooltip>
                     ),
-                    style: { marginLeft: 'auto' },
+                    style: (tempRole === "teacher" ? { marginLeft: 'auto' } : {}),
                   } ]
               : []),
             // If the user is an admin or a teacher, show the change role option
             {
               key: 'change-role',
               label: (
-                <Dropdown menu={{ items: roleChangeItems }} trigger={['hover']}>
-                  <div>
-                    <UserSwitchOutlined style={{fontSize: "125%"}}/>
-                  </div>
-                </Dropdown>
+                <RoleDropdown 
+                  role={role}
+                  tempRole={tempRole}
+                />
               ),
-              style: (role === "admin" ? { marginLeft: 'auto' } : {}),
+              style: (tempRole !== "teacher" ? { marginLeft: 'auto' } : {}),
             },
           ]
         : []),
