@@ -13,6 +13,7 @@ declare module "next-auth" {
     user: {
       id: string
       role: string
+      tempRole: string
     } & DefaultSession["user"]
     accessToken: string
   }
@@ -83,6 +84,7 @@ export const authConfig = {
       // Add custom role logic here to fetch a previous role from the database or use a default value
       // TODO - Fetch the role from the database 
       session.user.role = "admin"
+      session.user.tempRole = session.user.role
       //session.user.email?.startsWith("a") ? "student" : "teacher"
 
       return session

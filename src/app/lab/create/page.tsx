@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, Input } from "antd";
+import { Button, Form, Input, TimePicker } from "antd";
 import DefaultPage from "~/app/components/pages/DefaultPage";
 
 const formItems = [
@@ -8,31 +8,13 @@ const formItems = [
     label: "Nome",
     name: "name",
     rules: [{ required: true, message: "Por favor insira um nome!" }],
-    component: <Input placeholder="Nome do laboratório" />,
+    component: <Input autoFocus={true} autoSave="true" autoCorrect="true" placeholder="Nome do laboratório" />,
   },
   {
-    label: "Descrição",
-    name: "description",
-    rules: [{ required: true, message: "Por favor insira uma descrição!" }],
-    component: <Input.TextArea placeholder="Descrição do laboratório" />,
-  },
-  {
-    label: "Máquinas",
-    name: "machines",
-    rules: [{ required: true, message: "Por favor insira as máquinas!" }],
-    component: <Input.TextArea placeholder="Máquinas do laboratório" />,
-  },
-  {
-    label: "Data de início",
-    name: "startDate",
-    rules: [{ required: true, message: "Por favor insira uma data de início!" }],
-    component: <Input placeholder="Data de início" />,
-  },
-  {
-    label: "Data de término",
-    name: "endDate",
-    rules: [{ required: true, message: "Por favor insira uma data de término!" }],
-    component: <Input placeholder="Data de término" />,
+    label: "Duração das sessões",
+    name: "duration",
+    rules: [{ required: true, message: "Por favor insira a duração!" }],
+    component: <TimePicker autoSave="true" minuteStep={15} showSecond={false} showNow={false} changeOnScroll needConfirm={false} placeholder="Duração das sessões" />
   }
 ]
 
@@ -50,6 +32,9 @@ export default function CreateLab() {
               {item.component}
             </Form.Item>
           ))}
+          <Form.Item>
+            <Button type="primary">Criar laboratório</Button>
+          </Form.Item>
         </Form>
       </DefaultPage>
     )

@@ -1,5 +1,5 @@
 import { MailOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Card, Flex, Image, Space } from "antd";
+import { Avatar, Card, Flex, Image } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 

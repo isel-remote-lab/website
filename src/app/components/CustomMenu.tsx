@@ -5,7 +5,6 @@ import CustomBreadcrumb from "./CustomBreadcrumb";
 import UserImage from "./UserImage";
 import { auth } from "~/server/auth";
 import Image from "next/image";
-import changeRole from "~/server/changeRole";
 
 /**
  * Client menu component
@@ -55,39 +54,49 @@ export default async function CustomMenu() {
     ]
 
     const roleChangeItems: MenuProps['items'] = [
-      {
-        key: 'student',
-        label: (
-          <Tooltip title="Mudar para estudante">
-            <div onClick={(changeRole("student"))}>
-              Estudante
-            </div>
-          </Tooltip>
-        ),
-      },
-      {
-        key: 'teacher',
-        label: (
-          <Tooltip title="Mudar para professor">
-            <div onClick={(changeRole("teacher"))}>
-              Professor
-            </div>
-          </Tooltip>
-        ),
-      },
+      // If the user is watching the page as a student, don't show it as an option
+      ...(role !== "student"
+        ? [ {
+              key: 'student',
+              label: (
+                <Tooltip title="Mudar para estudante">
+                  <div>
+                    Estudante
+                  </div>
+                </Tooltip>
+              ),
+            } 
+          ]
+        : []),
+      // If the user is watching the page as a teacher, don't show it as an option
       ...(role !== "teacher"
         ? [
             {
-              key: 'admin',
+              key: 'teacher',
               label: (
-                <Tooltip title="Mudar para administrador">
-                  <div onClick={(changeRole("admin"))}>
-                    Administrador
+                <Tooltip title="Mudar para professor">
+                  <div>
+                    Professor
                   </div>
                 </Tooltip>
               ),
             },
-        ]
+            // If the user is watching the page as an admin, don't show it as an option
+            ...(role !== "admin"
+              ? [
+                  {
+                    key: 'admin',
+                    label: (
+                      <Tooltip title="Mudar para administrador">
+                        <div>
+                          Administrador
+                        </div>
+                      </Tooltip>
+                    ),
+                  },
+              ]
+              : []),
+          ]
         : []),
     ]
 
@@ -116,26 +125,34 @@ export default async function CustomMenu() {
         ),
         style: {fontSize: 18, fontWeight: 'bold'},
       },
+      // If the user is either an admin or a teacher, show the create lab and the change role options
       ...(role !== "student"
         ? [
-            {
-              key: 'create-lab',
-              label: (
-                <Tooltip title="Criar laboratório" placement="bottom">
-                  <Link href="/lab/create">
-                    <PlusOutlined style={{fontSize: "125%"}}/>
-                  </Link>
-                </Tooltip>
-              ),
-              style: { marginLeft: 'auto' },
-            },
+            // If the user is a teacher, show the create lab option
+            ...(role === "teacher"
+              ? [ {
+                    key: 'create-lab',
+                    label: (
+                      <Tooltip title="Criar laboratório" placement="bottom">
+                        <Link href="/lab/create">
+                          <PlusOutlined style={{fontSize: "125%"}}/>
+                        </Link>
+                      </Tooltip>
+                    ),
+                    style: { marginLeft: 'auto' },
+                  } ]
+              : []),
+            // If the user is an admin or a teacher, show the change role option
             {
               key: 'change-role',
               label: (
                 <Dropdown menu={{ items: roleChangeItems }} trigger={['hover']}>
-                  <UserSwitchOutlined style={{fontSize: "125%"}}/>
+                  <div>
+                    <UserSwitchOutlined style={{fontSize: "125%"}}/>
+                  </div>
                 </Dropdown>
-              )
+              ),
+              style: (role === "admin" ? { marginLeft: 'auto' } : {}),
             },
           ]
         : []),
