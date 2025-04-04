@@ -1,6 +1,6 @@
 'use client'
 
-import { Breadcrumb, Divider } from "antd"
+import { Breadcrumb } from "antd"
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb"
 import { usePathname } from "next/navigation"
 import { itemRender } from "~/server/browserHistoryItemRender"

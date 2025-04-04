@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import {useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Flex } from 'antd';
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Flex } from "antd";
 
 /**
  * The check login props
@@ -26,26 +26,26 @@ const CheckLogin = ({ children }: CheckLoginProps): React.ReactNode => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === "unauthenticated") {
       // Redirect to login page when unauthenticated
-      router.push('/api/auth/signin');
+      router.push("/api/auth/signin");
     }
   }, [status, router]);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
-    <Flex justify="center" align="center" style={{ height: '100vh' }}>
-      <LoadingOutlined/>
-    </Flex>
-    )
+      <Flex justify="center" align="center" style={{ height: "100vh" }}>
+        <LoadingOutlined />
+      </Flex>
+    );
   }
 
-  if (status === 'unauthenticated') {
-    return null
+  if (status === "unauthenticated") {
+    return null;
   }
-  
+
   // Render the children if authenticated
-  return children
+  return children;
 };
 
 export default CheckLogin;
