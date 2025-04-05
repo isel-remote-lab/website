@@ -1,11 +1,10 @@
 import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod"
-import pkg from '@next/env'
-import path from 'path'
+import dotenv from 'dotenv';
+import path from 'path';
 
-const { loadEnvConfig } = pkg
 const internalDir = path.resolve(process.cwd(), '../internal/frontend')
-loadEnvConfig(internalDir)
+dotenv.config({ path: internalDir + '/.env.local' });
 
 export const env = createEnv({
   /**
@@ -19,7 +18,7 @@ export const env = createEnv({
         : z.string().optional(),
     AUTH_MICROSOFT_ENTRA_ID_ID: z.string(),
     AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string(),
-    // AUTH_MICROSOFT_ENTRA_ID_ISSUER: z.string(),
+    X_API_KEY: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -42,6 +41,7 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_MICROSOFT_ENTRA_ID_ID: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
     AUTH_MICROSOFT_ENTRA_ID_SECRET: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+    X_API_KEY: process.env.X_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
