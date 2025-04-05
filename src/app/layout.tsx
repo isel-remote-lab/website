@@ -6,6 +6,7 @@ import { Content } from "antd/es/layout/layout"
 import CheckLogin from "./checkLogin"
 import { SessionProvider } from "next-auth/react"
 import Menu from "./components/CustomMenu"
+import Modals from "./modals"
 
 /**
  * Metadata for the Remote Lab application
@@ -32,6 +33,7 @@ export default async function RootLayout({
         <SessionProvider>
           <CheckLogin>
               <Menu/>
+              <Modals/>
               <Content style={{ padding: 24 }}>
                 {children}
               </Content>

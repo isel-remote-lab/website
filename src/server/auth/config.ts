@@ -1,6 +1,9 @@
 import { type DefaultSession, type NextAuthConfig } from "next-auth"
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
 import "../../env.js"
+import getUserByOAuthId from "~/services/user/getUserByOAuthId"
+import { UserRequest } from "~/types/user.js"
+import createUser from "~/services/user/createUser"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -11,11 +14,10 @@ import "../../env.js"
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      id: string
+      oauthId: string
       role: string
-      tempRole: string
+      tempRole: string // TODO - Remove, to be replaced with a context
     } & DefaultSession["user"]
-    accessToken: string
   }
 }
 
@@ -41,6 +43,24 @@ export const authConfig = {
      */
   ],
   callbacks: {
+    async signIn({ user }) {
+      // Check if the user exists in the database
+      if (await getUserByOAuthId(user.id!)) {
+        // If the user exists, return true to allow sign in
+        return true
+      }
+      // If the user does not exist, add them to the database
+
+      const newUser: UserRequest = {
+        oauthId: user.id!,
+        role: "admin",
+        username: user.name!,
+        email: user.email!,
+      }
+
+      return await createUser(newUser)
+    },
+
     // Store the access token in the user session
     async jwt({ token, account }) {
       if (account) {
@@ -55,37 +75,20 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        id: token.sub!,
+
+      // Add the user ID to the session object
+      session.user.oauthId = token.sub as string
+
+      const user = await getUserByOAuthId(session.user.id!)
+
+      const roleMap: { [key: string]: string } = {
+        a: "admin",
+        t: "teacher"
       }
+      
+      session.user.role = roleMap[user!.role] || (session.user.email?.startsWith("a") ? "student" : "teacher")
 
-      if (token.accessToken) {
-        try {
-          const res = await fetch("https://graph.microsoft.com/v1.0/me/photo/$value", {
-            headers: {
-              Authorization: `Bearer ${token.accessToken as string}`,
-            },
-          });
-          if (res.ok) {
-            const buffer = await res.arrayBuffer();
-            const base64 = Buffer.from(buffer).toString("base64");
-            session.user.image = `data:image/jpeg;base64,${base64}`;
-          } else {
-            console.error("Failed to get user profile picture, status:", res.status);
-          }
-        } catch (error) {
-          console.error("Failed to get user profile picture:", error);
-        }
-      }
-
-      session.accessToken = token.accessToken as string;
-
-      // Add custom role logic here to fetch a previous role from the database or use a default value
-      // TODO - Fetch the role from the database 
-      session.user.role = "admin"
       session.user.tempRole = "teacher"
-      //session.user.email?.startsWith("a") ? "student" : "teacher"
 
       return session
     }

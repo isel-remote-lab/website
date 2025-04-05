@@ -1,9 +1,8 @@
-import { LogoutOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, PlusOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, Tooltip, type MenuProps } from "antd";
 import Link from "next/link"
 import CustomBreadcrumb from "./CustomBreadcrumb";
 import UserImage from "./UserImage";
-import { auth } from "~/server/auth";
 import RoleDropdown from "./RoleDropdown";
 import LogoSwitch from "./LogoSwitch";
 
@@ -11,10 +10,7 @@ import LogoSwitch from "./LogoSwitch";
  * Client menu component
  * @returns The client menu component
  */
-export default async function CustomMenu() {
-    const session = await auth();
-    const { role, tempRole } = session!.user;
-
+export default function CustomMenu() {
     /**
      * Dropdown items for the user menu
      * @type {MenuProps['items']}
@@ -67,7 +63,7 @@ export default async function CustomMenu() {
         label: (
             <CustomBreadcrumb />
         ),
-        style: {fontSize: 18, fontWeight: 'bold'},
+        style: (tempRole === "student" ? { marginLeft: 'auto', fontSize: 18, fontWeight: 'bold' } : {fontSize: 18, fontWeight: 'bold'}),
       },
       // If the user is either an admin or a teacher, show the create lab and the change role options
       ...(role !== "student"
