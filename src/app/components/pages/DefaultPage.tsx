@@ -1,4 +1,4 @@
-import { Card } from "antd"
+import { Card } from "antd";
 
 interface DefaultPageProps {
   title?: string | null;
@@ -7,11 +7,11 @@ interface DefaultPageProps {
 
 export default function DefaultPage({
   title = null,
-  children = null
+  children = null,
 }: DefaultPageProps) {
   return (
     <Card title={title} style={{ width: "50%", margin: "auto", padding: 20 }}>
       {children}
     </Card>
-  )
+  );
 }

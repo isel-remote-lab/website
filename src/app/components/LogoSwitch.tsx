@@ -10,20 +10,27 @@ export default function LogoSwitch() {
 
   return (
     <Tooltip title="Pesquisar">
-        <Link 
+      <Link
         href="/search"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        style={{ display: "flex", alignItems: "center"}}
-        >
-            {hovered ? (
-                <div style={{width:"40px", height: "40px", display: "flex", justifyContent: "center"}}>
-                    <SearchOutlined style={{ fontSize: "125%" }} />
-                </div>
-            ) : (
-            <Image src="/logo.svg" alt="RL" width={40} height={40} />
-            )}
-        </Link>
+        style={{ display: "flex", alignItems: "center" }}
+      >
+        {hovered ? (
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <SearchOutlined style={{ fontSize: "125%" }} />
+          </div>
+        ) : (
+          <Image src="/logo.svg" alt="RL" width={40} height={40} />
+        )}
+      </Link>
     </Tooltip>
   );
 }

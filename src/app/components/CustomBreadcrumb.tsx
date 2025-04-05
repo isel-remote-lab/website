@@ -1,43 +1,43 @@
-'use client'
+"use client";
 
-import { Breadcrumb } from "antd"
-import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb"
-import { usePathname } from "next/navigation"
-import { itemRender } from "~/server/browserHistoryItemRender"
+import { Breadcrumb } from "antd";
+import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
+import { usePathname } from "next/navigation";
+import { itemRender } from "~/server/browserHistoryItemRender";
+import { labs } from "../page";
 
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}
  */
 const breadcrumbDashboard: BreadcrumbItemType[] = [
-    {
-        title: 'Dashboard',
-        path: '/',
-    }
-]
+  {
+    title: "Dashboard",
+    path: "/",
+  },
+];
 
 /**
  * Special paths that have custom titles
  * @type {Record<string, string>}
  */
 const specialPaths: Record<string, string[]> = {
-    "/account": ["Perfil"],
-    "/lab/create": ["Criar laboratório"],
-    "/lab/edit": ["Editar laboratório"],
-}
+  "/account": ["Perfil"],
+  "/lab/create": ["Criar laboratório"],
+  "/lab/edit": ["Editar laboratório"],
+};
 
 /**
  * Translations for the breadcrumb items
  * @type {Record<string, string>}
  */
 const translations: Record<string, string> = {
-    account: "Perfil",
-    lab: "Laboratório",
-    labs: "Laboratórios",
-    devices: "Dispositivos",
-    device: "Dispositivo",
-}
-  
+  account: "Perfil",
+  lab: "Laboratório",
+  labs: "Laboratórios",
+  devices: "Dispositivos",
+  device: "Dispositivo",
+};
 
 /**
  * Generates breadcrumb items based on the current pathname
@@ -45,56 +45,60 @@ const translations: Record<string, string> = {
  * @returns {Breadcrumb.Item[]} - The breadcrumb items
  */
 function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
+  // Split the pathname into an array of path segments
+  const pathnames = pathname.split("/").filter((x) => x);
 
-    // Split the pathname into an array of path segments
-    const pathnames = pathname.split('/').filter((x) => x)
+  const items: BreadcrumbItemType[] = [];
 
-    const items: BreadcrumbItemType[] = []
+  // Check if the pathname is in special paths
+  if (specialPaths[pathname]) {
+    items.push({
+      title: specialPaths[pathname],
+      path: pathname,
+    });
+  } else {
+    for (let i = 0; i < pathnames.length; i++) {
+      const pathname = pathnames[i];
 
-    // Check if the pathname is in special paths
-    if (specialPaths[pathname]) {
-        items.push(
-            {
-                title: specialPaths[pathname],
-                path: pathname,
-            }
-        )
-    } else {
-        for (let i = 0; i < pathnames.length; i++) {
-            const pathname = pathnames[i]
-            
-            // Check if the pathname is a number (lab ID)
-            if (i === pathnames.length - 1 && /^\d+$/.test(pathname!)) {
-                const labId = pathname
-                // TODO : Add logic to get the name of the lab
-                const labName = "FPGA " + labId
-                items[items.length - 1]!.title = labName
-            } else {
-                const title = translations[pathname!] ?? (pathname!.charAt(0).toUpperCase() + pathname!.slice(1))
-                const href = '/' + pathnames.slice(0, i + 1).join('/')
-                items.push({ title, href })
-            }
-        }
+      // Check if the pathname is a number (lab ID)
+      if (i === pathnames.length - 1 && /^\d+$/.test(pathname!)) {
+        const id = pathname;
+        const labId = Number(id);
+
+        // TODO : Add logic to get the name of the lab
+        const labName = labs[labId - 1];
+        items[items.length - 1]!.title = labName;
+      } else {
+        const title =
+          translations[pathname!] ??
+          pathname!.charAt(0).toUpperCase() + pathname!.slice(1);
+        const href = "/" + pathnames.slice(0, i + 1).join("/");
+        items.push({ title, href });
+      }
     }
+  }
 
-      items[items.length - 1]!.href = undefined
+  items[items.length - 1]!.href = undefined;
 
-      return [...breadcrumbDashboard, ...items]
+  return [...breadcrumbDashboard, ...items];
 }
 
 export default function CustomBreadcrumb() {
-    const pathname = usePathname()
-    if (!pathname) return null
+  const pathname = usePathname();
+  if (!pathname) return null;
 
-    // Check if the path is the dashboard, if so, don't show the breadcrumb
-    if (pathname === '/') {
-        return null
-    }
+  // Check if the path is the dashboard, if so, don't show the breadcrumb
+  if (pathname === "/") {
+    return null;
+  }
 
-    return (
-        <>
-            <Breadcrumb itemRender={itemRender} items={generateBreadcrumbItems(pathname)} style={{padding: 24}}/>
-        </>
-    )
+  return (
+    <>
+      <Breadcrumb
+        itemRender={itemRender}
+        items={generateBreadcrumbItems(pathname)}
+        style={{ padding: 24 }}
+      />
+    </>
+  );
 }
-
