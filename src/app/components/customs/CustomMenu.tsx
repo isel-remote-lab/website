@@ -62,7 +62,7 @@ export default async function CustomMenu() {
      * Menu items for the client menu
      * @type {MenuProps['items']}
      */
-    const menuItems = [
+    const menuItems: MenuProps['items'] = [
       {
         key: 'logo',
         label: (

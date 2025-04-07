@@ -1,6 +1,6 @@
-import { Avatar, Flex, Image } from "antd";
+import { Avatar, Flex, Image, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
-import { MailOutlined, UserOutlined } from "@ant-design/icons";
+import { CalendarOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import getAccountInfo from "~/services/session/getAccountInfo";
 
@@ -9,6 +9,16 @@ export const avatarSize = 250
 export default async function AccountInfo() {
     const accountInfo = await getAccountInfo()
     const { name, email, role, image, joinedAt } = accountInfo
+
+    let title
+    switch (role) {
+        case "teacher":
+            title = "Professor"
+        case "admin":
+            title = "Administrador"
+        default:
+            title = "Aluno"
+    }
 
     return(
         <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
@@ -21,19 +31,28 @@ export default async function AccountInfo() {
                     />
                 </Avatar>
                 <Title level={1}>{name}</Title>
-                <Flex gap="small">
-                    <UserOutlined/>
-                    <Title level={5}>{role.charAt(0).toUpperCase() + role.slice(1)}</Title>
-                </Flex>
-                <Flex gap="small">
+                <Tooltip title={title}>
+                    <Flex gap="small">
+                        <UserOutlined/>
+                        <Title style={{marginBottom: "0"}} level={5}>{title}</Title>
+                    </Flex>
+                </Tooltip>
+                <Tooltip title="Enviar email">
                     <Link href={`mailto:${email}`}>
-                        <MailOutlined/>
+                        <Flex gap="small">
+                            <MailOutlined/>
+                            <Title style={{marginBottom: "0"}} level={5}>
+                                {email}
+                            </Title>
+                        </Flex>
                     </Link>
-                    <Title level={4}>
-                        {email}
-                    </Title>
-                </Flex>
-                <Title level={5}>{new Date(joinedAt).toLocaleDateString()}</Title>
+                </Tooltip>
+                <Tooltip title="Data de adesão">
+                    <Flex gap="small">
+                        <CalendarOutlined/>
+                        <Title style={{marginBottom: "0"}} level={5}>{new Date(joinedAt).toLocaleDateString()}</Title>
+                    </Flex>
+                </Tooltip>
             </Flex>
     )
 }

@@ -3,6 +3,7 @@
 import { Breadcrumb, Divider } from "antd"
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb"
 import { usePathname } from "next/navigation"
+import { labs } from "~/app/page"
 import { itemRender } from "~/server/browserHistoryItemRender"
 
 /**
@@ -34,6 +35,7 @@ const translations: Record<string, string> = {
     account: "Perfil",
     lab: "Laboratório",
     labs: "Laboratórios",
+    settings: "Configurações",
     devices: "Dispositivos",
     device: "Dispositivo",
 }
@@ -64,10 +66,10 @@ function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
             const pathname = pathnames[i]
             
             // Check if the pathname is a number (lab ID)
-            if (i === pathnames.length - 1 && /^\d+$/.test(pathname!)) {
+            if (/^\d+$/.test(pathname!)) {
                 const labId = pathname
-                // TODO : Add logic to get the name of the lab
-                const labName = "FPGA " + labId
+                // TODO : Add logic to get the name of the lab from the database
+                const labName = labs[parseInt(labId!) - 1]
                 items[items.length - 1]!.title = labName
             } else {
                 const title = translations[pathname!] ?? (pathname!.charAt(0).toUpperCase() + pathname!.slice(1))
@@ -91,10 +93,6 @@ export default function CustomBreadcrumb() {
         return null
     }
 
-    return (
-        <>
-            <Breadcrumb itemRender={itemRender} items={generateBreadcrumbItems(pathname)} style={{padding: 24}}/>
-        </>
-    )
+    return <Breadcrumb itemRender={itemRender} items={generateBreadcrumbItems(pathname)} style={{padding: 24}}/>
 }
 
