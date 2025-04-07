@@ -1,4 +1,4 @@
-import { LogoutOutlined, PlusOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, PlusOutlined, SearchOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu, Tooltip, type MenuProps } from "antd";
 import Link from "next/link"
 import CustomBreadcrumb from "./CustomBreadcrumb";
@@ -6,6 +6,8 @@ import UserImage from "../UserImage";
 import RoleDropdown from "../dropdowns/RoleDropdown";
 import LogoSwitch from "../LogoSwitch";
 import { auth } from "~/server/auth";
+import Image from "next/image";
+import Search from "antd/es/input/Search";
 
 /**
  * Client menu component
@@ -54,6 +56,8 @@ export default async function CustomMenu() {
       },
     ]
 
+    const menuHeight = 64
+
     /**
      * Menu items for the client menu
      * @type {MenuProps['items']}
@@ -61,7 +65,11 @@ export default async function CustomMenu() {
     const menuItems = [
       {
         key: 'logo',
-        label: <LogoSwitch />,
+        label: (
+        <Link href="/" style={{ display: "flex", alignItems: "center"}}>     
+          <Image src="/logo.svg" alt="RL" width={40} height={40} />
+        </Link>
+        ),
       },
       {
         key: 'breadcrumb',
@@ -69,6 +77,17 @@ export default async function CustomMenu() {
             <CustomBreadcrumb />
         ),
         style: (tempRole === "student" ? { marginLeft: 'auto', fontSize: 18, fontWeight: 'bold' } : {fontSize: 18, fontWeight: 'bold'}),
+      },
+      {
+        key: "search",
+        label: <Search placeholder="Pesquisar..." />,
+        style: {
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          top: menuHeight/4,
+          width: '30%',
+        },
       },
       // If the user is either an admin or a teacher, show the create lab and the change role options
       ...(role !== "student"
@@ -110,6 +129,6 @@ export default async function CustomMenu() {
       }
     ]
     
-    return <Menu mode="horizontal" style={{alignItems: 'center', height: 64 }} items={menuItems}/>
+    return <Menu mode="horizontal" style={{alignItems: 'center', height: menuHeight }} items={menuItems}/>
 }
 
