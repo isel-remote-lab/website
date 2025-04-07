@@ -56,9 +56,13 @@ export const authConfig = {
       }
       // If the user does not exist, add them to the database
 
+
+      // Automatically assign the role based on the email address (ISEL only)
+      const role = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!) ? "student" : "teacher"
+
       const newUser: UserRequest = {
         oauthId: user.id!,
-        role: "admin",
+        role: role,
         username: user.name!,
         email: user.email!,
       }
@@ -101,7 +105,7 @@ export const authConfig = {
         s: "student",
       }
 
-      session.user.role = roleMap[user!.role] || (session.user.email?.startsWith("a") ? "student" : "teacher")
+      session.user.role = roleMap[user!.role]!
 
       session.user.tempRole = "teacher"
 
