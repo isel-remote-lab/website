@@ -42,7 +42,7 @@ export default async function AccountInfo() {
                     <Flex gap="small">
                         <UserOutlined/>
                         <Title style={{marginBottom: "0"}} level={5}>{title}</Title>
-                        // TODO: Add option to admins to change the role of the user
+                        {/* TODO: Add option to admins to change the role of the user*/}
                     </Flex>
                 </Tooltip>
                 <Tooltip title="Enviar email">
