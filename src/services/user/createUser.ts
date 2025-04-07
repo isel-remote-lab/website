@@ -1,11 +1,16 @@
-import { type UserRequest } from "../../types/user";
+import User, { type UserRequest } from "../../types/user";
 
 export default async function createUser(user: UserRequest): Promise<boolean> {
-  // Simulate a database insert operation
-  await fetch("https://api.mockapi.com/api/v1/user/{id}", {
+
+  if (process.env.API_MOCKING === "enabled") {
+    // If API mocking is enabled, simulate a successful response
+    console.log("Mocking API response for createUser with user:", user)
+    return true
+  }
+
+  await fetch("https://localhost:8080/api/v1/user/{id}", {
     method: "POST",
     headers: {
-      "x-api-key": process.env.X_API_KEY!,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(user),

@@ -15,7 +15,6 @@ export interface UserRequest {
 }
 
 export interface UserResponse {
-  id: string;
   oauthId: string;
   role: string;
   username: string;

@@ -2,15 +2,20 @@ import { LogoutOutlined, PlusOutlined, SunOutlined, UserOutlined } from "@ant-de
 import { Avatar, Dropdown, Menu, Tooltip, type MenuProps } from "antd";
 import Link from "next/link"
 import CustomBreadcrumb from "./CustomBreadcrumb";
-import UserImage from "./UserImage";
-import RoleDropdown from "./RoleDropdown";
-import LogoSwitch from "./LogoSwitch";
+import UserImage from "../UserImage";
+import RoleDropdown from "../dropdowns/RoleDropdown";
+import LogoSwitch from "../LogoSwitch";
+import { auth } from "~/server/auth";
 
 /**
  * Client menu component
  * @returns The client menu component
  */
-export default function CustomMenu() {
+export default async function CustomMenu() {
+    const session = await auth()
+
+    const { role, tempRole } = session!.user
+
     /**
      * Dropdown items for the user menu
      * @type {MenuProps['items']}
@@ -19,9 +24,9 @@ export default function CustomMenu() {
       {
         key: 'account',
         label: (
-            <Link href="/account">
-              Conta
-            </Link>
+          <Link href="/account">
+            Conta
+          </Link>
         ),
         icon: <UserOutlined />,
       },

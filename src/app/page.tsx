@@ -58,11 +58,11 @@ export default async function Dashboard() {
           )
         })}
         {tempRole === "teacher" && (
-          <Tooltip title="Criar laboratório">
-            <Link href="/lab/create">
+          <Link href="/lab/create">
+            <Tooltip title="Criar laboratório">
               <Button style={cardStyle} icon={<PlusOutlined />} size="large"/>
-            </Link>
-          </Tooltip>
+            </Tooltip>
+          </Link>
         )}
       </Flex>
     </Layout>

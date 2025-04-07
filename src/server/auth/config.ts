@@ -4,6 +4,7 @@ import "../../env.js"
 import getUserByOAuthId from "~/services/user/getUserByOAuthId"
 import { UserRequest } from "~/types/user.js"
 import createUser from "~/services/user/createUser"
+import { Client, CustomAuthenticationProvider, Options } from "@microsoft/microsoft-graph-client"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -18,6 +19,8 @@ declare module "next-auth" {
       role: string
       tempRole: string // TODO - Remove, to be replaced with a context
     } & DefaultSession["user"]
+
+    accessToken: string
   }
 }
 
@@ -45,8 +48,10 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
       // Check if the user exists in the database
-      if (await getUserByOAuthId(user.id!)) {
+      if (process.env.API_MOCKING === "enabled" || await getUserByOAuthId(user.id!)) {
+        // If API mocking is enabled, simulate a successful sign in
         // If the user exists, return true to allow sign in
+        console.log("User exists in the database")
         return true
       }
       // If the user does not exist, add them to the database
@@ -58,13 +63,21 @@ export const authConfig = {
         email: user.email!,
       }
 
-      return await createUser(newUser)
+      const response = createUser(newUser)
+
+      if (!response) {
+        console.log("Error creating user")
+      }
+
+      return response
     },
 
     // Store the access token in the user session
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account) {
+        console.log(token)
         token.accessToken = account.access_token
+        token.oauthId = user.id
       }
       return token;
     },
@@ -75,15 +88,17 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
+      session.accessToken = token.accessToken as string
+      session.user.oauthId = token.oauthId as string
 
-      // Add the user ID to the session object
-      session.user.oauthId = token.sub as string
-
-      const user = await getUserByOAuthId(session.user.id!)
+      // Gets the user from the database
+      // If API mocking is enabled, simulate a successful response
+      const user = (process.env.API_MOCKING === "enabled") ? {role: "a"} : await getUserByOAuthId(session.user.id!)
 
       const roleMap: { [key: string]: string } = {
         a: "admin",
-        t: "teacher"
+        t: "teacher",
+        s: "student",
       }
       
       session.user.role = roleMap[user!.role] || (session.user.email?.startsWith("a") ? "student" : "teacher")

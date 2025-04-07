@@ -1,14 +1,12 @@
-import { type UserResponse } from "~/types/user";
+import { type UserResponse } from "~/types/user"
+import "~/env.js"
 
 export default async function getUserByOAuthId(
   oauthId: string
 ): Promise<UserResponse | null> {
   try {
-    const response = await fetch(`https://api.mockapi.com/api/v1/user/${oauthId}`, {
+    const response = await fetch(`https://localhost:8080/api/v1/user/${oauthId}`, {
       method: "GET",
-      headers: {
-        "x-api-key": process.env.X_API_KEY!,
-      },
     });
 
     if (!response.ok) {

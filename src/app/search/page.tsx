@@ -1,5 +1,5 @@
 import { Flex } from "antd";
-import DefaultPage from "../components/pages/DefaultPage";
+import DefaultPage from "../components/defaults/DefaultPage";
 import Search from "antd/es/input/Search";
 
 export default function SearchPage() {
