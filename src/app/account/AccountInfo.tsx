@@ -11,14 +11,14 @@ export default async function AccountInfo() {
     const { name, email, role, image, joinedAt } = accountInfo
 
     let title
-    switch (role) {
-        case "teacher":
-            title = "Professor"
-        case "admin":
-            title = "Administrador"
-        default:
-            title = "Aluno"
+
+    const titles = {
+        student: "Aluno",
+        teacher: "Professor",
+        admin: "Administrador",
     }
+
+    title = titles[role as keyof typeof titles]
 
     return(
         <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
