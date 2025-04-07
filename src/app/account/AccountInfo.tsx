@@ -22,14 +22,21 @@ export default async function AccountInfo() {
 
     return(
         <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
-                <Avatar size={avatarSize}>
+                <div
+                style={{
+                    width: avatarSize,
+                    height: avatarSize,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                }}
+                >
                     <Image
-                    src={image ?? undefined}
+                    src={image}
                     alt="User Avatar"
                     width={avatarSize}
                     height={avatarSize}
                     />
-                </Avatar>
+                </div>
                 <Title level={1}>{name}</Title>
                 <Tooltip title={title}>
                     <Flex gap="small">

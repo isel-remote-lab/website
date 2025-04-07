@@ -76,7 +76,7 @@ export default async function CustomMenu() {
         label: (
             <CustomBreadcrumb />
         ),
-        style: (tempRole === "student" ? { marginLeft: 'auto', fontSize: 18, fontWeight: 'bold' } : {fontSize: 18, fontWeight: 'bold'}),
+        style: {fontSize: 18, fontWeight: 'bold'},
       },
       {
         key: "search",

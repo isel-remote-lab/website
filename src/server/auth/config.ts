@@ -103,7 +103,7 @@ export const authConfig = {
       
       session.user.role = roleMap[user!.role] || (session.user.email?.startsWith("a") ? "student" : "teacher")
 
-      session.user.tempRole = "teacher"
+      session.user.tempRole = "student"
 
       return session
     }

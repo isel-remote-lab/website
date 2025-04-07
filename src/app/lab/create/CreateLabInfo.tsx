@@ -1,6 +1,7 @@
 "use client"
 
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
+import TextArea from "antd/es/input/TextArea";
 
 const formItems = [
   {
@@ -8,7 +9,7 @@ const formItems = [
     name: "name",
     rules: [{ required: true, message: "Por favor insira um nome!" }],
     component: 
-      <Input 
+      <TextArea 
         autoFocus={true} 
         autoSave="true" 
         autoCorrect="true" 
@@ -20,10 +21,10 @@ const formItems = [
     name: "description",
     rules: [{message: "Por favor insira uma descrição!" }],
     component: 
-      <Input.TextArea 
+      <TextArea 
         autoSave="true" 
+        autoCorrect="true"
         placeholder="Descrição do laboratório" 
-        autoSize={{ minRows: 2, maxRows: 6 }} 
       />,
   },
   {

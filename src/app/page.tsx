@@ -16,7 +16,7 @@ const cardStyle = {
   width: labsWidth,
   height: "100%",
   hoverable: true,
-  border: "none"
+  border: "none",
 }
 
 export default async function Dashboard() {
