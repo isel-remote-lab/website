@@ -10,7 +10,7 @@ const formItems = [
     rules: [{ required: true, message: "Por favor insira um nome!" }],
     component: (
       <TextArea
-        autoFocus={true}
+        autoFocus
         autoSave="true"
         autoCorrect="true"
         placeholder="Nome do laboratório"

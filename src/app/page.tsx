@@ -1,4 +1,4 @@
-import { PlusOutlined, SettingOutlined } from "@ant-design/icons";
+import { CalendarOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, Card, Divider, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
@@ -22,18 +22,23 @@ export default async function Dashboard() {
 
   function getLabActions(labId: number) {
     return [
-      <Tooltip title="Editar laboratório" key="settings">
-        <Link href={`/labs/${labId}/settings`}>
-          <SettingOutlined />
+      <Tooltip title="Calendário do laboratório" key="calendar">
+        <Link href={`/labs/${labId}/calendar`}>
+          <CalendarOutlined />
         </Link>
       </Tooltip>,
+      <Tooltip title="Editar laboratório" key="settings">
+      <Link href={`/labs/${labId}/settings`}>
+        <SettingOutlined />
+      </Link>
+    </Tooltip>,
     ];
   }
 
   return (
     <Layout style={{ padding: "1%" }}>
       <Title level={2}>Os meus laboratórios</Title>
-      <Divider />
+      <Divider/>
       <Flex wrap gap="small">
         {labs.map((lab, index) => {
           const labId = index + 1;
@@ -51,6 +56,7 @@ export default async function Dashboard() {
             </Card>
           );
         })}
+        
         {tempRole === "teacher" && (
           <Link href="/labs/create">
             <Tooltip title="Criar laboratório">

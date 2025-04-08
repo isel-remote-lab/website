@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "antd";
+import { Divider, Modal } from "antd";
 import { useRouter } from "next/navigation";
 
 interface DefaultModelProps {
@@ -33,7 +33,7 @@ export default function DefaultModal({
   return (
     <Modal
       title={title}
-      open={true}
+      open
       onCancel={() => handleCancel()}
       onClose={() => handleCancel()}
       {...modalOptions}

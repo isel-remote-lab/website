@@ -1,5 +1,5 @@
 import { LogoutOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, Menu, Tooltip, type MenuProps } from "antd";
+import { Avatar, Dropdown, Flex, Menu, Tooltip, type MenuProps } from "antd";
 import Link from "next/link";
 import CustomBreadcrumb from "./CustomBreadcrumb";
 import UserImage from "../UserImage";
@@ -58,7 +58,7 @@ export default async function CustomMenu() {
       key: "logo",
       label: (
         <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-          <Image src="/logo.svg" alt="RL" width={40} height={40} />
+          <Image src="/black-logo.svg" alt="RL" width={50} height={0}/>
         </Link>
       ),
     },
@@ -88,7 +88,7 @@ export default async function CustomMenu() {
                   key: "create-lab",
                   label: (
                     <Tooltip title="Criar laboratório">
-                      <Link href="/lab/create">
+                      <Link href="/labs/create">
                         <PlusOutlined style={{ fontSize: "125%" }} />
                       </Link>
                     </Tooltip>
