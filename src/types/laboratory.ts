@@ -1,22 +1,19 @@
-export default interface Laboratory {
-  id: number;
-  labName: string;
-  labDescription: string;
-  labDuration: number;
-  createdAt: Date;
-  ownerId: number;
+export default interface Laboratory extends LaboratoryResponse {
+  id: number
 }
 
 export interface LaboratoryRequest {
-  labName: string;
-  labDescription: string;
-  labDuration: number;
+  labName: string | null
+  labDescription: string | null
+  labQueueLimit: number | null
+  labDuration: number | null
 }
 
 export interface LaboratoryResponse {
-  labName: string;
-  labDescription: string;
-  labDuration: number;
-  createdAt: Date;
-  ownerId: number;
+  labName: string
+  labDescription: string | null
+  labDuration: number
+  labQueueLimit: number
+  createdAt: Date
+  ownerId: number
 }

@@ -60,8 +60,8 @@ export const authConfig = {
 
       // Automatically assign the role based on the email address (ISEL only)
       const role = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
-        ? "student"
-        : "teacher";
+        ? "s"
+        : "t";
 
       const newUser: UserRequest = {
         oauthId: user.id!,

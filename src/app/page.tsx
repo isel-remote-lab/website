@@ -23,7 +23,7 @@ export default async function Dashboard() {
   function getLabActions(labId: number) {
     return [
       <Tooltip title="Editar laboratório" key="settings">
-        <Link href={`/lab/${labId}/settings`}>
+        <Link href={`/labs/${labId}/settings`}>
           <SettingOutlined />
         </Link>
       </Tooltip>,
@@ -43,7 +43,7 @@ export default async function Dashboard() {
               style={cardStyle}
               actions={tempRole === "teacher" ? getLabActions(labId) : []}
             >
-              <Link href={`/lab/${labId}`} key={labId}>
+              <Link href={`/labs/${labId}`} key={labId}>
                 <Title level={4} style={{ textAlign: "center" }}>
                   {lab}
                 </Title>
@@ -52,7 +52,7 @@ export default async function Dashboard() {
           );
         })}
         {tempRole === "teacher" && (
-          <Link href="/lab/create">
+          <Link href="/labs/create">
             <Tooltip title="Criar laboratório">
               <Button style={cardStyle} icon={<PlusOutlined />} size="large" />
             </Tooltip>

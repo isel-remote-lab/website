@@ -1,23 +1,17 @@
 export default interface User {
-  id: number;
-  oauthId: string;
-  role: string;
-  username: string;
-  email: string;
-  createdAt: Date;
+  userId: number
+  oauthId: string
+  role: string
+  username: string
+  email: string
+  createdAt: Date
 }
 
 export interface UserRequest {
-  oauthId: string;
-  role: string;
-  username: string;
-  email: string;
+  oauthId: string
+  role: string
+  username: string
+  email: string
 }
 
-export interface UserResponse {
-  oauthId: string;
-  role: string;
-  username: string;
-  email: string;
-  createdAt: Date;
-}
+export type UserResponse = User
