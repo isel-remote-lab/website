@@ -58,7 +58,7 @@ export default async function CustomMenu() {
       key: "logo",
       label: (
         <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-          <Image src="/black-logo.svg" alt="RL" width={50} height={0}/>
+          <Image src="/black-logo.svg" alt="RL" width={60} height={0}/>
         </Link>
       ),
     },

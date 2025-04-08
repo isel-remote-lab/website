@@ -12,8 +12,8 @@ import Menu from "./components/customs/CustomMenu";
  * @type {Metadata}
  */
 export const metadata: Metadata = {
-  title: "Remote Lab",
-  description: "Remote Lab",
+  title: "ISEL Remote Lab",
+  description: "ISEL Remote Lab",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
