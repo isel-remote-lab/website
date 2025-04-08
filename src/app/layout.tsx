@@ -1,11 +1,11 @@
-import "~/styles/globals.css"
+import "~/styles/globals.css";
 
-import { type Metadata } from "next"
-import React from "react"
-import { Content } from "antd/es/layout/layout"
-import CheckLogin from "./checkLogin"
-import { SessionProvider } from "next-auth/react"
-import Menu from "./components/customs/CustomMenu"
+import { type Metadata } from "next";
+import React from "react";
+import { Content } from "antd/es/layout/layout";
+import CheckLogin from "./checkLogin";
+import { SessionProvider } from "next-auth/react";
+import Menu from "./components/customs/CustomMenu";
 
 /**
  * Metadata for the Remote Lab application
@@ -28,22 +28,22 @@ export default async function RootLayout({
   modal,
   children,
 }: {
-  modal: React.ReactNode
-  children: React.ReactNode
+  modal: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <html>
       <body style={{ backgroundColor: "#f5f5f5" }}>
         <SessionProvider>
           <CheckLogin>
-              <Menu/>
-              <Content style={{ padding: 24 }}>
-                {children}
-                {modal}
-              </Content>
+            <Menu />
+            <Content style={{ padding: 24 }}>
+              {children}
+              {modal}
+            </Content>
           </CheckLogin>
         </SessionProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,12 +1,12 @@
-import { createEnv } from "@t3-oss/env-nextjs"
-import { z } from "zod"
-import dotenv from 'dotenv';
-import path from 'path';
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
+import dotenv from "dotenv";
+import path from "path";
 
 // Load the environment variables from the .env.local file
 // This is necessary for the Next.js app to work with the environment variables
-const internalDir = path.resolve(process.cwd(), '../internal/frontend')
-dotenv.config({ path: internalDir + '/.env.local' });
+const internalDir = path.resolve(process.cwd(), "../internal/frontend");
+dotenv.config({ path: internalDir + "/.env.local" });
 
 export const env = createEnv({
   /**
@@ -21,9 +21,7 @@ export const env = createEnv({
     AUTH_MICROSOFT_ENTRA_ID_ID: z.string(),
     AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string(),
     X_API_KEY: z.string().optional(),
-    API_MOCKING: z
-      .enum(["enabled", "disabled"])
-      .default("disabled"),
+    API_MOCKING: z.enum(["enabled", "disabled"]).default("disabled"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -61,4 +59,4 @@ export const env = createEnv({
    * `SOME_VAR=''` will throw an error.
    */
   emptyStringAsUndefined: true,
-})
+});

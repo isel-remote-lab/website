@@ -1,8 +1,7 @@
-import { UserOutlined, MailOutlined } from '@ant-design/icons';
-import { Flex } from 'antd';
-import SkeletonAvatar from 'antd/es/skeleton/Avatar';
-import SkeletonInput from 'antd/es/skeleton/Input';
-import { avatarSize } from '../user/[id]/UserInfo';
+import { Flex } from "antd";
+import SkeletonAvatar from "antd/es/skeleton/Avatar";
+import SkeletonInput from "antd/es/skeleton/Input";
+import { avatarSize } from "../user/[id]/UserInfo";
 
 export default function AccountInfoSkeleton() {
   return (

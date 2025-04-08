@@ -4,10 +4,10 @@
  * @returns The page content
  */
 export default async function LabPage({ params }: { params: { id: string } }) {
-    const { id } = await params
-    return (
-      <div>
-        <h1>Laboratório: {id}</h1>
-      </div>
-    );
-  }
+  const { id } = await params;
+  return (
+    <div>
+      <h1>Laboratório: {id}</h1>
+    </div>
+  );
+}

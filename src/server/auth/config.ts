@@ -1,10 +1,9 @@
-import { type DefaultSession, type NextAuthConfig } from "next-auth"
-import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
-import "../../env.js"
-import getUserByOAuthId from "~/services/user/getUserByOAuthId"
-import { UserRequest } from "~/types/user.js"
-import createUser from "~/services/user/createUser"
-import { Client, CustomAuthenticationProvider, Options } from "@microsoft/microsoft-graph-client"
+import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
+import "../../env.js";
+import getUserByOAuthId from "~/services/user/getUserByOAuthId";
+import { type UserRequest } from "~/types/user.js";
+import createUser from "~/services/user/createUser";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -15,12 +14,12 @@ import { Client, CustomAuthenticationProvider, Options } from "@microsoft/micros
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      oauthId: string
-      role: string
-      tempRole: string // TODO - Remove, to be replaced with a context
-    } & DefaultSession["user"]
+      oauthId: string;
+      role: string;
+      tempRole: string; // TODO - Remove, to be replaced with a context
+    } & DefaultSession["user"];
 
-    accessToken: string
+    accessToken: string;
   }
 }
 
@@ -48,40 +47,44 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
       // Check if the user exists in the database
-      if (process.env.API_MOCKING === "enabled" || await getUserByOAuthId(user.id!)) {
+      if (
+        process.env.API_MOCKING === "enabled" ||
+        (await getUserByOAuthId(user.id!))
+      ) {
         // If API mocking is enabled, simulate a successful sign in
         // If the user exists, return true to allow sign in
-        console.log("User exists in the database")
-        return true
+        console.log("User exists in the database");
+        return true;
       }
       // If the user does not exist, add them to the database
 
-
       // Automatically assign the role based on the email address (ISEL only)
-      const role = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!) ? "student" : "teacher"
+      const role = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
+        ? "student"
+        : "teacher";
 
       const newUser: UserRequest = {
         oauthId: user.id!,
         role: role,
         username: user.name!,
         email: user.email!,
-      }
+      };
 
-      const response = createUser(newUser)
+      const response = createUser(newUser);
 
       if (!response) {
-        console.log("Error creating user")
+        console.log("Error creating user");
       }
 
-      return response
+      return response;
     },
 
     // Store the access token in the user session
     async jwt({ token, account, user }) {
       if (account) {
-        console.log(token)
-        token.accessToken = account.access_token
-        token.oauthId = user.id
+        console.log(token);
+        token.accessToken = account.access_token;
+        token.oauthId = user.id;
       }
       return token;
     },
@@ -92,24 +95,27 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string
-      session.user.oauthId = token.oauthId as string
+      session.accessToken = token.accessToken as string;
+      session.user.oauthId = token.oauthId as string;
 
       // Gets the user from the database
       // If API mocking is enabled, simulate a successful response
-      const user = (process.env.API_MOCKING === "enabled") ? {role: "a"} : await getUserByOAuthId(session.user.id!)
+      const user =
+        process.env.API_MOCKING === "enabled"
+          ? { role: "a" }
+          : await getUserByOAuthId(session.user.id);
 
-      const roleMap: { [key: string]: string } = {
+      const roleMap: Record<string, string> = {
         a: "admin",
         t: "teacher",
         s: "student",
-      }
+      };
 
-      session.user.role = roleMap[user!.role]!
+      session.user.role = roleMap[user!.role]!;
 
-      session.user.tempRole = "teacher"
+      session.user.tempRole = "teacher";
 
-      return session
-    }
-  }
-} satisfies NextAuthConfig
+      return session;
+    },
+  },
+} satisfies NextAuthConfig;
