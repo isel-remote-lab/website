@@ -2,19 +2,14 @@
 
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { Dropdown, Tooltip, type MenuProps } from "antd";
-import { useSession } from "next-auth/react";
+import { useTempRole } from "~/contexts/TempRoleContext";
 
 interface RoleDropdownProps {
-  role: string;
-  tempRole: string;
+  role: string
 }
 
-export default function RoleDropdown({ role, tempRole }: RoleDropdownProps) {
-  const { update } = useSession();
-
-  const changeTempRole = async (role: string) => {
-    await update({ tempRole: role });
-  };
+export default function RoleDropdown({ role }: RoleDropdownProps) {
+  const { tempRole, setTempRole } = useTempRole()
 
   const items: MenuProps["items"] = [
     // If the user is watching the page as a student, don't show it as an option
@@ -24,7 +19,7 @@ export default function RoleDropdown({ role, tempRole }: RoleDropdownProps) {
             key: "student",
             label: (
               <Tooltip title="Mudar para estudante">
-                <div onClick={() => changeTempRole("student")}>Estudante</div>
+                <div onClick={() => setTempRole("student")}>Estudante</div>
               </Tooltip>
             ),
           },
@@ -38,7 +33,7 @@ export default function RoleDropdown({ role, tempRole }: RoleDropdownProps) {
             key: "teacher",
             label: (
               <Tooltip title="Mudar para professor">
-                <div onClick={() => changeTempRole("teacher")}>Professor</div>
+                <div onClick={() => setTempRole("teacher")}>Professor</div>
               </Tooltip>
             ),
           },
@@ -52,7 +47,7 @@ export default function RoleDropdown({ role, tempRole }: RoleDropdownProps) {
             key: "admin",
             label: (
               <Tooltip title="Mudar para administrador">
-                <div onClick={() => changeTempRole("admin")}>Administrador</div>
+                <div onClick={() => setTempRole("admin")}>Administrador</div>
               </Tooltip>
             ),
           },

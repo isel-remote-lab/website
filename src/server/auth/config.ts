@@ -14,10 +14,9 @@ import createUser from "~/services/user/createUser";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      oauthId: string;
-      role: string;
-      tempRole: string; // TODO - Remove, to be replaced with a context
-    } & DefaultSession["user"];
+      oauthId: string
+      role: string
+    } & DefaultSession["user"]
 
     accessToken: string;
   }
@@ -111,9 +110,7 @@ export const authConfig = {
         s: "student",
       };
 
-      session.user.role = roleMap[user!.role]!;
-
-      session.user.tempRole = "teacher";
+      session.user.role = roleMap[user!.role]!
 
       return session;
     },

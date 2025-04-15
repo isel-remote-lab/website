@@ -1,8 +1,10 @@
+"use client"
+
 import { CalendarOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, Card, Divider, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
-import { auth } from "~/server/auth";
+import { useTempRole } from "~/contexts/TempRoleContext";
 
 const labsWidth = 300;
 
@@ -16,9 +18,8 @@ const cardStyle = {
   border: "none",
 };
 
-export default async function Dashboard() {
-  const session = await auth();
-  const { tempRole } = session!.user;
+export default function Dashboard() {
+  const { tempRole } = useTempRole();
 
   function getLabActions(labId: number) {
     return [

@@ -1,21 +1,21 @@
-import { LogoutOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Dropdown, Flex, Menu, Tooltip, type MenuProps } from "antd";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Dropdown, Menu, type MenuProps } from "antd";
 import Link from "next/link";
 import CustomBreadcrumb from "./CustomBreadcrumb";
 import UserImage from "../UserImage";
-import RoleDropdown from "../dropdowns/RoleDropdown";
 import { auth } from "~/server/auth";
 import Image from "next/image";
 import Search from "antd/es/input/Search";
+import ExtraButtons from "../ExtraButtons";
 
 /**
  * Client menu component
  * @returns The client menu component
  */
 export default async function CustomMenu() {
-  const session = await auth();
+  const session = await auth()
 
-  const { role, tempRole } = session!.user;
+  const { role } = session!.user;
 
   /**
    * Dropdown items for the user menu
@@ -49,10 +49,6 @@ export default async function CustomMenu() {
 
   const menuHeight = 64;
 
-  /**
-   * Menu items for the client menu
-   * @type {MenuProps['items']}
-   */
   const menuItems: MenuProps["items"] = [
     {
       key: "logo",
@@ -65,46 +61,22 @@ export default async function CustomMenu() {
     {
       key: "breadcrumb",
       label: <CustomBreadcrumb />,
-      style: { fontSize: 18, fontWeight: "bold" },
+      style: { fontSize: 18, fontWeight: "bold" }
     },
     {
       key: "search",
-      label: <Search placeholder="Pesquisar..." />,
-      style: {
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-        top: menuHeight / 4,
-        width: "30%",
-      },
+      label: (
+        <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Search placeholder="Pesquisar..." style={{ width: "30rem", maxWidth: "100%" }} />
+        </div>
+      ),
+      style: { position: "absolute", left: "50%", transform: "translateX(-50%)", top: "25%" }
     },
-    // If the user is either an admin or a teacher, show the create lab and the change role options
-    ...(role !== "student"
-      ? [
-          // If the user is watching the page as a teacher, show the create lab option
-          ...(tempRole === "teacher"
-            ? [
-                {
-                  key: "create-lab",
-                  label: (
-                    <Tooltip title="Criar laboratório">
-                      <Link href="/labs/create">
-                        <PlusOutlined style={{ fontSize: "125%" }} />
-                      </Link>
-                    </Tooltip>
-                  ),
-                  style: tempRole === "teacher" ? { marginLeft: "auto" } : {},
-                },
-              ]
-            : []),
-          // If the user is an admin or a teacher, show the change role option
-          {
-            key: "change-role",
-            label: <RoleDropdown role={role} tempRole={tempRole} />,
-            style: tempRole !== "teacher" ? { marginLeft: "auto" } : {},
-          },
-        ]
-      : []),
+    {
+      key: "extra-buttons",
+      label: <ExtraButtons role={role} />,
+      style: { marginLeft: "auto" }
+    },
     {
       key: "options",
       label: (
@@ -112,13 +84,19 @@ export default async function CustomMenu() {
           <Avatar icon={<UserImage />} size={45} />
         </Dropdown>
       ),
-    },
+    }
   ];
 
   return (
     <Menu
       mode="horizontal"
-      style={{ alignItems: "center", height: menuHeight }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        height: menuHeight,
+        width: "100%",
+        position: "relative"
+      }}
       items={menuItems}
     />
   );
