@@ -42,7 +42,7 @@ export const Uris = {
  * @param {Object} params - Object containing parameter values
  * @returns {string} - The URI with parameters replaced
  */
-export const replaceParams = (uri, params) => {
+export const replaceParams = (uri: string, params: object): string => {
   let result = uri;
   Object.entries(params).forEach(([key, value]) => {
     result = result.replace(`{${key}}`, value);
