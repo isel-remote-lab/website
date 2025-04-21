@@ -16,6 +16,7 @@ declare module "next-auth" {
     user: {
       oauthId: string
       role: string
+      token: string
     } & DefaultSession["user"]
 
     accessToken: string;
@@ -96,7 +97,8 @@ export const authConfig = {
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.user.oauthId = token.oauthId as string;
-
+      session.user.token = token.token as string;
+      
       // Gets the user from the database
       // If API mocking is enabled, simulate a successful response
       const user =

@@ -4,17 +4,16 @@ import { PlusOutlined } from "@ant-design/icons"
 import { Flex, Tooltip } from "antd"
 import Link from "next/link"
 import { useTempRole } from "~/contexts/TempRoleContext"
-import RoleDropdown from "./dropdowns/RoleDropdown"
 
-interface ExtraButtonsProps {
+interface CrateLabTopButtonProps {
     role: string
 }
 
-export default function getExtraButtons({ role }: ExtraButtonsProps) {
+export default function CrateLabTopButton({ role }: CrateLabTopButtonProps) {
     const { tempRole, setTempRole } = useTempRole()
 
     return (
-    <Flex gap="small" justify="end">
+    <>
         {/* If the user is watching the page as a teacher, show the create lab option */
         tempRole === "teacher" && (
             <div style={{ position: 'relative', zIndex: 1 }}>
@@ -25,7 +24,6 @@ export default function getExtraButtons({ role }: ExtraButtonsProps) {
                 </Tooltip>
             </div>
         )}
-        <RoleDropdown role={role}/>
-    </Flex>
+    </>
 )
 }

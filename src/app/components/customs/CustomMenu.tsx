@@ -6,7 +6,8 @@ import UserImage from "../UserImage";
 import { auth } from "~/server/auth";
 import Image from "next/image";
 import Search from "antd/es/input/Search";
-import ExtraButtons from "../ExtraButtons";
+import CrateLabTopButton from "../buttons/topButtons/CrateLabTopButton";
+import RoleDropdown from "../dropdowns/RoleDropdown";
 
 /**
  * Client menu component
@@ -73,10 +74,21 @@ export default async function CustomMenu() {
       style: { position: "absolute", left: "50%", transform: "translateX(-50%)", top: "25%" }
     },
     {
+      key: "create-lab",
+      label: <CrateLabTopButton role={role} />,
+      style: { marginLeft: "auto" }
+    },
+    {
+      key: "change-role",
+      label: <RoleDropdown role={role} />,
+    },
+    /*
+    {
       key: "extra-buttons",
       label: <ExtraButtons role={role} />,
       style: { marginLeft: "auto" }
     },
+    */
     {
       key: "options",
       label: (
