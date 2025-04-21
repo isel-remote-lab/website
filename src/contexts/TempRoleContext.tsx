@@ -53,19 +53,7 @@ export default function TempRoleProvider ({ children, role }: TempRoleProviderPr
     return role
   })
 
-  // Update tempRole when session changes
-  useEffect(() => {
-    if (role) {
-      if (!canAssignRole(role, tempRole)) {
-        setTempRoleState(role);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('tempRole', role);
-        }
-      }
-    }
-  }, [role]);
-
-  // Update tempRole when userRole changes
+  // Update tempRole when role changes
   useEffect(() => {
     if (role && !canAssignRole(role, tempRole)) {
       setTempRoleState(role);
@@ -82,8 +70,8 @@ export default function TempRoleProvider ({ children, role }: TempRoleProviderPr
     }
 
     // Check if the user can assign this role based on their real role
-    if (!canAssignRole(role, role)) {
-      router.push(`/error?message=User with role ${role} cannot assign role ${role}`)
+    if (!canAssignRole(role, tempRole)) {
+      router.push(`/error?message=User with role ${role} cannot assign role ${tempRole}`)
     }
 
     setTempRoleState(role);
@@ -94,6 +82,7 @@ export default function TempRoleProvider ({ children, role }: TempRoleProviderPr
 
   // Event listener used to detect manual localStorage changes
   useEffect(() => {
+    // If the code is not running in the browser, return
     if (typeof window === 'undefined') return;
 
     const handleStorageChange = (e: StorageEvent) => {

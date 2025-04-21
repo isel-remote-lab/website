@@ -1,6 +1,6 @@
 import User, { UserResponse } from "~/types/user";
 
-const MOCK_USER_ROLE = "s";
+const MOCK_USER_ROLE = "t";
 
 /**
  * Mock user
