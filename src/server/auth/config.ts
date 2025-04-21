@@ -103,7 +103,7 @@ export const authConfig = {
       // If API mocking is enabled, simulate a successful response
       const user =
         process.env.API_MOCKING === "enabled"
-          ? { role: "a" }
+          ? { role: "t" }
           : await getUserByOAuthId(session.user.id);
 
       const roleMap: Record<string, string> = {

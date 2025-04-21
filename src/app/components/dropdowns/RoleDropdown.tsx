@@ -56,8 +56,12 @@ export default function RoleDropdown({ role }: RoleDropdownProps) {
   ];
 
   return (
-    <Dropdown menu={{ items: items }} trigger={["hover"]}>
-      <UserSwitchOutlined style={{ fontSize: "125%" }} />
-    </Dropdown>
+    <>
+      {role !== "student" && (
+        <Dropdown menu={{ items: items }} trigger={["hover"]}>
+          <UserSwitchOutlined style={{ fontSize: "125%" }} />
+        </Dropdown>
+      )}
+    </>
   );
 }
