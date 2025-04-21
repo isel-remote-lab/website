@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useState, useContext, ReactNode, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { Role } from "~/types/role";
 import { useRouter } from "next/navigation";
 // Define all the valid roles
@@ -19,7 +18,7 @@ const TempRoleContext = createContext<TempRoleContextProps>({
 
 interface TempRoleProviderProps {
   children: ReactNode;
-  initialRole?: Role;
+  role: Role;
 }
 
 // Helper function to check if a role can be assigned based on user's real role
@@ -32,13 +31,11 @@ const canAssignRole = (userRole: Role, targetRole: Role): boolean => {
     case "admin":
       return targetRole === "student" || targetRole === "teacher" || targetRole === "admin";
     default:
-      return false;
+      return targetRole === userRole;
   }
 };
 
-export const TempRoleProvider = ({ children, initialRole = "student" }: TempRoleProviderProps) => {
-  const { data: session } = useSession()
-  const userRole = session!.user!.role! as Role
+export default function TempRoleProvider ({ children, role }: TempRoleProviderProps) {
   const router = useRouter()
 
   const [tempRole, setTempRoleState] = useState<Role>(() => {
@@ -48,26 +45,45 @@ export const TempRoleProvider = ({ children, initialRole = "student" }: TempRole
       // Validate stored role
       if (storedRole && VALID_ROLES.includes(storedRole)) {
         // Check if the stored role is allowed for the user's real role
-        if (canAssignRole(userRole, storedRole)) {
+        if (canAssignRole(role, storedRole)) {
           return storedRole
         }
       }
     }
-    return initialRole
+    return role
   })
+
+  // Update tempRole when session changes
+  useEffect(() => {
+    if (role) {
+      if (!canAssignRole(role, tempRole)) {
+        setTempRoleState(role);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('tempRole', role);
+        }
+      }
+    }
+  }, [role]);
+
+  // Update tempRole when userRole changes
+  useEffect(() => {
+    if (role && !canAssignRole(role, tempRole)) {
+      setTempRoleState(role);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('tempRole', role);
+      }
+    }
+  }, [role, tempRole]);
 
   const setTempRole = (role: Role) => {
     // Validate the new role
     if (!VALID_ROLES.includes(role)) {
-      router.push("/error?message=Invalid role")
-      console.error(`Invalid role: ${role}. Valid roles are: ${VALID_ROLES.join(', ')}`);
-      return;
+      router.push(`/error?message=Invalid role`)
     }
 
     // Check if the user can assign this role based on their real role
-    if (!canAssignRole(userRole, role)) {
-      router.push("/error?message=User with role ${userRole} cannot assign role ${role}")
-      return;
+    if (!canAssignRole(role, role)) {
+      router.push(`/error?message=User with role ${role} cannot assign role ${role}`)
     }
 
     setTempRoleState(role);
@@ -84,7 +100,7 @@ export const TempRoleProvider = ({ children, initialRole = "student" }: TempRole
       if (e.key === 'tempRole' && e.newValue) {
         // Validate the new value
         if (VALID_ROLES.includes(e.newValue as Role) && 
-            canAssignRole(userRole, e.newValue as Role)) {
+            canAssignRole(role, e.newValue as Role)) {
           setTempRoleState(e.newValue as Role);
         } else {
           // If invalid, revert to the current valid role
@@ -95,7 +111,7 @@ export const TempRoleProvider = ({ children, initialRole = "student" }: TempRole
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [tempRole, userRole]);
+  }, [tempRole, role]);
 
   return (
     <TempRoleContext.Provider value={{ tempRole, setTempRole }}> 

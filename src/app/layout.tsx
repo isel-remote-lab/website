@@ -6,9 +6,9 @@ import { Content } from "antd/es/layout/layout";
 import CheckLogin from "./checkLogin";
 import { SessionProvider } from "next-auth/react";
 import Menu from "./components/customs/CustomMenu";
-import { TempRoleProvider } from "~/contexts/TempRoleContext";
+import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
-
+import { Role } from "~/types/role";
 /**
  * Metadata for the Remote Lab application
  * @type {Metadata}
@@ -34,14 +34,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const role = session?.user?.role;
+  const role = session?.user?.role as Role;
 
   return (
     <html>
       <body style={{ backgroundColor: "#f5f5f5" }}>
         <SessionProvider>
           <CheckLogin>
-            <TempRoleProvider initialRole={role}>
+            <TempRoleProvider role={role}>
               <Menu/>
               <Content style={{ padding: 24 }}>
                 {children}

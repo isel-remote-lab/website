@@ -10,9 +10,9 @@ interface CrateLabTopButtonProps {
 }
 
 export default function CrateLabTopButton({ role }: CrateLabTopButtonProps) {
-    const { tempRole, setTempRole } = useTempRole()
+    const { tempRole } = useTempRole()
 
-    return (
+    return ( 
     <>
         {/* If the user is watching the page as a teacher, show the create lab option */
         tempRole === "teacher" && (

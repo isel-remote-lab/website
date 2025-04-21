@@ -4,6 +4,7 @@ import "../../env.js";
 import getUserByOAuthId from "~/services/user/getUserByOAuthId";
 import { type UserRequest } from "~/types/user.js";
 import createUser from "~/services/user/createUser";
+import { mockUser } from "~/mocks/mockUser.js";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -100,11 +101,7 @@ export const authConfig = {
       session.user.token = token.token as string;
       
       // Gets the user from the database
-      // If API mocking is enabled, simulate a successful response
-      const user =
-        process.env.API_MOCKING === "enabled"
-          ? { role: "t" }
-          : await getUserByOAuthId(session.user.id);
+      const user = await getUserByOAuthId(session.user.id);
 
       const roleMap: Record<string, string> = {
         a: "admin",
