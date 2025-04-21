@@ -1,7 +1,9 @@
+import { RoleLetter } from "./role"
+
 export default interface User {
   userId: number
   oauthId: string
-  role: string
+  role: RoleLetter
   username: string
   email: string
   createdAt: Date
@@ -9,7 +11,7 @@ export default interface User {
 
 export interface UserRequest {
   oauthId: string
-  role: string
+  role: RoleLetter
   username: string
   email: string
 }

@@ -2,9 +2,9 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import getUserByOAuthId from "~/services/user/getUserByOAuthId";
-import { type UserRequest } from "~/types/user.js";
+import { type UserRequest, type UserResponse } from "~/types/user.js";
 import createUser from "~/services/user/createUser";
-import { mockUser } from "~/mocks/mockUser.js";
+import { Role, roleLetterToRole } from "~/types/role";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -15,12 +15,10 @@ import { mockUser } from "~/mocks/mockUser.js";
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
-      oauthId: string
-      role: string
-      token: string
+      accessToken: string
+      dbUser: UserResponse
+      role: Role
     } & DefaultSession["user"]
-
-    accessToken: string;
   }
 }
 
@@ -54,38 +52,36 @@ export const authConfig = {
       ) {
         // If API mocking is enabled, simulate a successful sign in
         // If the user exists, return true to allow sign in
-        console.log("User exists in the database");
         return true;
       }
       // If the user does not exist, add them to the database
 
       // Automatically assign the role based on the email address (ISEL only)
-      const role = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
-        ? "s"
-        : "t";
+      const roleLetter = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
+        ? "S"
+        : "T";
 
       const newUser: UserRequest = {
         oauthId: user.id!,
-        role: role,
+        role: roleLetter,
         username: user.name!,
         email: user.email!,
       };
 
-      const response = createUser(newUser);
+      await createUser(newUser);
 
-      if (!response) {
-        console.log("Error creating user");
-      }
-
-      return response;
+      return true;
     },
 
     // Store the access token in the user session
     async jwt({ token, account, user }) {
       if (account) {
-        console.log(token);
-        token.accessToken = account.access_token;
-        token.oauthId = user.id;
+        token.accessToken = account.access_token
+
+        const dbUser = await getUserByOAuthId(user.id!)
+        token.dbUser = dbUser
+
+        token.role = roleLetterToRole(dbUser!.role)
       }
       return token;
     },
@@ -96,20 +92,11 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string;
-      session.user.oauthId = token.oauthId as string;
-      session.user.token = token.token as string;
-      
-      // Gets the user from the database
-      const user = await getUserByOAuthId(session.user.id);
+      const user = session.user;
 
-      const roleMap: Record<string, string> = {
-        a: "admin",
-        t: "teacher",
-        s: "student",
-      };
-
-      session.user.role = roleMap[user!.role]!
+      user.accessToken = token.accessToken as string;
+      user.dbUser = token.dbUser as UserResponse;
+      user.role = token.role as Role
 
       return session;
     },
