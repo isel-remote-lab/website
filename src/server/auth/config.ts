@@ -1,9 +1,7 @@
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import getUserByOAuthId from "~/services/user/getUserByOAuthId";
-import { type UserRequest, type UserResponse } from "~/types/user.js";
-import createUser from "~/services/user/createUser";
+import { userService, type UserRequest, type UserResponse } from "~/services/userService";
 import { Role, roleLetterToRole } from "~/types/role";
 
 /**
@@ -48,7 +46,7 @@ export const authConfig = {
       // Check if the user exists in the database
       if (
         process.env.API_MOCKING === "enabled" ||
-        (await getUserByOAuthId(user.id!))
+        (await userService.getUserByOAuthId(user.id!))
       ) {
         // If API mocking is enabled, simulate a successful sign in
         // If the user exists, return true to allow sign in
@@ -68,7 +66,7 @@ export const authConfig = {
         email: user.email!,
       };
 
-      await createUser(newUser);
+      await userService.createUser(newUser);
 
       return true;
     },
@@ -78,7 +76,7 @@ export const authConfig = {
       if (account) {
         token.accessToken = account.access_token
 
-        const dbUser = await getUserByOAuthId(user.id!)
+        const dbUser = await userService.getUserByOAuthId(user.id!)
         token.dbUser = dbUser
 
         token.role = roleLetterToRole(dbUser!.role)

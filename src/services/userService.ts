@@ -1,36 +1,60 @@
 import { Uris, replaceParams } from '~/services/api';
+import { RoleLetter } from '~/types/role';
 
 /**
  * User data interface
- */
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  oauthId?: string;
-  createdAt: string;
-  updatedAt: string;
+ */ 
+export type User = {
+  userId: number
+  oauthId: string
+  role: RoleLetter
+  username: string
+  email: string
+  createdAt: Date
 }
 
 /**
- * User creation data interface
+ * User request data interface
  */
-export interface UserCreateData {
-  name: string;
-  email: string;
-  oauthId?: string;
+export type UserRequest = {
+  oauthId: string
+  role: RoleLetter
+  username: string
+  email: string
 }
+
+/**
+ * User response data interface
+ */
+export type UserResponse = User
 
 /**
  * User service for handling user-related API calls
  */
 export const userService = {
+
+  /**
+   * Get a user by OAuth ID
+   * @param oauthId - OAuth ID
+   * @returns User data
+   */
+    getUserByOAuthId: async (oauthId: string): Promise<UserResponse> => {
+      const uri = replaceParams(Uris.Users.GET_BY_OAUTHID, { oauthid: oauthId });
+      const response = await fetch(uri);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to get user by OAuth ID: ${response.statusText}`);
+      }
+      
+    return response.json();
+  },
+
   /**
    * Create a new user
    * @param userData - User data to create
    * @returns Created user data
    */
-  createUser: async (userData: UserCreateData): Promise<User> => {
+  createUser: async (userData: UserRequest): Promise<UserResponse> => {
     const response = await fetch(Uris.Users.CREATE, {
       method: 'POST',
       headers: {
@@ -51,7 +75,7 @@ export const userService = {
    * @param userId - User ID
    * @returns User data
    */
-  getUserById: async (userId: string): Promise<User> => {
+  getUserById: async (userId: string): Promise<UserResponse> => {
     const uri = replaceParams(Uris.Users.GET, { id: userId });
     const response = await fetch(uri);
     
@@ -67,7 +91,7 @@ export const userService = {
    * @param email - User email
    * @returns User data
    */
-  getUserByEmail: async (email: string): Promise<User> => {
+  getUserByEmail: async (email: string): Promise<UserResponse> => {
     const uri = `${Uris.Users.GET_BY_EMAIL}?email=${encodeURIComponent(email)}`;
     const response = await fetch(uri);
     
@@ -77,20 +101,4 @@ export const userService = {
     
     return response.json();
   },
-  
-  /**
-   * Get a user by OAuth ID
-   * @param oauthId - OAuth ID
-   * @returns User data
-   */
-  getUserByOAuthId: async (oauthId: string): Promise<User> => {
-    const uri = replaceParams(Uris.Users.GET_BY_OAUTHID, { oauthid: oauthId });
-    const response = await fetch(uri);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to get user by OAuth ID: ${response.statusText}`);
-    }
-    
-    return response.json();
-  }
 }; 
