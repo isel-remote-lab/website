@@ -42,20 +42,11 @@ jobs:
       - name: Setup environment variables
         run: cp .env.example .env
 
-      - name: Run checks
-        run: pnpm check
-        continue-on-error: true
-
-      - name: Fix linting issues
-        if: failure()
-        run: pnpm lint:fix
-        continue-on-error: true
-
-      - name: Check formatting
-        run: pnpm format:check
-        continue-on-error: true
-
-      - name: Fix formatting issues
-        if: failure()
+      - name: Fix formatting
         run: pnpm format:write
-        continue-on-error: true
+
+      - name: Fix linting
+        run: pnpm lint:fix
+
+      - name: Run final checks
+        run: pnpm check
