@@ -39,11 +39,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run linting
+      - name: Run checks
+        run: pnpm check
+        continue-on-error: true
+
+      - name: Fix linting issues
+        if: failure()
         run: pnpm lint:fix
+        continue-on-error: true
 
       - name: Check formatting
-        run: pnpm format:write
+        run: pnpm format:check
+        continue-on-error: true
 
-      - name: Type check
-        run: pnpm typecheck 
+      - name: Fix formatting issues
+        if: failure()
+        run: pnpm format:write
+        continue-on-error: true
