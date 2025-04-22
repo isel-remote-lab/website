@@ -44,6 +44,16 @@ jobs:
       - name: Setup environment variables
         run: cp .env.example .env
 
+      - name: Check for outdated dependencies
+        run: pnpm outdated
+        continue-on-error: true
+
+      - name: Update dependencies
+        run: |
+          pnpm update --latest
+          pnpm install
+        continue-on-error: true
+
       - name: Fix formatting
         run: pnpm format:write
         continue-on-error: true
@@ -52,11 +62,19 @@ jobs:
         run: pnpm lint:fix
         continue-on-error: true
 
-      - name: Run final checks
+      - name: Run checks
         run: pnpm check
 
+      - name: Commit fixes
+        if: failure()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git diff --staged --quiet || (git commit -m "style: fix linting and formatting issues" && git push)
+
   build:
-    name: Build
+    name: Production Build
     needs: checks
     runs-on: ubuntu-latest
 
