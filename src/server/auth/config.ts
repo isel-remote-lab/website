@@ -3,7 +3,6 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { userService, type UserLoginRequest } from "~/services/userService";
 
-
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -20,7 +19,7 @@ declare module "next-auth" {
     } & DefaultSession["user"]
   }
 }
-*/
+
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -56,6 +55,7 @@ export const authConfig = {
 
       await userService.signIn(userRequest);
       return true;
+
       /*
       // Check if the user exists in the database
       if (
@@ -83,8 +83,10 @@ export const authConfig = {
       await userService.createUser(newUser);
 
       return true;
+      */
     },
 
+    /*
     // Store the access token in the user session
     async jwt({ token, account, user }) {
       if (account) {
