@@ -41,6 +41,25 @@ export type UserResponse = User
 export const userService = {
 
   /**
+   * Sign in a user
+   * @param userData - User data
+   * @returns User data
+   */
+  signIn: async (userData: UserLoginRequest) => {
+    const uri = Uris.LOGIN;
+    const response = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to sign in: ${response.statusText}`);
+    }
+  },
+  /**
    * Get a user by OAuth ID
    * @param oauthId - OAuth ID
    * @returns User data

@@ -7,12 +7,21 @@
 
 // Base API prefix
 const API_PREFIX = "/api/v1";
+const LOGIN_URI = `${API_PREFIX}/login`;
 const USERS_URI = `${API_PREFIX}/users`;
 
 /**
  * API URIs for user-related operations
  */
 export const Uris = {
+  /**
+   * URI for the login endpoint
+   */
+  LOGIN: LOGIN_URI,
+
+  /**
+   * URI for user-related operations
+   */
   Users: {
     /**
      * URI for creating a user
