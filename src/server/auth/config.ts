@@ -1,8 +1,8 @@
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import { type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { userService, type UserRequest, type UserResponse } from "~/services/userService";
-import { Role, roleLetterToRole } from "~/types/role";
+import { userService, type UserLoginRequest } from "~/services/userService";
+
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -10,6 +10,7 @@ import { Role, roleLetterToRole } from "~/types/role";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
+/*
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
@@ -19,6 +20,7 @@ declare module "next-auth" {
     } & DefaultSession["user"]
   }
 }
+*/
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -43,6 +45,18 @@ export const authConfig = {
   ],
   callbacks: {
     async signIn({ user }) {
+      // If API mocking is enabled, simulate a successful sign in
+      if (process.env.API_MOCKING === "enabled") {
+        return true;
+      }
+
+      const userRequest: UserLoginRequest = {
+        oauthId: user.id!,
+      }
+
+      await userService.signIn(userRequest);
+      return true;
+      /*
       // Check if the user exists in the database
       if (
         process.env.API_MOCKING === "enabled" ||
@@ -83,12 +97,14 @@ export const authConfig = {
       }
       return token;
     },
+    */
 
     /**
      * Add custom properties to the session object. This is where you can add the user ID and
      * other properties to the session object. The `session` object is what is returned to the
      * client-side.
      */
+    /*
     async session({ session, token }) {
       const user = session.user;
 
@@ -98,5 +114,6 @@ export const authConfig = {
 
       return session;
     },
+    */
   },
 } satisfies NextAuthConfig;

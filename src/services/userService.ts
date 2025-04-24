@@ -14,6 +14,13 @@ export type User = {
 }
 
 /**
+ * User login request data interface
+ */
+export type UserLoginRequest = {
+  oauthId: string
+}
+
+/**
  * User request data interface
  */
 export type UserRequest = {
