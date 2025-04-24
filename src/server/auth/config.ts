@@ -4,24 +4,6 @@ import "../../env.js";
 import { userService, type UserLoginRequest } from "~/services/userService";
 
 /**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
-/*
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      accessToken: string
-      dbUser: UserResponse
-      role: Role
-    } & DefaultSession["user"]
-  }
-}
-
-
-/**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
  * @see https://next-auth.js.org/configuration/options
@@ -53,69 +35,12 @@ export const authConfig = {
         oauthId: user.id!,
       }
 
-      await userService.signIn(userRequest);
-      return true;
-
-      /*
-      // Check if the user exists in the database
-      if (
-        process.env.API_MOCKING === "enabled" ||
-        (await userService.getUserByOAuthId(user.id!))
-      ) {
-        // If API mocking is enabled, simulate a successful sign in
-        // If the user exists, return true to allow sign in
+      // Sign in the user
+      userService.signIn(userRequest).then(() => {
         return true;
-      }
-      // If the user does not exist, add them to the database
+      })
 
-      // Automatically assign the role based on the email address (ISEL only)
-      const roleLetter = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
-        ? "S"
-        : "T";
-
-      const newUser: UserRequest = {
-        oauthId: user.id!,
-        role: roleLetter,
-        username: user.name!,
-        email: user.email!,
-      };
-
-      await userService.createUser(newUser);
-
-      return true;
-      */
+      return false;
     },
-
-    /*
-    // Store the access token in the user session
-    async jwt({ token, account, user }) {
-      if (account) {
-        token.accessToken = account.access_token
-
-        const dbUser = await userService.getUserByOAuthId(user.id!)
-        token.dbUser = dbUser
-
-        token.role = roleLetterToRole(dbUser!.role)
-      }
-      return token;
-    },
-    */
-
-    /**
-     * Add custom properties to the session object. This is where you can add the user ID and
-     * other properties to the session object. The `session` object is what is returned to the
-     * client-side.
-     */
-    /*
-    async session({ session, token }) {
-      const user = session.user;
-
-      user.accessToken = token.accessToken as string;
-      user.dbUser = token.dbUser as UserResponse;
-      user.role = token.role as Role
-
-      return session;
-    },
-    */
   },
 } satisfies NextAuthConfig;
