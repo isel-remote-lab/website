@@ -1,7 +1,7 @@
 import { type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { userService, type UserLoginRequest } from "~/services/userService";
+import { userService, type UserRequest } from "~/services/userService";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -25,14 +25,17 @@ export const authConfig = {
      */
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       // If API mocking is enabled, simulate a successful sign in
       if (process.env.API_MOCKING === "enabled") {
         return true;
       }
 
-      const userRequest: UserLoginRequest = {
+      const userRequest: UserRequest = {
         oauthId: user.id!,
+        username: user.name!,
+        email: user.email!,
+        accessToken: account!.access_token!,
       }
 
       // Sign in the user

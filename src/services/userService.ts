@@ -16,18 +16,11 @@ export type User = {
 /**
  * User login request data interface
  */
-export type UserLoginRequest = {
-  oauthId: string
-}
-
-/**
- * User request data interface
- */
 export type UserRequest = {
-  oauthId: string
-  role: RoleLetter
-  username: string
-  email: string
+  oauthId: string,
+  username: string,
+  email: string,
+  accessToken: string,
 }
 
 /**
@@ -45,7 +38,7 @@ export const userService = {
    * @param userData - User data
    * @returns User data
    */
-  signIn: async (userData: UserLoginRequest) => {
+  signIn: async (userData: UserRequest) => {
     const uri = Uris.LOGIN;
     const response = await fetch(uri, {
       method: 'POST',
@@ -58,42 +51,6 @@ export const userService = {
     if (!response.ok) {
       throw new Error(`Failed to sign in: ${response.statusText}`);
     }
-  },
-  /**
-   * Get a user by OAuth ID
-   * @param oauthId - OAuth ID
-   * @returns User data
-   */
-    getUserByOAuthId: async (oauthId: string): Promise<UserResponse> => {
-      const uri = replaceParams(Uris.Users.GET_BY_OAUTHID, { oauthid: oauthId });
-      const response = await fetch(uri);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to get user by OAuth ID: ${response.statusText}`);
-      }
-      
-    return response.json();
-  },
-
-  /**
-   * Create a new user
-   * @param userData - User data to create
-   * @returns Created user data
-   */
-  createUser: async (userData: UserRequest): Promise<UserResponse> => {
-    const response = await fetch(Uris.Users.CREATE, {
-      method: 'POST',
-      headers: {
-        'X-API-Key': process.env.API_KEY!,
-      },
-      body: JSON.stringify(userData),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to create user: ${response.statusText}`);
-    }
-    
-    return response.json();
   },
   
   /**
