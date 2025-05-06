@@ -2,7 +2,6 @@ import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { UserResponse, userService, type UserRequest } from "~/services/userService";
-import { Role, RoleLetter, roleLetterToRole } from "~/types/role.js";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -11,8 +10,6 @@ import { Role, RoleLetter, roleLetterToRole } from "~/types/role.js";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface User extends UserResponse {}
-
   interface Session extends DefaultSession {
     user: {
       accessToken: string
@@ -96,6 +93,15 @@ export const authConfig = {
       user.createdAt = dbUser.createdAt
 
       return session
+    },
+  },
+  events: {
+    /**
+     * Sign out the user
+     */
+    async signOut() {
+      // Sign out the user on the backend
+      await userService.signOut()
     },
   },
 } satisfies NextAuthConfig

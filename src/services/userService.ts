@@ -44,7 +44,6 @@ export const userService = {
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
       body: JSON.stringify(userData),
     });
     
@@ -89,5 +88,20 @@ export const userService = {
     }
     
     return response.json();
+  },
+
+  /**
+   * Sign out the current user
+   */
+  signOut: async () => {
+    const uri = Uris.LOGOUT;
+    const response = await fetch(uri, {
+      method: 'POST',
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to sign out: ${response.statusText}`);
+    }
   },
 }; 
