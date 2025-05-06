@@ -38,20 +38,27 @@ export const userService = {
    * @returns User data
    */
   signIn: async (userData: UserRequest): Promise<UserResponse> => {
+    console.log('Signing in user:', JSON.stringify(userData));
     const uri = Uris.LOGIN;
     const response = await fetch(uri, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-API-Key': process.env.API_KEY || '',
       },
       body: JSON.stringify(userData),
     });
+
+    const responseText = await response.text();
+    console.log('Response status:', response.status);
+    console.log('Response status text:', response.statusText);
+    console.log('Response body:', responseText);
     
     if (!response.ok) {
-      throw new Error(`Failed to sign in: ${response.statusText}`);
+      throw new Error(`Failed to sign in: ${response.statusText}. Response: ${responseText}`);
     }
 
-    return response.json();
+    return JSON.parse(responseText);
   },
   
   /**

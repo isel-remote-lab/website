@@ -45,22 +45,27 @@ export const authConfig = {
   callbacks: {
     async signIn({ user }) {
       // If API mocking is enabled, simulate a successful sign in
-      if (process.env.API_MOCKING === "enabled") {
+      if (process.env.API_MOCKING === "1") {
         return true
       }
 
-      const userRequest: UserRequest = {
-        oauthId: user.id!,
-        username: user.name!,
-        email: user.email!,
-      }
+      try {
+        const userRequest: UserRequest = {
+          oauthId: user.id!,
+          username: user.name!,
+          email: user.email!,
+        }
 
-      // Sign in the user
-      const dbUser = await userService.signIn(userRequest)
-      if (dbUser) {
-        // Store the user data in the user object to be used in jwt callback
-        user.dbUser = dbUser
-        return true
+        // Sign in the user
+        const dbUser = await userService.signIn(userRequest)
+        if (dbUser) {
+          // Store the user data in the user object to be used in jwt callback
+          user.dbUser = dbUser
+          return true
+        }
+      } catch (error) {
+        console.error('Error during sign in:', error)
+        return false
       }
 
       return false
@@ -70,11 +75,11 @@ export const authConfig = {
     async jwt({ token, account, user }) {
       if (account) {
         token.accessToken = account.access_token
+      }
 
-        // Use the user data that was stored in the user object
-        if (user?.dbUser) {
-          token.user = user.dbUser
-        }
+      // If we have user data from signIn, store it in the token
+      if (user?.dbUser) {
+        token.user = user.dbUser
       }
 
       return token
@@ -93,12 +98,14 @@ export const authConfig = {
       sessionUser.accessToken = token.accessToken as string
 
       // Add the user data to the session
-      sessionUser.userId = dbUser.userId
-      sessionUser.oauthId = dbUser.oauthId
-      sessionUser.role = dbUser.role
-      sessionUser.username = dbUser.username
-      sessionUser.email = dbUser.email
-      sessionUser.createdAt = dbUser.createdAt
+      if (dbUser) {
+        sessionUser.userId = dbUser.userId
+        sessionUser.oauthId = dbUser.oauthId
+        sessionUser.role = dbUser.role
+        sessionUser.username = dbUser.username
+        sessionUser.email = dbUser.email
+        sessionUser.createdAt = dbUser.createdAt
+      }
 
       return session
     },
@@ -108,8 +115,12 @@ export const authConfig = {
      * Sign out the user
      */
     async signOut() {
-      // Sign out the user on the backend
-      await userService.signOut()
+      try {
+        // Sign out the user on the backend
+        await userService.signOut()
+      } catch (error) {
+        console.error('Error during sign out:', error)
+      }
     },
   },
 } satisfies NextAuthConfig

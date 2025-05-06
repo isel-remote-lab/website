@@ -6,9 +6,13 @@
  */
 
 // Base API prefix
-const API_PREFIX = "/api/v1";
-const LOGIN_URI = `${API_PREFIX}/login`;
-const LOGOUT_URI = `${API_PREFIX}/logout`;
+const PROTOCOL = "http";
+const HOST = "api";
+const PORT = "8080";
+const API_PREFIX = `${PROTOCOL}://${HOST}:${PORT}/api/v1`;
+const AUTH_URI = `${API_PREFIX}/auth`;
+const LOGIN_URI = `${AUTH_URI}/login`;
+const LOGOUT_URI = `${AUTH_URI}/logout`;
 const USERS_URI = `${API_PREFIX}/users`;
 
 /**

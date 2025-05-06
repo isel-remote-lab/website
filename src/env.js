@@ -5,8 +5,12 @@ import path from "path";
 
 // Load the environment variables from the .env.local file
 // This is necessary for the Next.js app to work with the environment variables
-const internalDir = path.resolve(process.cwd(), "../internal/frontend");
+const internalDir = path.resolve(process.cwd(), "../private/frontend");
+const sharedSecretsDir = path.resolve(process.cwd(), "../private/shared/secrets");
+
+// Load both environment files
 dotenv.config({ path: internalDir + "/.env.local" });
+dotenv.config({ path: sharedSecretsDir + "/.env" });
 
 export const env = createEnv({
   /**
@@ -21,10 +25,11 @@ export const env = createEnv({
     AUTH_MICROSOFT_ENTRA_ID_ID: z.string(),
     AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string(),
     X_API_KEY: z.string().optional(),
-    API_MOCKING: z.enum(["enabled", "disabled"]).default("disabled"),
+    API_MOCKING: z.enum(["0", "1"]).default("0"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    API_KEY: z.string(),
   },
 
   /**
@@ -47,7 +52,7 @@ export const env = createEnv({
     X_API_KEY: process.env.X_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
     API_MOCKING: process.env.API_MOCKING,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    API_KEY: process.env.API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
