@@ -1,7 +1,25 @@
-import { type NextAuthConfig } from "next-auth";
+import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { userService, type UserRequest } from "~/services/userService";
+import { UserResponse, userService, type UserRequest } from "~/services/userService";
+import { Role, RoleLetter, roleLetterToRole } from "~/types/role.js";
+
+/**
+ * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
+ * object and keep type safety.
+ *
+ * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
+ */
+declare module "next-auth" {
+  interface User extends UserResponse {}
+
+  interface Session extends DefaultSession {
+    user: {
+      accessToken: string
+    } & UserResponse & DefaultSession["user"]
+  }
+}
+
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -25,25 +43,59 @@ export const authConfig = {
      */
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user }) {
       // If API mocking is enabled, simulate a successful sign in
       if (process.env.API_MOCKING === "enabled") {
-        return true;
+        return true
       }
 
       const userRequest: UserRequest = {
         oauthId: user.id!,
         username: user.name!,
         email: user.email!,
-        accessToken: account!.access_token!,
       }
 
       // Sign in the user
-      userService.signIn(userRequest).then(() => {
-        return true;
+      await userService.signIn(userRequest).then((dbUser) => {
+        user = dbUser
+        return true
       })
 
-      return false;
+      return false
+    },
+  
+    // Store the access token in the user session
+    async jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token
+
+        // Use the user data that was stored in the user object
+        if (user) {
+          token.user = user
+        }
+      }
+
+      return token
+    },
+
+    /**
+     * Add custom properties to the session object. This is where you can add the user ID and
+     * other properties to the session object. The `session` object is what is returned to the
+     * client-side.
+     */
+    async session({ session, token }) {
+      const user = session.user
+      const dbUser = token.user as UserResponse
+
+      user.accessToken = token.accessToken as string
+      user.userId = dbUser.userId
+      user.oauthId = dbUser.oauthId
+      user.role = dbUser.role
+      user.username = dbUser.username
+      user.email = dbUser.email
+      user.createdAt = dbUser.createdAt
+
+      return session
     },
   },
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig
