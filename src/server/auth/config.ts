@@ -10,13 +10,16 @@ import { UserResponse, userService, type UserRequest } from "~/services/userServ
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
+  interface User {
+    dbUser?: UserResponse
+  }
+
   interface Session extends DefaultSession {
     user: {
       accessToken: string
     } & UserResponse & DefaultSession["user"]
   }
 }
-
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -53,10 +56,12 @@ export const authConfig = {
       }
 
       // Sign in the user
-      await userService.signIn(userRequest).then((dbUser) => {
-        user = dbUser
+      const dbUser = await userService.signIn(userRequest)
+      if (dbUser) {
+        // Store the user data in the user object to be used in jwt callback
+        user.dbUser = dbUser
         return true
-      })
+      }
 
       return false
     },
@@ -67,8 +72,8 @@ export const authConfig = {
         token.accessToken = account.access_token
 
         // Use the user data that was stored in the user object
-        if (user) {
-          token.user = user
+        if (user?.dbUser) {
+          token.user = user.dbUser
         }
       }
 
@@ -81,16 +86,19 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      const user = session.user
+      const sessionUser = session.user
       const dbUser = token.user as UserResponse
 
-      user.accessToken = token.accessToken as string
-      user.userId = dbUser.userId
-      user.oauthId = dbUser.oauthId
-      user.role = dbUser.role
-      user.username = dbUser.username
-      user.email = dbUser.email
-      user.createdAt = dbUser.createdAt
+      // Add the access token to the session
+      sessionUser.accessToken = token.accessToken as string
+
+      // Add the user data to the session
+      sessionUser.userId = dbUser.userId
+      sessionUser.oauthId = dbUser.oauthId
+      sessionUser.role = dbUser.role
+      sessionUser.username = dbUser.username
+      sessionUser.email = dbUser.email
+      sessionUser.createdAt = dbUser.createdAt
 
       return session
     },
