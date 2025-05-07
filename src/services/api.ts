@@ -6,13 +6,32 @@
  */
 
 // Base API prefix
-const API_PREFIX = "/api/v1";
+const PROTOCOL = "http";
+const HOST = "api";
+const PORT = "8080";
+const API_PREFIX = `${PROTOCOL}://${HOST}:${PORT}/api/v1`;
+const AUTH_URI = `${API_PREFIX}/auth`;
+const LOGIN_URI = `${AUTH_URI}/login`;
+const LOGOUT_URI = `${AUTH_URI}/logout`;
 const USERS_URI = `${API_PREFIX}/users`;
 
 /**
  * API URIs for user-related operations
  */
 export const Uris = {
+  /**
+   * URI for the login endpoint
+   */
+  LOGIN: LOGIN_URI,
+
+  /**
+   * URI for the logout endpoint
+   */
+  LOGOUT: LOGOUT_URI,
+
+  /**
+   * URI for user-related operations
+   */
   Users: {
     /**
      * URI for creating a user
@@ -49,6 +68,40 @@ export const replaceParams = (uri: string, params: object): string => {
   });
   return result;
 };
+
+/**
+ * Fetch API with API key
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch request
+ * @returns The response from the fetch request
+ */
+export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+  const response = await fetch(uri, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'X-API-Key': process.env.API_KEY || ''
+    }
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+  }
+  return response;
+}
+
+/**
+ * Fetch API with cookie
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch request
+ * @returns The response from the fetch request
+ */
+export const fetchWithCookie = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+  const response = await fetch(uri, {
+    ...options,
+    credentials: 'include'
+  });
+  return response;
+}
 
 // Example usage:
 // const userUri = replaceParams(UserUris.GET, { id: '123' });

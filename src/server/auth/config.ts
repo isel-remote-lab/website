@@ -1,8 +1,7 @@
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { userService, type UserRequest, type UserResponse } from "~/services/userService";
-import { Role, roleLetterToRole } from "~/types/role";
+import { UserResponse, userService, type UserRequest } from "~/services/userService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -11,12 +10,14 @@ import { Role, roleLetterToRole } from "~/types/role";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
+  interface User {
+    dbUser?: UserResponse
+  }
+
   interface Session extends DefaultSession {
     user: {
       accessToken: string
-      dbUser: UserResponse
-      role: Role
-    } & DefaultSession["user"]
+    } & UserResponse & DefaultSession["user"]
   }
 }
 
@@ -43,45 +44,44 @@ export const authConfig = {
   ],
   callbacks: {
     async signIn({ user }) {
-      // Check if the user exists in the database
-      if (
-        process.env.API_MOCKING === "enabled" ||
-        (await userService.getUserByOAuthId(user.id!))
-      ) {
-        // If API mocking is enabled, simulate a successful sign in
-        // If the user exists, return true to allow sign in
-        return true;
+      // If API mocking is enabled, simulate a successful sign in
+      if (process.env.API_MOCKING === "1") {
+        return true
       }
-      // If the user does not exist, add them to the database
 
-      // Automatically assign the role based on the email address (ISEL only)
-      const roleLetter = /^a\d{5}@alunos\.isel\.pt$/.test(user.email!)
-        ? "S"
-        : "T";
+      try {
+        const userRequest: UserRequest = {
+          username: user.name!,
+          email: user.email!,
+        }
 
-      const newUser: UserRequest = {
-        oauthId: user.id!,
-        role: roleLetter,
-        username: user.name!,
-        email: user.email!,
-      };
+        // Sign in the user
+        const dbUser = await userService.signIn(userRequest)
+        if (dbUser) {
+          // Store the user data in the user object to be used in jwt callback
+          user.dbUser = dbUser
+          return true
+        }
+      } catch (error) {
+        console.error('Error during sign in:', error)
+        return false
+      }
 
-      await userService.createUser(newUser);
-
-      return true;
+      return false
     },
-
+  
     // Store the access token in the user session
     async jwt({ token, account, user }) {
       if (account) {
         token.accessToken = account.access_token
-
-        const dbUser = await userService.getUserByOAuthId(user.id!)
-        token.dbUser = dbUser
-
-        token.role = roleLetterToRole(dbUser!.role)
       }
-      return token;
+
+      // If we have user data from signIn, store it in the token
+      if (user?.dbUser) {
+        token.user = user.dbUser
+      }
+
+      return token
     },
 
     /**
@@ -90,13 +90,35 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      const user = session.user;
+      const sessionUser = session.user
+      const dbUser = token.user as UserResponse
 
-      user.accessToken = token.accessToken as string;
-      user.dbUser = token.dbUser as UserResponse;
-      user.role = token.role as Role
+      // Add the access token to the session
+      sessionUser.accessToken = token.accessToken as string
 
-      return session;
+      // Add the user data to the session
+      if (dbUser) {
+        sessionUser.userId = dbUser.userId
+        sessionUser.username = dbUser.username
+        sessionUser.email = dbUser.email
+        sessionUser.role = dbUser.role
+        sessionUser.createdAt = dbUser.createdAt
+      }
+
+      return session
     },
   },
-} satisfies NextAuthConfig;
+  events: {
+    /**
+     * Sign out the user
+     */
+    async signOut() {
+      try {
+        // Sign out the user on the backend
+        await userService.signOut()
+      } catch (error) {
+        console.error('Error during sign out:', error)
+      }
+    },
+  },
+} satisfies NextAuthConfig

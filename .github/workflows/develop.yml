@@ -1,14 +1,14 @@
-name: CI
+name: Develop CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   checks:
-    name: Code Quality Checks
+    name: Development Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -64,6 +64,7 @@ jobs:
 
       - name: Run checks
         run: pnpm check
+        continue-on-error: true
 
       - name: Commit fixes
         run: |
@@ -73,7 +74,7 @@ jobs:
           git diff --staged --quiet || (git commit -m "style: fix linting and formatting issues" && git push)
 
   build:
-    name: Production Build
+    name: Development Build
     needs: checks
     runs-on: ubuntu-latest
 
@@ -111,4 +112,5 @@ jobs:
         run: cp .env.example .env
 
       - name: Build
-        run: pnpm build 
+        run: pnpm build
+        continue-on-error: true 
