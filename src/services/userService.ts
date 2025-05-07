@@ -6,7 +6,7 @@ import { RoleLetter } from '~/types/role';
  */ 
 export type User = {
   userId: number
-  username: string
+  name: string
   email: string
   role: RoleLetter
   createdAt: Date
@@ -16,7 +16,7 @@ export type User = {
  * User login request data interface
  */
 export type UserRequest = {
-  username: string,
+  name: string,
   email: string,
 }
 
@@ -53,7 +53,7 @@ export const userService = {
 
     const responseData = JSON.parse(responseText);
     console.log('Response data:', responseData);
-    return responseData;
+    return responseData.data.user;
   },
 
 
@@ -71,7 +71,7 @@ export const userService = {
   
   /**
    * Get a user by ID
-   * @param userId - User ID
+   * @param userId - User ID+
    * @returns User data
    */
   getUserById: async (userId: string): Promise<UserResponse> => {
