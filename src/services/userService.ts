@@ -1,5 +1,5 @@
 import { Uris, fetchWithApiKey, fetchWithCookie, replaceParams } from '~/services/api';
-import { RoleLetter } from '~/types/role';
+import { Role } from '~/types/role';
 
 /**
  * User data interface
@@ -8,8 +8,8 @@ export type User = {
   userId: number
   name: string
   email: string
-  role: RoleLetter
-  createdAt: Date
+  role: Role
+  createdAt: string
 }
 
 /**

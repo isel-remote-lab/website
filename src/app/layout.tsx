@@ -9,6 +9,7 @@ import Menu from "./components/customs/CustomMenu";
 import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
 import { Role } from "~/types/role";
+
 /**
  * Metadata for the Remote Lab application
  * @type {Metadata}

@@ -1,31 +1,26 @@
 import { auth } from "~/server/auth";
-import getUserImage from "../microsoft/getUserImage";
-
-export interface AccountInfoProps {
+import { getUserOwnImage } from "../microsoft/microsoftApiService";
+import { Role } from "~/types/role";
+interface AccountInfoProps {
   name: string;
   email: string;
-  role: string;
+  role: Role;
   image: string;
-  joinedAt: string;
+  createdAt: string;
 }
 
 export default async function getAccountInfo(): Promise<AccountInfoProps> {
   const session = await auth();
   const user = session!.user;
-  const userImage = await getUserImage();
+  const userImage = await getUserOwnImage();
 
   const userInfo = {
     name: user.name!,
     email: user.email!,
     role: user.role,
-    image: userImage ?? user.image!,
+    image: userImage!,
+    createdAt: user.createdAt,
   };
 
-  // TODO: get the joinedAt date from the database
-  const joinedAt = new Date("2025-07-04T20:42:00Z").toString();
-
-  return {
-    ...userInfo,
-    joinedAt,
-  };
+  return userInfo;
 }

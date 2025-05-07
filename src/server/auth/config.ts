@@ -2,6 +2,9 @@ import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { UserResponse, userService, type UserRequest } from "~/services/userService";
+import path from "path";
+import fs from "fs";
+import { RoleLetter, roleLetterToRole } from "~/types/role";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -99,8 +102,9 @@ export const authConfig = {
       // Add the user data to the session
       if (dbUser) {
         sessionUser.userId = dbUser.userId
-        sessionUser.role = dbUser.role
-        sessionUser.createdAt = dbUser.createdAt
+        // sessionUser.role = dbUser.role
+        sessionUser.role = roleLetterToRole(RoleLetter.ADMIN)
+        sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString()
       }
 
       return session

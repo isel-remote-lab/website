@@ -1,12 +1,20 @@
 /**
  * The role of the user.
  */
-export type Role = "student" | "teacher" | "admin";
+export enum Role {
+  STUDENT = "student",
+  TEACHER = "teacher",
+  ADMIN = "admin",
+}
 
 /**
- * The letter of the role.
+ * The enum of the role letter.
  */
-export type RoleLetter = "S" | "T" | "A";
+export enum RoleLetter {
+  STUDENT = "S",
+  TEACHER = "T",
+  ADMIN = "A",
+}
 
 /**
  * Convert a role letter to a role.
@@ -15,11 +23,11 @@ export type RoleLetter = "S" | "T" | "A";
  */
 export function roleLetterToRole(roleLetter: RoleLetter): Role {
   switch (roleLetter) {
-    case "S":
-      return "student";
-    case "T":
-      return "teacher";
-    case "A":
-      return "admin";
+    case RoleLetter.STUDENT:
+      return Role.STUDENT;
+    case RoleLetter.TEACHER:
+      return Role.TEACHER;
+    case RoleLetter.ADMIN:
+      return Role.ADMIN;
   }
 }
