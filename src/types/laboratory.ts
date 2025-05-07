@@ -1,7 +1,13 @@
+/**
+ * Laboratory interface
+ */ 
 export default interface Laboratory extends LaboratoryResponse {
   id: number
 }
 
+/**
+ * Laboratory request data interface
+ */
 export interface LaboratoryRequest {
   labName: string | null
   labDescription: string | null
@@ -9,6 +15,9 @@ export interface LaboratoryRequest {
   labDuration: number | null
 }
 
+/**
+ * Laboratory response data interface
+ */
 export interface LaboratoryResponse {
   labName: string
   labDescription: string | null

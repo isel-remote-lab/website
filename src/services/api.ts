@@ -52,6 +52,16 @@ export const Uris = {
      * URI for getting a user by OAuth ID
      */
     GET_BY_OAUTHID: `${USERS_URI}/{oauthid}`
+  },
+
+  /**
+   * URI for laboratory-related operations
+   */
+  Laboratories: {
+    /**
+     * URI for getting all laboratories
+     */
+    GET_ALL: `${API_PREFIX}/laboratories`
   }
 };
 
