@@ -69,6 +69,40 @@ export const replaceParams = (uri: string, params: object): string => {
   return result;
 };
 
+/**
+ * Fetch API with API key
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch request
+ * @returns The response from the fetch request
+ */
+export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+  const response = await fetch(uri, {
+    ...options,
+    headers: {
+      ...options.headers,
+      'X-API-Key': process.env.API_KEY || ''
+    }
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+  }
+  return response;
+}
+
+/**
+ * Fetch API with cookie
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch request
+ * @returns The response from the fetch request
+ */
+export const fetchWithCookie = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+  const response = await fetch(uri, {
+    ...options,
+    credentials: 'include'
+  });
+  return response;
+}
+
 // Example usage:
 // const userUri = replaceParams(UserUris.GET, { id: '123' });
 // Result: /api/v1/users/123 

@@ -51,7 +51,6 @@ export const authConfig = {
 
       try {
         const userRequest: UserRequest = {
-          oauthId: user.id!,
           username: user.name!,
           email: user.email!,
         }
@@ -100,10 +99,9 @@ export const authConfig = {
       // Add the user data to the session
       if (dbUser) {
         sessionUser.userId = dbUser.userId
-        sessionUser.oauthId = dbUser.oauthId
-        sessionUser.role = dbUser.role
         sessionUser.username = dbUser.username
         sessionUser.email = dbUser.email
+        sessionUser.role = dbUser.role
         sessionUser.createdAt = dbUser.createdAt
       }
 

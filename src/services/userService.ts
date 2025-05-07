@@ -1,4 +1,4 @@
-import { Uris, replaceParams } from '~/services/api';
+import { Uris, fetchWithApiKey, fetchWithCookie, replaceParams } from '~/services/api';
 import { RoleLetter } from '~/types/role';
 
 /**
@@ -6,10 +6,9 @@ import { RoleLetter } from '~/types/role';
  */ 
 export type User = {
   userId: number
-  oauthId: string
-  role: RoleLetter
   username: string
   email: string
+  role: RoleLetter
   createdAt: Date
 }
 
@@ -17,7 +16,6 @@ export type User = {
  * User login request data interface
  */
 export type UserRequest = {
-  oauthId: string,
   username: string,
   email: string,
 }
@@ -38,27 +36,37 @@ export const userService = {
    * @returns User data
    */
   signIn: async (userData: UserRequest): Promise<UserResponse> => {
-    console.log('Signing in user:', JSON.stringify(userData));
     const uri = Uris.LOGIN;
-    const response = await fetch(uri, {
+    const response = await fetchWithApiKey(uri, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': process.env.API_KEY || '',
       },
       body: JSON.stringify(userData),
     });
 
     const responseText = await response.text();
-    console.log('Response status:', response.status);
-    console.log('Response status text:', response.statusText);
-    console.log('Response body:', responseText);
-    
+
     if (!response.ok) {
-      throw new Error(`Failed to sign in: ${response.statusText}. Response: ${responseText}`);
+      throw new Error(`Failed to sign in: ${response.status} ${response.statusText}. \nResponse: ${responseText}`);
     }
 
-    return JSON.parse(responseText);
+    const responseData = JSON.parse(responseText);
+    console.log('Response data:', responseData);
+    return responseData;
+  },
+
+
+  /**
+   * Sign out the current user
+   */
+  signOut: async () => {
+    const uri = Uris.LOGOUT;
+    const response = await fetchWithCookie(uri);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to sign out: ${response.statusText}`);
+    }
   },
   
   /**
@@ -68,9 +76,7 @@ export const userService = {
    */
   getUserById: async (userId: string): Promise<UserResponse> => {
     const uri = replaceParams(Uris.Users.GET, { id: userId });
-    const response = await fetch(uri, {
-      credentials: 'include'
-    });
+    const response = await fetchWithCookie(uri);
     
     if (!response.ok) {
       throw new Error(`Failed to get user: ${response.statusText}`);
@@ -86,29 +92,12 @@ export const userService = {
    */
   getUserByEmail: async (email: string): Promise<UserResponse> => {
     const uri = `${Uris.Users.GET_BY_EMAIL}?email=${encodeURIComponent(email)}`;
-    const response = await fetch(uri, {
-      credentials: 'include'
-    });
+    const response = await fetchWithCookie(uri);
     
     if (!response.ok) {
       throw new Error(`Failed to get user by email: ${response.statusText}`);
     }
     
     return response.json();
-  },
-
-  /**
-   * Sign out the current user
-   */
-  signOut: async () => {
-    const uri = Uris.LOGOUT;
-    const response = await fetch(uri, {
-      method: 'POST',
-      credentials: 'include'
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Failed to sign out: ${response.statusText}`);
-    }
   },
 }; 
