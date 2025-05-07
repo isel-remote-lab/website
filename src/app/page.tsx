@@ -1,15 +1,18 @@
 "use client"
 
 import { CalendarOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Card, Divider, Flex, Layout, Tooltip } from "antd";
+import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
+import { labsService } from "~/services/labsService";
 
 const labsWidth = 300;
 
 // TODO: Add a function to get the labs from the database
-export const labs = ["FPGA 1", "Laboratório Química 1"];
+//export const labs = ["FPGA 1", "Laboratório Química 1"];
+
+export const labs = await labsService.getAllLabs();
 
 const cardStyle = {
   width: labsWidth,
@@ -41,9 +44,12 @@ export default function Dashboard() {
       <Title level={2}>Os meus laboratórios</Title>
       <Divider/>
       <Flex wrap gap="small">
-        {labs.map((lab, index) => {
-          const labId = index + 1;
-          return (
+        {(labs.length == 0) ? (
+          <Empty description="Nenhum laboratório disponível" />
+        ) : (
+          labs.map((lab, index) => {
+            const labId = index + 1;
+            return (
             <Card
               key={labId}
               style={cardStyle}
@@ -55,8 +61,9 @@ export default function Dashboard() {
                 </Title>
               </Link>
             </Card>
-          );
-        })}
+            );
+          })
+        )}
         
         {tempRole === "teacher" && (
           <Link href="/labs/create">
