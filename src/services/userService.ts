@@ -39,9 +39,6 @@ export const userService = {
     const uri = Uris.LOGIN;
     const response = await fetchWithApiKey(uri, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(userData),
     });
 
@@ -62,7 +59,11 @@ export const userService = {
    */
   signOut: async () => {
     const uri = Uris.LOGOUT;
-    const response = await fetchWithCookie(uri);
+    const response = await fetchWithCookie(uri,
+      {
+        method: 'POST'
+      }
+    );
     
     if (!response.ok) {
       throw new Error(`Failed to sign out: ${response.statusText}`);
