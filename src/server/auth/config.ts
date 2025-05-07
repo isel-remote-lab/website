@@ -10,9 +10,7 @@ import { UserResponse, userService, type UserRequest } from "~/services/userServ
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface User {
-    dbUser?: UserResponse
-  }
+  interface User extends UserResponse {}
 
   interface Session extends DefaultSession {
     user: {
@@ -51,7 +49,7 @@ export const authConfig = {
 
       try {
         const userRequest: UserRequest = {
-          username: user.name!,
+          name: user.name!,
           email: user.email!,
         }
 
@@ -59,7 +57,7 @@ export const authConfig = {
         const dbUser = await userService.signIn(userRequest)
         if (dbUser) {
           // Store the user data in the user object to be used in jwt callback
-          user.dbUser = dbUser
+          user = dbUser
           return true
         }
       } catch (error) {
@@ -77,8 +75,8 @@ export const authConfig = {
       }
 
       // If we have user data from signIn, store it in the token
-      if (user?.dbUser) {
-        token.user = user.dbUser
+      if (user) {
+        token.user = user
       }
 
       return token
@@ -99,8 +97,6 @@ export const authConfig = {
       // Add the user data to the session
       if (dbUser) {
         sessionUser.userId = dbUser.userId
-        sessionUser.username = dbUser.username
-        sessionUser.email = dbUser.email
         sessionUser.role = dbUser.role
         sessionUser.createdAt = dbUser.createdAt
       }

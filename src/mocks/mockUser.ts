@@ -8,7 +8,7 @@ const MOCK_USER_ROLE = "T";
  */
 export const mockUser: User = {
     userId: 0,
-    username: "John Doe",
+    name: "John Doe",
     email: "john.doe@example.com",
     role: MOCK_USER_ROLE,
     oauthId: "0",
@@ -17,7 +17,7 @@ export const mockUser: User = {
 
 export const mockUserResponse: UserResponse = {
     userId: 0,
-    username: "John Doe",
+    name: "John Doe",
     email: "john.doe@example.com",
     role: MOCK_USER_ROLE,
     oauthId: "0",
