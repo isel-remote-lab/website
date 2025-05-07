@@ -8,15 +8,16 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { auth } from "~/server/auth";
+import { Role } from "~/types/role";
 
 export const avatarSize = 250;
 
 interface UserInfoProps {
   name: string;
   email: string;
-  role: string;
+  role: Role;
   image: string;
-  joinedAt: string;
+  createdAt: string;
 }
 
 export default async function UserInfo({
@@ -24,7 +25,7 @@ export default async function UserInfo({
   email,
   role,
   image,
-  joinedAt,
+  createdAt,
 }: UserInfoProps) {
   const session = await auth();
   const ownRole = session!.user.role;
@@ -32,15 +33,15 @@ export default async function UserInfo({
   let title;
 
   const titles = {
-    student: "Aluno",
-    teacher: "Professor",
-    admin: "Administrador",
+    [Role.STUDENT]: "Aluno",
+    [Role.TEACHER]: "Professor",
+    [Role.ADMIN]: "Administrador",
   };
 
   title = titles[role as keyof typeof titles];
 
   const isAdminAndNotOwnProfile =
-    ownRole === "admin" && email !== session!.user.email!;
+    ownRole === Role.ADMIN && email !== session!.user.email!;
 
   return (
     <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
@@ -90,7 +91,7 @@ export default async function UserInfo({
         <Flex gap="small">
           <CalendarOutlined />
           <Title style={{ marginBottom: "0" }} level={5}>
-            {new Date(joinedAt).toLocaleDateString()}
+            {createdAt}
           </Title>
         </Flex>
       </Tooltip>

@@ -80,6 +80,7 @@ export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): P
     ...options,
     headers: {
       ...options.headers,
+      'Content-Type': 'application/json',
       'X-API-Key': process.env.API_KEY || ''
     }
   });
@@ -98,6 +99,10 @@ export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): P
 export const fetchWithCookie = async (uri: string, options: RequestInit = {}): Promise<Response> => {
   const response = await fetch(uri, {
     ...options,
+    headers: {
+      ...options.headers,
+      'Content-Type': 'application/json'
+    },
     credentials: 'include'
   });
   return response;

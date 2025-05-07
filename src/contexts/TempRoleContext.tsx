@@ -4,15 +4,15 @@ import { createContext, useState, useContext, ReactNode, useEffect } from "react
 import { Role } from "~/types/role";
 import { useRouter } from "next/navigation";
 // Define all the valid roles
-const VALID_ROLES: Role[] = ["student", "teacher", "admin"];
+const VALID_ROLES = Object.values(Role);
 
 interface TempRoleContextProps {
   tempRole: Role;
-  setTempRole: (role: Role) => void;
+  setTempRole: (tempRole: Role) => void;
 }
 
 const TempRoleContext = createContext<TempRoleContextProps>({
-  tempRole: "student",
+  tempRole: Role.STUDENT,
   setTempRole: () => {},
 });
 
@@ -24,14 +24,12 @@ interface TempRoleProviderProps {
 // Helper function to check if a role can be assigned based on user's real role
 const canAssignRole = (userRole: Role, targetRole: Role): boolean => {
   switch (userRole) {
-    case "student":
-      return targetRole === "student";
-    case "teacher":
-      return targetRole === "student" || targetRole === "teacher";
-    case "admin":
-      return targetRole === "student" || targetRole === "teacher" || targetRole === "admin";
+    case Role.TEACHER:
+      return targetRole === Role.STUDENT || targetRole === Role.TEACHER;
+    case Role.ADMIN:
+      return true;
     default:
-      return targetRole === userRole;
+      return false;
   }
 };
 
@@ -63,20 +61,16 @@ export default function TempRoleProvider ({ children, role }: TempRoleProviderPr
     }
   }, [role, tempRole]);
 
-  const setTempRole = (role: Role) => {
-    // Validate the new role
-    if (!VALID_ROLES.includes(role)) {
-      router.push(`/error?message=Invalid role`)
-    }
-
+  const setTempRole = (newTempRole: Role) => {
     // Check if the user can assign this role based on their real role
-    if (!canAssignRole(role, tempRole)) {
-      router.push(`/error?message=User with role ${role} cannot assign role ${tempRole}`)
+    if (!canAssignRole(role, newTempRole)) {
+      router.push(`/error?message=User with role ${role} cannot assign role ${newTempRole}`);
+      return;
     }
 
-    setTempRoleState(role);
+    setTempRoleState(newTempRole);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('tempRole', role);
+      localStorage.setItem('tempRole', newTempRole);
     }
   };
 
