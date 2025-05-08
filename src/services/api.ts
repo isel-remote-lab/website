@@ -115,6 +115,9 @@ export const fetchWithCookie = async (uri: string, options: RequestInit = {}): P
     },
     credentials: 'include'
   });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+  }
   return response;
 }
 
