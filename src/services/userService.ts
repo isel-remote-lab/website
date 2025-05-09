@@ -26,6 +26,14 @@ export type UserRequest = {
 export type UserResponse = User
 
 /**
+ * Sign in response data interface
+ */
+export type SignInResponse = {
+  user: UserResponse,
+  token: string,
+}
+
+/**
  * User service for handling user-related API calls
  */
 export const userService = {
@@ -35,7 +43,7 @@ export const userService = {
    * @param userData - User data
    * @returns User data
    */
-  signIn: async (userData: UserRequest): Promise<UserResponse> => {
+  signIn: async (userData: UserRequest): Promise<SignInResponse> => {
     const uri = Uris.LOGIN;
     const response = await fetchWithApiKey(uri, {
       method: 'POST',
@@ -49,10 +57,8 @@ export const userService = {
     }
 
     const responseData = JSON.parse(responseText);
-    console.log('Response data:', responseData);
-    return responseData.data.user;
+    return responseData.data;
   },
-
 
   /**
    * Sign out the current user

@@ -2,8 +2,6 @@ import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { UserResponse, userService, type UserRequest } from "~/services/userService";
-import path from "path";
-import fs from "fs";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
 
 /**
@@ -14,12 +12,12 @@ import { RoleLetter, roleLetterToRole } from "~/types/role";
  */
 declare module "next-auth" {
   interface User {
-    dbUser?: UserResponse
+    dbUser?: UserResponse,
   }
 
   interface Session extends DefaultSession {
     user: {
-      accessToken: string
+      oauthUserToken: string,
     } & UserResponse & DefaultSession["user"]
   }
 }
@@ -34,6 +32,19 @@ export const authConfig = {
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      authorization: {
+        params: {
+          scope: "openid profile email offline_access",
+        },
+      },
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        }
+      },
     }),
     /**
      * ...add more providers here.
@@ -53,16 +64,21 @@ export const authConfig = {
       }
 
       try {
+        if (!user.email || !user.name) {
+          console.error('Missing required user data:', { email: user.email, name: user.name })
+          return false
+        }
+
         const userRequest: UserRequest = {
-          name: user.name!,
-          email: user.email!,
+          name: user.name,
+          email: user.email,
         }
 
         // Sign in the user
-        const dbUser = await userService.signIn(userRequest)
-        if (dbUser) {
+        const signInResponse = await userService.signIn(userRequest)
+        if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
-          user.dbUser = dbUser
+          user.dbUser = signInResponse.user
           return true
         }
       } catch (error) {
@@ -75,8 +91,9 @@ export const authConfig = {
   
     // Store the access token in the user session
     async jwt({ token, account, user }) {
+      // If we have an access token, store it in the token
       if (account) {
-        token.accessToken = account.access_token
+        token.oauthUserToken = account.access_token
       }
 
       // If we have user data from signIn, store it in the token
@@ -94,15 +111,14 @@ export const authConfig = {
      */
     async session({ session, token }) {
       const sessionUser = session.user
-      const dbUser = token.user as UserResponse
 
       // Add the access token to the session
-      sessionUser.accessToken = token.accessToken as string
+      sessionUser.oauthUserToken = token.oauthUserToken as string
 
       // Add the user data to the session
+      const dbUser = token.user as UserResponse
       if (dbUser) {
         sessionUser.userId = dbUser.userId
-        // sessionUser.role = dbUser.role
         sessionUser.role = roleLetterToRole(RoleLetter.ADMIN)
         sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString()
       }

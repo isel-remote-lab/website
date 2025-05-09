@@ -1,4 +1,4 @@
-import { Uris, fetchWithCookie } from '~/services/api';
+import { fetchWithCookie, Uris } from '~/services/api';
 import Laboratory, { LaboratoryRequest } from '~/types/laboratory';
 
 /**

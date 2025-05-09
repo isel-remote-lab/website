@@ -7,7 +7,7 @@ import { auth } from "~/server/auth";
  */
 export async function getUserOwnImage() {
   const session = await auth();
-  const accessToken = session!.user.accessToken;
+  const accessToken = session!.user.oauthUserToken;
 
   try {
     const res = await fetch(
@@ -38,7 +38,7 @@ export async function getUserOwnImage() {
  */
 export async function getUserImage(userPrincipalName: string) {
   const session = await auth();
-  const accessToken = session!.user.accessToken;
+  const accessToken = session!.user.oauthUserToken;
 
   try {
     const res = await fetch(`https://graph.microsoft.com/v1.0/users/${userPrincipalName}/photo/$value`, {
