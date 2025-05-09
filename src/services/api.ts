@@ -1,3 +1,5 @@
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+
 // Base API prefix
 const PROTOCOL = "http";
 const DOCKER_HOST = "api";
@@ -108,14 +110,16 @@ export const fetchWithLogs = async (uri: string, options: RequestInit = {}): Pro
  * @param options - The options for the fetch request
  * @returns The response from the fetch request
  */
-export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): Promise<Response> => {
-  return fetchWithLogs(uri, {
+export const fetchWithApiKey = async (uri: string, data: any = {}, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
+  const config: AxiosRequestConfig = {
     ...options,
     headers: {
-      ...options.headers,
-      'X-API-Key': process.env.API_KEY || ''
-    }
-  });
+      ...(options.headers || {}),
+      'X-API-Key': process.env.API_KEY || '',
+    },
+  };
+
+  return await axios.post(uri, data, config);
 }
 
 /**
