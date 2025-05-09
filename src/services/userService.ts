@@ -1,5 +1,9 @@
+import axios from 'axios';
 import { Uris, fetchWithApiKey, fetchWithCookie, replaceParams } from '~/services/api';
 import { Role } from '~/types/role';
+import { parse } from "cookie";
+import { cookies } from 'next/headers';
+
 
 /**
  * User data interface
@@ -45,19 +49,38 @@ export const userService = {
    */
   signIn: async (userData: UserRequest): Promise<SignInResponse> => {
     const uri = Uris.LOGIN;
-    const response = await fetchWithApiKey(uri, {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+    
+    try {
+      const response = await axios.post(uri, userData, {
+        headers: {
+          'X-API-Key': process.env.API_KEY || '',
+          'Content-Type': 'application/json',
+        },
+      });
+  
+    const apiCookies = response.headers["set-cookie"];
+    if (apiCookies && apiCookies.length > 0) {
+        apiCookies.forEach((cookie) => {
+            const parsedCookie = parse(cookie);
+            const [cookieName, cookieValue] = Object.entries(parsedCookie)[0];
+            const httpOnly = cookie.includes("httponly;");
 
-    const responseText = await response.text();
-
-    if (!response.ok) {
-      throw new Error(`Failed to sign in: ${response.status} ${response.statusText}. \nResponse: ${responseText}`);
+            cookies().set({
+                name: cookieName,
+                value: cookieValue,
+                httpOnly: httpOnly,
+            });
+        });
     }
 
-    const responseData = JSON.parse(responseText);
-    return responseData.data;
+      return response.data.data;
+    } catch (error: any) {
+      const status = error.response?.status || 'Sem status';
+      const statusText = error.response?.statusText || 'Sem statusText';
+      const responseText = error.response?.data || 'Sem resposta';
+  
+      throw new Error(`Falha no login: ${status} ${statusText}. \nResposta: ${JSON.stringify(responseText)}`);
+    }
   },
 
   /**

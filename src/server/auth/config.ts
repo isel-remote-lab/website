@@ -4,6 +4,7 @@ import "../../env.js";
 import { UserResponse, userService, type UserRequest } from "~/services/userService";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
 
+
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -32,7 +33,7 @@ export const authConfig = {
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      authorization: {
+      /*authorization: {
         params: {
           scope: "openid profile email offline_access",
         },
@@ -45,6 +46,7 @@ export const authConfig = {
           image: profile.picture,
         }
       },
+      */
     }),
     /**
      * ...add more providers here.
@@ -79,6 +81,7 @@ export const authConfig = {
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
           user.dbUser = signInResponse.user
+ 
           return true
         }
       } catch (error) {

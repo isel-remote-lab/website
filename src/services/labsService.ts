@@ -19,7 +19,7 @@ export const labsService = {
 
     const responseData = await response.json();
     console.log(responseData);
-    return responseData.data.laboratories;
+    return responseData.data;
   },
 
   /**
