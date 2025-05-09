@@ -1,19 +1,16 @@
-/**
- * API URIs configuration
- * 
- * This file contains all the API endpoints used in the application.
- * It mirrors the structure defined in the Kotlin backend (Uris.kt).
- */
-
 // Base API prefix
 const PROTOCOL = "http";
-const HOST = "api";
+const DOCKER_HOST = "api";
+const HOST = "localhost";
 const PORT = "8080";
+const API_DOCKER_PREFIX = `${PROTOCOL}://${DOCKER_HOST}:${PORT}/api/v1`;
 const API_PREFIX = `${PROTOCOL}://${HOST}:${PORT}/api/v1`;
 const AUTH_URI = `${API_PREFIX}/auth`;
-const LOGIN_URI = `${AUTH_URI}/login`;
+const AUTH_DOCKER_URI = `${API_DOCKER_PREFIX}/auth`;
+const LOGIN_URI = `${AUTH_DOCKER_URI}/login`;
 const LOGOUT_URI = `${AUTH_URI}/logout`;
 const USERS_URI = `${API_PREFIX}/users`;
+const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
 
 /**
  * API URIs for user-related operations
@@ -61,7 +58,7 @@ export const Uris = {
     /**
      * URI for getting all laboratories
      */
-    GET_ALL: `${API_PREFIX}/laboratories`
+    GET_ALL: LABORATORIES_URI
   }
 };
 
@@ -80,24 +77,45 @@ export const replaceParams = (uri: string, params: object): string => {
 };
 
 /**
+ * Fetch API with logs
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch request
+ * @returns The response from the fetch request
+ */
+export const fetchWithLogs = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+  try {
+    const response = await fetch(uri, {
+      ...options,
+      headers: {
+      ...options.headers,
+      'Content-Type': 'application/json',
+    }
+  });
+  console.log(response);
+  if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching:', error);
+    throw error;
+  }
+}
+
+/**
  * Fetch API with API key
  * @param uri - The URI to fetch
  * @param options - The options for the fetch request
  * @returns The response from the fetch request
  */
 export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): Promise<Response> => {
-  const response = await fetch(uri, {
+  return fetchWithLogs(uri, {
     ...options,
     headers: {
       ...options.headers,
-      'Content-Type': 'application/json',
       'X-API-Key': process.env.API_KEY || ''
     }
   });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-  }
-  return response;
 }
 
 /**
@@ -107,20 +125,8 @@ export const fetchWithApiKey = async (uri: string, options: RequestInit = {}): P
  * @returns The response from the fetch request
  */
 export const fetchWithCookie = async (uri: string, options: RequestInit = {}): Promise<Response> => {
-  const response = await fetch(uri, {
+  return fetchWithLogs(uri, {
     ...options,
-    headers: {
-      ...options.headers,
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include'
+    credentials: 'include' // This ensures the session cookie is sent with the request
   });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-  }
-  return response;
 }
-
-// Example usage:
-// const userUri = replaceParams(UserUris.GET, { id: '123' });
-// Result: /api/v1/users/123 
