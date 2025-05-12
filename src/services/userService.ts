@@ -79,8 +79,8 @@ export const userService = {
       const status = error.response?.status || 'No status';
       const statusText = error.response?.statusText || 'No statusText';
       const responseText = error.response?.data || 'No response';
-  
-      throw new Error(`Error during sign in: ${status} ${statusText}. \nResponse: ${JSON.stringify(responseText)}`);
+
+      console.log(error);
     }
   },
 
