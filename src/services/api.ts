@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // Base API prefix
-const DOCKER_URL = "http://api:80";
+const DOCKER_URL = "http://api:8080";
 const API_PREFIX = `${process.env.NEXTAUTH_URL}/api/v1`;
 const AUTH_URI = `${API_PREFIX}/auth`;
 const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`;
