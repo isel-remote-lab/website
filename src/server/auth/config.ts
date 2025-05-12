@@ -33,7 +33,7 @@ export const authConfig = {
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      /*authorization: {
+      authorization: {
         params: {
           scope: "openid profile email offline_access",
         },
@@ -43,10 +43,8 @@ export const authConfig = {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
-          image: profile.picture,
         }
       },
-      */
     }),
     /**
      * ...add more providers here.
