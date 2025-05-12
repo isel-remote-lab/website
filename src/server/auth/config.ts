@@ -40,7 +40,6 @@ export const authConfig = {
       },
       profile(profile) {
         return {
-          id: profile.sub,
           name: profile.name,
           email: profile.email,
         }
