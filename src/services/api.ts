@@ -2,14 +2,11 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // Base API prefix
 const PROTOCOL = "http";
-const DOCKER_HOST = "api";
 const HOST = "localhost";
-const PORT = "8080";
-const API_DOCKER_PREFIX = `${PROTOCOL}://${DOCKER_HOST}:${PORT}/api/v1`;
+const PORT = "80";
 const API_PREFIX = `${PROTOCOL}://${HOST}:${PORT}/api/v1`;
 const AUTH_URI = `${API_PREFIX}/auth`;
-const AUTH_DOCKER_URI = `${API_DOCKER_PREFIX}/auth`;
-const LOGIN_URI = `${AUTH_DOCKER_URI}/login`;
+const LOGIN_URI = `${AUTH_URI}/login`;
 const LOGOUT_URI = `${AUTH_URI}/logout`;
 const USERS_URI = `${API_PREFIX}/users`;
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
