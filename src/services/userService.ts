@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Uris, fetchWithApiKey, fetchWithCookie, replaceParams } from '~/services/api';
+import { Uris, fetchWithCookie, replaceParams } from '~/services/api';
 import { Role } from '~/types/role';
 import { parse } from "cookie";
 import { cookies } from 'next/headers';
@@ -59,6 +59,7 @@ export const userService = {
       });
   
     const apiCookies = response.headers["set-cookie"];
+    console.log("apiCookies", apiCookies);
     if (apiCookies && apiCookies.length > 0) {
         apiCookies.forEach((cookie) => {
             const parsedCookie = parse(cookie);
@@ -75,11 +76,11 @@ export const userService = {
 
       return response.data.data;
     } catch (error: any) {
-      const status = error.response?.status || 'Sem status';
-      const statusText = error.response?.statusText || 'Sem statusText';
-      const responseText = error.response?.data || 'Sem resposta';
+      const status = error.response?.status || 'No status';
+      const statusText = error.response?.statusText || 'No statusText';
+      const responseText = error.response?.data || 'No response';
   
-      throw new Error(`Falha no login: ${status} ${statusText}. \nResposta: ${JSON.stringify(responseText)}`);
+      throw new Error(`Error during sign in: ${status} ${statusText}. \nResponse: ${JSON.stringify(responseText)}`);
     }
   },
 
