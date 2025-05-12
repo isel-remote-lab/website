@@ -29,10 +29,12 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:80",
   providers: [
     MicrosoftEntraID({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+      redirectUri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/microsoft-entra-id`,
       authorization: {
         params: {
           scope: "openid profile email offline_access",
