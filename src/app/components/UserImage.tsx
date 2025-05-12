@@ -1,13 +1,13 @@
 import Image from "next/image";
-import { auth } from "~/server/auth";
+import { getUserOwnImage } from "~/services/microsoft/microsoftApiService";
 
 /**
  * User avatar component
  * @returns The user avatar component
  */
 export default async function UserImage() {
-  const session = await auth();
+  const userImage = await getUserOwnImage();
   return (
-    <Image src={session!.user.image!} alt="User Avatar" width="0" height="0" />
+    <Image src={userImage} alt="User Avatar" width="0" height="0" />
   );
 }

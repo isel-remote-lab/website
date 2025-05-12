@@ -67,7 +67,7 @@ export default async function CustomMenu() {
     {
       key: "search",
       label: (
-        <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "100%", display: "f<lex", justifyContent: "center" }}>
           <Search placeholder="Pesquisar..." style={{ width: "30rem", maxWidth: "100%" }} />
         </div>
       ),
