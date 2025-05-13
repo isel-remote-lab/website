@@ -19,10 +19,10 @@ export interface LaboratoryRequest {
  * Laboratory response data interface
  */
 export interface LaboratoryResponse {
-  name: string
-  description: string | null
-  duration: number
-  queueLimit: number
-  createdAt: Date
-  ownerId: number
+  labName: string
+  labDescription: string | null
+  labDuration: number
+  labQueueLimit: number
+  labCreatedAt: Date
+  labOwnerId: number
 }

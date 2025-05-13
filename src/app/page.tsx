@@ -57,7 +57,7 @@ export default function Dashboard() {
             >
               <Link href={`/labs/${labId}`} key={labId}>
                 <Title level={4} style={{ textAlign: "center" }}>
-                  {lab}
+                  {lab.labName}
                 </Title>
               </Link>
             </Card>
