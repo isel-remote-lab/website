@@ -9,7 +9,7 @@ const internalDir = path.resolve(process.cwd(), "../private/frontend");
 const sharedSecretsDir = path.resolve(process.cwd(), "../private/shared/secrets");
 
 // Load both environment files
-dotenv.config({ path: internalDir + "/.env.local" });
+dotenv.config({ path: internalDir + "/.env" });
 dotenv.config({ path: sharedSecretsDir + "/.env" });
 
 export const env = createEnv({
