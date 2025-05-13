@@ -18,6 +18,7 @@
   "dependencies": {
     "@ant-design/colors": "^8.0.0",
     "@ant-design/icons": "^6.0.0",
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@next/env": "^15.3.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@types/jsonwebtoken": "^9.0.9",

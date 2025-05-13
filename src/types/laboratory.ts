@@ -9,10 +9,10 @@ export default interface Laboratory extends LaboratoryResponse {
  * Laboratory request data interface
  */
 export interface LaboratoryRequest {
-  name: string | null
-  description: string | null
-  queueLimit: number | null
-  duration: number | null
+  labName: string | null
+  labDescription: string | null
+  labQueueLimit: number | null
+  labDuration: number | null
 }
 
 /**
