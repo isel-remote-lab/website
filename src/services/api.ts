@@ -77,22 +77,20 @@ export const replaceParams = (uri: string, params: object): string => {
 /**
  * Fetch API with logs
  * @param uri - The URI to fetch
- * @param options - The options for the fetch request
- * @returns The response from the fetch request
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
  */
-export const fetchWithLogs = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+export const fetchWithLogs = async (uri: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
   try {
-    const response = await fetch(uri, {
+    const response = await axios({
+      url: uri,
       ...options,
       headers: {
-      ...options.headers,
-      'Content-Type': 'application/json',
-    }
-  });
-  console.log(response);
-  if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-    }
+        ...options.headers,
+        'Content-Type': 'application/json',
+      }
+    });
+    console.log(response);
     return response;
   } catch (error) {
     console.error('Error fetching:', error);
@@ -103,8 +101,9 @@ export const fetchWithLogs = async (uri: string, options: RequestInit = {}): Pro
 /**
  * Fetch API with API key
  * @param uri - The URI to fetch
- * @param options - The options for the fetch request
- * @returns The response from the fetch request
+ * @param data - The data to send
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
  */
 export const fetchWithApiKey = async (uri: string, data: any = {}, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
   const config: AxiosRequestConfig = {
@@ -121,12 +120,13 @@ export const fetchWithApiKey = async (uri: string, data: any = {}, options: Axio
 /**
  * Fetch API with cookie
  * @param uri - The URI to fetch
- * @param options - The options for the fetch request
- * @returns The response from the fetch request
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
  */
-export const fetchWithCookie = async (uri: string, options: RequestInit = {}): Promise<Response> => {
+export const fetchWithCookie = async (uri: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
   return fetchWithLogs(uri, {
     ...options,
-    credentials: 'include' // This ensures the session cookie is sent with the request
+    withCredentials: true // This ensures the session cookie is sent with the request
   });
 }
+  

@@ -11,15 +11,13 @@ export const labsService = {
    */
   getAllLabs: async (): Promise<Laboratory[]> => {
     const uri = Uris.Laboratories.GET_ALL;
-    const response = await fetchWithCookie(uri);
-
-    if (!response.ok) {
-      throw new Error(`Failed to get laboratories: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetchWithCookie(uri);
+      console.log(response.data);
+      return response.data.data;
+    } catch (error: any) {
+      throw new Error(`Failed to get laboratories: ${error.message}`);
     }
-
-    const responseData = await response.json();
-    console.log(responseData);
-    return responseData.data;
   },
 
   /**
@@ -29,17 +27,15 @@ export const labsService = {
    */
   createLab: async (labData: LaboratoryRequest): Promise<Laboratory> => {
     const uri = Uris.Laboratories.GET_ALL;
-    const response = await fetchWithCookie(uri, {
-      method: 'POST',
-      body: JSON.stringify(labData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to create laboratory: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetchWithCookie(uri, {
+        method: 'POST',
+        data: labData
+      });
+      return response.data.data.laboratory;
+    } catch (error: any) {
+      throw new Error(`Failed to create laboratory: ${error.message}`);
     }
-
-    const responseData = await response.json();
-    return responseData.data.laboratory;
   },
 
   /**
@@ -49,14 +45,12 @@ export const labsService = {
    */
   getLabById: async (labId: number): Promise<Laboratory> => {
     const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
-    const response = await fetchWithCookie(uri);
-
-    if (!response.ok) {
-      throw new Error(`Failed to get laboratory: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetchWithCookie(uri);
+      return response.data.data.laboratory;
+    } catch (error: any) {
+      throw new Error(`Failed to get laboratory: ${error.message}`);
     }
-
-    const responseData = await response.json();
-    return responseData.data.laboratory;
   },
 
   /**
@@ -67,17 +61,15 @@ export const labsService = {
    */
   updateLab: async (labId: number, labData: LaboratoryRequest): Promise<Laboratory> => {
     const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
-    const response = await fetchWithCookie(uri, {
-      method: 'PUT',
-      body: JSON.stringify(labData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update laboratory: ${response.status} ${response.statusText}`);
+    try {
+      const response = await fetchWithCookie(uri, {
+        method: 'PUT',
+        data: labData
+      });
+      return response.data.data.laboratory;
+    } catch (error: any) {
+      throw new Error(`Failed to update laboratory: ${error.message}`);
     }
-
-    const responseData = await response.json();
-    return responseData.data.laboratory;
   },
 
   /**
@@ -86,12 +78,12 @@ export const labsService = {
    */
   deleteLab: async (labId: number): Promise<void> => {
     const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
-    const response = await fetchWithCookie(uri, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete laboratory: ${response.status} ${response.statusText}`);
+    try {
+      await fetchWithCookie(uri, {
+        method: 'DELETE'
+      });
+    } catch (error: any) {
+      throw new Error(`Failed to delete laboratory: ${error.message}`);
     }
   }
 }; 
