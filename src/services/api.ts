@@ -1,14 +1,14 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
 // Base API prefix
-const DOCKER_URL = "http://api:8080";
-const BASE_URL = process.env.NEXTAUTH_URL || 'http://localhost:80';
-const API_PREFIX = `${BASE_URL}/api/v1`;
-const AUTH_URI = `${API_PREFIX}/auth`;
-const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`;
-const LOGOUT_URI = `${AUTH_URI}/logout`;
-const USERS_URI = `${API_PREFIX}/users`;
-const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
+const DOCKER_URL = "http://api:8080"
+const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
+const API_PREFIX = `${BASE_URL}/api/v1`
+const AUTH_URI = `${API_PREFIX}/auth`
+const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`
+const LOGOUT_URI = `${AUTH_URI}/logout`
+const USERS_URI = `${API_PREFIX}/users`
+const LABORATORIES_URI = `${API_PREFIX}/laboratories`
 
 /**
  * API URIs for user-related operations
@@ -69,9 +69,9 @@ export const Uris = {
 export const replaceParams = (uri: string, params: object): string => {
   let result = uri;
   Object.entries(params).forEach(([key, value]) => {
-    result = result.replace(`{${key}}`, value);
-  });
-  return result;
+    result = result.replace(`{${key}}`, value)
+  })
+  return result
 };
 
 /**
@@ -90,11 +90,11 @@ export const fetchWithLogs = async (uri: string, options: AxiosRequestConfig = {
         'Content-Type': 'application/json',
       }
     });
-    console.log(response);
-    return response;
+    console.log(response)
+    return response
   } catch (error) {
-    console.error('Error fetching:', error);
-    throw error;
+    console.error('Error fetching:', error)
+    throw error
   }
 }
 
@@ -114,7 +114,7 @@ export const fetchWithApiKey = async (uri: string, data: any = {}, options: Axio
     },
   };
 
-  return await axios.post(uri, data, config);
+  return await axios.post(uri, data, config)
 }
 
 /**
