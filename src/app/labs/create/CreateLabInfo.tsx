@@ -8,8 +8,7 @@ export default function CreateLabInfo() {
   const onFinish = async (values: any) => {
     // Convert date string to minutes
     const durationDate = new Date(values.duration);
-    console.log("Duration date:", durationDate);
-    const durationInMinutes = Math.floor((durationDate.getTime() - new Date().getTime()) / (1000 * 60));
+    const durationInMinutes = durationDate.getHours() * 60 + durationDate.getMinutes();
 
     const labData: LaboratoryRequest = {
       labName: values.name,

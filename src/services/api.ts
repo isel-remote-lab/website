@@ -4,6 +4,7 @@ import { signOut } from "next-auth/react"
 // Base API prefix
 const DOCKER_URL = "http://api:8080"
 const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
+console.log("BASE_URL", BASE_URL)
 const API_PREFIX = `${BASE_URL}/api/v1`
 const AUTH_URI = `${API_PREFIX}/auth`
 const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`

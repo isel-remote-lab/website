@@ -120,6 +120,7 @@ export const authConfig = {
       if (dbUser) {
         sessionUser.userId = dbUser.userId
         sessionUser.role = roleLetterToRole(RoleLetter.ADMIN)
+        //sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
         sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString()
       }
 
