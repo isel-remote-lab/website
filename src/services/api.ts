@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import { signOut } from "next-auth/react"
 
 // Base API prefix
 const DOCKER_URL = "http://api:8080"
@@ -9,6 +10,18 @@ const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`
 const LOGOUT_URI = `${AUTH_URI}/logout`
 const USERS_URI = `${API_PREFIX}/users`
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`
+
+// Add response interceptor to handle 401 errors
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Sign out the user and redirect to login
+      await signOut({ redirect: true, callbackUrl: "/api/auth/signin" })
+    }
+    return Promise.reject(error)
+  }
+)
 
 /**
  * API URIs for user-related operations
