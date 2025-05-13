@@ -12,7 +12,7 @@ const USERS_URI = `${API_PREFIX}/users`
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`
 
 // Add response interceptor to handle 401 errors
-axios.interceptors.response.use(
+/*axios.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
@@ -22,6 +22,7 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+*/
 
 /**
  * API URIs for user-related operations
