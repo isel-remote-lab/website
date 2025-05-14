@@ -1,29 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-import { signOut } from "next-auth/react"
 
 // Base API prefix
 const DOCKER_URL = "http://api:8080"
 const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
-console.log("BASE_URL", BASE_URL)
 const API_PREFIX = `${BASE_URL}/api/v1`
 const AUTH_URI = `${API_PREFIX}/auth`
 const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`
 const LOGOUT_URI = `${AUTH_URI}/logout`
 const USERS_URI = `${API_PREFIX}/users`
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`
-
-// Add response interceptor to handle 401 errors
-/*axios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      // Sign out the user and redirect to login
-      await signOut({ redirect: true, callbackUrl: "/api/auth/signin" })
-    }
-    return Promise.reject(error)
-  }
-)
-*/
 
 /**
  * API URIs for user-related operations
@@ -61,7 +46,12 @@ export const Uris = {
     /**
      * URI for getting a user by OAuth ID
      */
-    GET_BY_OAUTHID: `${USERS_URI}/{oauthid}`
+    GET_BY_OAUTHID: `${USERS_URI}/{oauthid}`,
+
+    /**
+     * URI for updating a user's role
+     */
+    UPDATE_ROLE: `${USERS_URI}/role`,
   },
 
   /**
@@ -71,7 +61,12 @@ export const Uris = {
     /**
      * URI for getting all laboratories
      */
-    GET_ALL: LABORATORIES_URI
+    GET_ALL: LABORATORIES_URI,
+
+    /**
+     * URI for getting a laboratory by ID
+     */
+    GET_BY_ID: `${LABORATORIES_URI}/{id}`
   }
 };
 

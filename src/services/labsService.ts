@@ -13,7 +13,6 @@ export const labsService = {
     const uri = Uris.Laboratories.GET_ALL;
     try {
       const response = await fetchWithCookie(uri);
-      console.log(response.data);
       return response.data.data;
     } catch (error: any) {
       throw new Error(`Failed to get laboratories: ${error.message}`);
@@ -44,10 +43,10 @@ export const labsService = {
    * @returns Laboratory data
    */
   getLabById: async (labId: number): Promise<Laboratory> => {
-    const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
+    const uri = Uris.Laboratories.GET_BY_ID.replace('{id}', labId.toString());
     try {
       const response = await fetchWithCookie(uri);
-      return response.data.data.laboratory;
+      return response.data.laboratory;
     } catch (error: any) {
       throw new Error(`Failed to get laboratory: ${error.message}`);
     }

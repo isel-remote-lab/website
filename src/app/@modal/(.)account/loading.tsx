@@ -1,4 +1,4 @@
-import AccountInfoSkeleton from "~/app/account/AccountInfoSkeleton";
+import AccountInfoSkeleton from "~/app/users/[id]/UserInfoSkeleton";
 import DefaultModal from "~/app/components/defaults/DefaultModal";
 
 export default function AccountInfoModalSkeleton() {

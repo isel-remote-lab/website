@@ -1,5 +1,5 @@
-import DefaultPage from "../components/defaults/DefaultPage";
-import UserInfoSkeleton from "~/app/users/[id]/UserInfoSkeleton";
+import DefaultPage from "~/app/components/defaults/DefaultPage";
+import UserInfoSkeleton from "./UserInfoSkeleton";
 
 export default function AccountInfoModalSkeleton() {
   return (

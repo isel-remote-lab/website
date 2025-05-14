@@ -1,4 +1,5 @@
 import { auth } from "~/server/auth";
+import axios from "axios";
 
 /**
  * Fetches the user's profile picture from Microsoft Graph API
@@ -10,17 +11,18 @@ export async function getUserOwnImage() {
   const accessToken = session!.user.oauthUserToken;
 
   try {
-    const res = await fetch(
+    const res = await axios.get(
       "https://graph.microsoft.com/v1.0/me/photo/$value",
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        responseType: 'arraybuffer'
       },
     );
-    if (res.ok) {
-      const buffer = await res.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString("base64");
+    
+    if (res.status === 200) {
+      const base64 = Buffer.from(res.data).toString("base64");
       return `data:image/jpeg;base64,${base64}`;
     } else {
       console.error("Failed to get user profile picture, status:", res.status)
@@ -41,15 +43,18 @@ export async function getUserImage(userPrincipalName: string) {
   const accessToken = session!.user.oauthUserToken;
 
   try {
-    const res = await fetch(`https://graph.microsoft.com/v1.0/users/${userPrincipalName}/photo/$value`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const res = await axios.get(
+      `https://graph.microsoft.com/v1.0/users/${userPrincipalName}/photo/$value`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: 'arraybuffer'
+      }
+    );
 
-    if (res.ok) {
-      const buffer = await res.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString("base64");
+    if (res.status === 200) {
+      const base64 = Buffer.from(res.data).toString("base64");
       return `data:image/jpeg;base64,${base64}`;
     } else {
       console.error("Failed to get user profile picture, status:", res.status)

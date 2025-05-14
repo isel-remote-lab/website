@@ -1,4 +1,4 @@
-import { type User, type UserResponse } from "~/services/userService";
+import { type User, type UserResponse } from "~/services/usersService";
 
 const MOCK_USER_ROLE = "T";
 

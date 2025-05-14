@@ -1,19 +1,17 @@
 import { AxiosResponse } from 'axios';
 import { Uris, fetchWithCookie, replaceParams, fetchWithApiKey } from '~/services/api';
-import { Role } from '~/types/role';
+import { RoleLetter, roleLetterToRole } from '~/types/role';
 import { parse } from "cookie";
 import { cookies } from 'next/headers';
+import { UserInfo } from '~/app/users/[id]/UserInfo';
+import { Role } from '~/types/role';
 
 /**
  * User data interface
  */ 
 export type User = {
   userId: number
-  name: string
-  email: string
-  role: Role
-  createdAt: string
-}
+} & UserInfo
 
 /**
  * User login request data interface
@@ -34,6 +32,14 @@ export type UserResponse = User
 export type SignInResponse = {
   user: UserResponse,
   token: string,
+}
+
+/**
+ * Update user role request data interface
+ */
+export type UpdateUserRoleRequest = {
+  email: string,
+  role: Role,
 }
 
 /**
@@ -60,7 +66,7 @@ async function setCookies(response: AxiosResponse) {
 /**
  * User service for handling user-related API calls
  */
-export const userService = {
+export const usersService = {
 
   /**
    * Sign in a user
@@ -99,12 +105,17 @@ export const userService = {
    * @returns User data
    */
   getUserById: async (userId: string): Promise<UserResponse> => {
-    const uri = replaceParams(Uris.Users.GET, { id: userId });
+    const uri = replaceParams(Uris.Users.GET, { id: userId })
     try {
-      const response = await fetchWithCookie(uri);
-      return response.data;
+      const response = await fetchWithCookie(uri)
+
+      let user = response.data.data.user
+
+      user.role = roleLetterToRole(user.role as unknown as RoleLetter)
+      user.createdAt = new Date(user.createdAt).toLocaleDateString('pt-PT')
+      return user
     } catch (error: any) {
-      throw new Error(`Failed to get user: ${error.message}`);
+      throw new Error(`Failed to get user: ${error.message}`)
     }
   },
   
@@ -120,6 +131,24 @@ export const userService = {
       return response.data;
     } catch (error: any) {
       throw new Error(`Failed to get user by email: ${error.message}`);
+    }
+  },
+
+  /**
+   * Update a user's role
+   * @param data - User email and new role
+   * @returns Updated user data
+   */
+  updateUserRole: async (data: UpdateUserRoleRequest): Promise<UserResponse> => {
+    const uri = Uris.Users.UPDATE_ROLE;
+    try {
+      const response = await fetchWithCookie(uri, {
+        method: 'PUT',
+        data,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`Failed to update user role: ${error.message}`);
     }
   },
 }; 

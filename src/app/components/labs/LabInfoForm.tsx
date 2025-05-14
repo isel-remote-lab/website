@@ -4,6 +4,7 @@ import { Button, Form, InputNumber, TimePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import Laboratory from "~/types/laboratory";
 
 export const formItems = [
   {
@@ -63,12 +64,7 @@ export const formItems = [
 ];
 
 interface LabInfoFormProps {
-  initialValues?: {
-    name: string;
-    description: string;
-    duration: string;
-    queueLimit: number;
-  };
+  initialValues?: Laboratory;
   onFinish: (values: any) => void;
   submitButtonText: string;
 }
@@ -80,7 +76,7 @@ export default function LabInfoForm({ initialValues, onFinish, submitButtonText 
     if (initialValues) {
       form.setFieldsValue({
         ...initialValues,
-        duration: initialValues.duration ? dayjs(initialValues.duration, "HH:mm") : undefined,
+        duration: initialValues.labDuration ? dayjs(initialValues.labDuration, "HH:mm") : undefined,
       });
     }
   }, [initialValues, form]);

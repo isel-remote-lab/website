@@ -1,15 +1,10 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-
+import Laboratory from "~/types/laboratory";
 interface EditLabInfoProps {
   labId: string;
-  initialValues?: {
-    name: string;
-    description: string;
-    duration: string;
-    queueLimit: number;
-  };
+  initialValues?: Laboratory;
 }
 
 export default function EditLabInfo({ labId, initialValues }: EditLabInfoProps) {

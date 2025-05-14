@@ -1,7 +1,7 @@
 import { DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { UserResponse, userService, type UserRequest } from "~/services/userService";
+import { UserResponse, usersService, type UserRequest } from "~/services/usersService";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
 
 
@@ -35,7 +35,7 @@ export const authConfig = {
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
       authorization: {
         params: {
-          scope: "openid profile email offline_access",
+          scope: "openid profile email offline_access User.ReadBasic.All",
         },
       },
       profile(profile) {
@@ -74,7 +74,7 @@ export const authConfig = {
         }
 
         // Sign in the user
-        const signInResponse = await userService.signIn(userRequest)
+        const signInResponse = await usersService.signIn(userRequest)
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
           user.dbUser = signInResponse.user
@@ -121,7 +121,7 @@ export const authConfig = {
         sessionUser.userId = dbUser.userId
         sessionUser.role = roleLetterToRole(RoleLetter.ADMIN)
         //sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
-        sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString()
+        sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString('pt-PT')
       }
 
       return session
@@ -134,7 +134,7 @@ export const authConfig = {
     async signOut() {
       try {
         // Sign out the user on the backend
-        await userService.signOut()
+        await usersService.signOut()
       } catch (error) {
         console.error('Error during sign out:', error)
       }

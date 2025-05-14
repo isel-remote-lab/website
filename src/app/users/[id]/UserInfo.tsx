@@ -1,18 +1,21 @@
-import { Dropdown, Flex, Image, Tooltip } from "antd";
+"use client";
+
+import { Flex, Image, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import {
   CalendarOutlined,
-  EditOutlined,
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import { auth } from "~/server/auth";
 import { Role } from "~/types/role";
+import ChangeRoleDropdown from "~/app/components/dropdowns/ChangeRoleDropdown";
+import { useTempRole } from "~/contexts/TempRoleContext";
 
 export const avatarSize = 250;
 
-interface UserInfoProps {
+export type UserInfo = {
   name: string;
   email: string;
   role: Role;
@@ -26,22 +29,20 @@ export default async function UserInfo({
   role,
   image,
   createdAt,
-}: UserInfoProps) {
-  const session = await auth();
-  const ownRole = session!.user.role;
-
-  let title;
-
+}: UserInfo) {
   const titles = {
     [Role.STUDENT]: "Aluno",
     [Role.TEACHER]: "Professor",
     [Role.ADMIN]: "Administrador",
-  };
+  } as const;
 
-  title = titles[role as keyof typeof titles];
+  const title = titles[role];
 
-  const isAdminAndNotOwnProfile =
-    ownRole === Role.ADMIN && email !== session!.user.email!;
+  const { tempRole } = useTempRole()
+  const session = await auth()
+  const userEmail = session?.user.email
+
+  const isAdminAndNotOwnProfile = tempRole === Role.ADMIN && email !== userEmail
 
   return (
     <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>
@@ -67,12 +68,9 @@ export default async function UserInfo({
           <Title style={{ marginBottom: "0" }} level={5}>
             {title}
           </Title>
-          {/* TODO: Add option to admins to change the role of the user*/}
           {isAdminAndNotOwnProfile && (
             <Tooltip title="Mudar role">
-              <Dropdown trigger={["click"]}>
-                <EditOutlined />
-              </Dropdown>
+              <ChangeRoleDropdown role={role} onRoleChange={() => {}} />
             </Tooltip>
           )}
         </Flex>

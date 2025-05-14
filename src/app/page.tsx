@@ -31,12 +31,14 @@ export default function Dashboard() {
           <CalendarOutlined />
         </Link>
       </Tooltip>,
-      <Tooltip title="Editar laboratório" key="settings">
-      <Link href={`/labs/${labId}/settings`}>
-        <SettingOutlined />
-      </Link>
-    </Tooltip>,
-    ];
+      tempRole === "teacher" && (
+        <Tooltip title="Editar laboratório" key="settings">
+          <Link href={`/labs/${labId}/settings`}>
+            <SettingOutlined />
+          </Link>
+        </Tooltip>
+      ),
+    ].filter(Boolean);
   }
 
   return (
@@ -45,7 +47,9 @@ export default function Dashboard() {
       <Divider/>
       <Flex wrap gap="small">
         {(labs.length == 0) ? (
-          <Empty description="Nenhum laboratório disponível" />
+          <Button style={cardStyle} icon={<PlusOutlined />} size="large">
+            <Empty description="Nenhum laboratório disponível" />
+          </Button>
         ) : (
           labs.map((lab, index) => {
             const labId = index + 1;
@@ -53,7 +57,7 @@ export default function Dashboard() {
             <Card
               key={labId}
               style={cardStyle}
-              actions={tempRole === "teacher" ? getLabActions(labId) : []}
+              actions={getLabActions(labId)}
             >
               <Link href={`/labs/${labId}`} key={labId}>
                 <Title level={4} style={{ textAlign: "center" }}>
