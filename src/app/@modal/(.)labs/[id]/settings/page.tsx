@@ -8,7 +8,7 @@ export default async function LaboratorySettingsModal({
 }: {
   params: { id: string };
 }) {
-  const { id } = await params;
+  const { id } = params;
   const labName = labs[Number(id) - 1];
 
   // TODO: Fetch the lab data from the API

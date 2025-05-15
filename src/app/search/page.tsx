@@ -1,7 +1,9 @@
+"use client";
+
 import { Flex } from "antd";
 import DefaultPage from "../components/defaults/DefaultPage";
 import Search from "antd/es/input/Search";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, type ChangeEvent, useEffect } from "react";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");

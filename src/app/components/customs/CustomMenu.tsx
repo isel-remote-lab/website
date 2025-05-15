@@ -14,7 +14,7 @@ import RoleDropdown from "../dropdowns/RoleDropdown";
  * @returns The client menu component
  */
 export default async function CustomMenu() {
-  const session = await auth()
+  const session = await auth();
 
   const { role } = session!.user;
 
@@ -55,28 +55,38 @@ export default async function CustomMenu() {
       key: "logo",
       label: (
         <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-          <Image src="/black-logo.svg" alt="RL" width={60} height={0}/>
+          <Image src="/black-logo.svg" alt="RL" width={60} height={0} />
         </Link>
       ),
     },
     {
       key: "breadcrumb",
       label: <CustomBreadcrumb />,
-      style: { fontSize: 18, fontWeight: "bold" }
+      style: { fontSize: 18, fontWeight: "bold" },
     },
     {
       key: "search",
       label: (
-        <div style={{ width: "100%", display: "f<lex", justifyContent: "center" }}>
-          <Search placeholder="Pesquisar..." style={{ width: "30rem", maxWidth: "100%" }} />
+        <div
+          style={{ width: "100%", display: "f<lex", justifyContent: "center" }}
+        >
+          <Search
+            placeholder="Pesquisar..."
+            style={{ width: "30rem", maxWidth: "100%" }}
+          />
         </div>
       ),
-      style: { position: "absolute", left: "50%", transform: "translateX(-50%)", top: "25%" }
+      style: {
+        position: "absolute",
+        left: "50%",
+        transform: "translateX(-50%)",
+        top: "25%",
+      },
     },
     {
       key: "create-lab",
       label: <CrateLabTopButton role={role} />,
-      style: { marginLeft: "auto" }
+      style: { marginLeft: "auto" },
     },
     {
       key: "change-role",
@@ -96,7 +106,7 @@ export default async function CustomMenu() {
           <Avatar icon={<UserImage />} size={45} />
         </Dropdown>
       ),
-    }
+    },
   ];
 
   return (
@@ -107,7 +117,7 @@ export default async function CustomMenu() {
         alignItems: "center",
         height: menuHeight,
         width: "100%",
-        position: "relative"
+        position: "relative",
       }}
       items={menuItems}
     />

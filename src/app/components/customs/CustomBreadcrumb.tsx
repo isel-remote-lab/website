@@ -67,7 +67,7 @@ function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
         // TODO : Add logic to get the name of the lab from the database
         const labName = labs[parseInt(labId!) - 1]?.labName;
         // Convert Laboratory object to string for ReactNode compatibility
-        items[items.length - 1]!.title = labName ? labName : `Lab ${labId}`;
+        items[items.length - 1]!.title = labName ?? `Lab ${labId}`;
       } else {
         const title =
           translations[pathname!] ??

@@ -8,10 +8,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { auth } from "~/server/auth";
 import { Role } from "~/types/role";
 import ChangeRoleDropdown from "~/app/components/dropdowns/ChangeRoleDropdown";
 import { useTempRole } from "~/contexts/TempRoleContext";
+import { useSession } from "next-auth/react";
 
 export const avatarSize = 250;
 
@@ -21,7 +21,7 @@ export type UserInfo = {
   role: Role;
   image: string;
   createdAt: string;
-}
+};
 
 export default async function UserInfo({
   name,
@@ -38,11 +38,12 @@ export default async function UserInfo({
 
   const title = titles[role];
 
-  const { tempRole } = useTempRole()
-  const session = await auth()
-  const userEmail = session?.user.email
+  const { tempRole } = useTempRole();
+  const session = useSession();
+  const userEmail = session?.data?.user?.email;
 
-  const isAdminAndNotOwnProfile = tempRole === Role.ADMIN && email !== userEmail
+  const isAdminAndNotOwnProfile =
+    tempRole === Role.ADMIN && email !== userEmail;
 
   return (
     <Flex wrap gap="large" align="center" style={{ flexDirection: "column" }}>

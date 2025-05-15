@@ -17,15 +17,15 @@ export async function getUserOwnImage() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        responseType: 'arraybuffer'
+        responseType: "arraybuffer",
       },
     );
-    
+
     if (res.status === 200) {
       const base64 = Buffer.from(res.data).toString("base64");
       return `data:image/jpeg;base64,${base64}`;
     } else {
-      console.error("Failed to get user profile picture, status:", res.status)
+      console.error("Failed to get user profile picture, status:", res.status);
     }
   } catch (error) {
     console.error("Failed to get user profile picture:", error);
@@ -49,15 +49,15 @@ export async function getUserImage(userPrincipalName: string) {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        responseType: 'arraybuffer'
-      }
+        responseType: "arraybuffer",
+      },
     );
 
     if (res.status === 200) {
       const base64 = Buffer.from(res.data).toString("base64");
       return `data:image/jpeg;base64,${base64}`;
     } else {
-      console.error("Failed to get user profile picture, status:", res.status)
+      console.error("Failed to get user profile picture, status:", res.status);
     }
   } catch (error) {
     console.error("Failed to get user profile picture:", error);

@@ -2,7 +2,7 @@
 
 import { EditOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
-import { Role } from "~/types/role";
+import { type Role } from "~/types/role";
 import { RoleDropdownMenu } from "./RoleDropdownMenu";
 
 interface ChangeRoleDropdownProps {
@@ -10,17 +10,20 @@ interface ChangeRoleDropdownProps {
   onRoleChange: (role: Role) => void;
 }
 
-export default function ChangeRoleDropdown({ role, onRoleChange }: ChangeRoleDropdownProps) {
+export default function ChangeRoleDropdown({
+  role,
+  onRoleChange,
+}: ChangeRoleDropdownProps) {
   return (
-    <Dropdown 
-      menu={{ 
-        items: RoleDropdownMenu({ 
-          currentRole: role, 
-          userRole: role, 
+    <Dropdown
+      menu={{
+        items: RoleDropdownMenu({
+          currentRole: role,
+          userRole: role,
           onRoleChange,
-          isTemporary: false
-        }) 
-      }} 
+          isTemporary: false,
+        }),
+      }}
       trigger={["hover"]}
     >
       <EditOutlined />

@@ -8,8 +8,8 @@ export default async function AccountInfo() {
   const userImage = await getUserOwnImage();
 
   const userInfo = {
-    name: user.name!,
-    email: user.email!,
+    name: user.name,
+    email: user.email,
     role: user.role,
     image: userImage!,
     createdAt: user.createdAt,

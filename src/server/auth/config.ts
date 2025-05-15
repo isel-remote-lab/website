@@ -1,9 +1,12 @@
-import { DefaultSession, type NextAuthConfig } from "next-auth";
+import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { UserResponse, usersService, type UserRequest } from "~/services/usersService";
+import {
+  type UserResponse,
+  usersService,
+  type UserRequest,
+} from "~/services/usersService";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
-
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -13,13 +16,14 @@ import { RoleLetter, roleLetterToRole } from "~/types/role";
  */
 declare module "next-auth" {
   interface User {
-    dbUser?: UserResponse,
+    dbUser?: UserResponse;
   }
 
   interface Session extends DefaultSession {
     user: {
-      oauthUserToken: string,
-    } & UserResponse & DefaultSession["user"]
+      oauthUserToken: string;
+    } & UserResponse &
+      DefaultSession["user"];
   }
 }
 
@@ -42,7 +46,7 @@ export const authConfig = {
         return {
           name: profile.name,
           email: profile.email,
-        }
+        };
       },
     }),
     /**
@@ -59,49 +63,52 @@ export const authConfig = {
     async signIn({ user }) {
       // If API mocking is enabled, simulate a successful sign in
       if (process.env.API_MOCKING === "1") {
-        return true
+        return true;
       }
 
       try {
         if (!user.email || !user.name) {
-          console.error('Missing required user data:', { email: user.email, name: user.name })
-          return false
+          console.error("Missing required user data:", {
+            email: user.email,
+            name: user.name,
+          });
+          return false;
         }
 
         const userRequest: UserRequest = {
           name: user.name,
           email: user.email,
-        }
+        };
 
         // Sign in the user
-        const signInResponse = await usersService.signIn(userRequest)
+        const signInResponse = await usersService.signIn(userRequest);
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
-          user.dbUser = signInResponse.user
- 
-          return true
+          user.dbUser = signInResponse.user;
+
+          return true;
         }
       } catch (error) {
-        console.error('Error during sign in:', error)
-        return false
+        console.error("Error during sign in:", error);
+        return false;
       }
 
-      return false
+      return false;
     },
-  
+
     // Store the access token in the user session
     async jwt({ token, account, user }) {
       // If we have an access token, store it in the token
       if (account) {
-        token.oauthUserToken = account.access_token
+        token.oauthUserToken = account.access_token;
       }
 
       // If we have user data from signIn, store it in the token
       if (user) {
-        token.user = user.dbUser
+        token.user = user.dbUser;
       }
 
-      return token
+      return token;
     },
 
     /**
@@ -110,21 +117,23 @@ export const authConfig = {
      * client-side.
      */
     async session({ session, token }) {
-      const sessionUser = session.user
+      const sessionUser = session.user;
 
       // Add the access token to the session
-      sessionUser.oauthUserToken = token.oauthUserToken as string
+      sessionUser.oauthUserToken = token.oauthUserToken as string;
 
       // Add the user data to the session
-      const dbUser = token.user as UserResponse
+      const dbUser = token.user as UserResponse;
       if (dbUser) {
-        sessionUser.userId = dbUser.userId
-        sessionUser.role = roleLetterToRole(RoleLetter.ADMIN)
+        sessionUser.userId = dbUser.userId;
+        sessionUser.role = roleLetterToRole(RoleLetter.ADMIN);
         //sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
-        sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString('pt-PT')
+        sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString(
+          "pt-PT",
+        );
       }
 
-      return session
+      return session;
     },
   },
   events: {
@@ -134,10 +143,10 @@ export const authConfig = {
     async signOut() {
       try {
         // Sign out the user on the backend
-        await usersService.signOut()
+        await usersService.signOut();
       } catch (error) {
-        console.error('Error during sign out:', error)
+        console.error("Error during sign out:", error);
       }
     },
   },
-} satisfies NextAuthConfig
+} satisfies NextAuthConfig;

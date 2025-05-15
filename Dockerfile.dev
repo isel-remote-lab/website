@@ -3,14 +3,14 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json ./
-COPY package-lock.json ./
+COPY ./website/package.json ./
+COPY ./website/package-lock.json ./
 
 # Install dependencies with verbose logging
 RUN npm install --loglevel verbose
 
 # Copy source files (excluding node_modules)
-COPY . .
+COPY ./website .
 
 EXPOSE 3000
 

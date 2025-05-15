@@ -1,14 +1,17 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-import Laboratory from "~/types/laboratory";
+import type Laboratory from "~/types/laboratory";
 interface EditLabInfoProps {
   labId: string;
   initialValues?: Laboratory;
 }
 
-export default function EditLabInfo({ labId, initialValues }: EditLabInfoProps) {
-  const onFinish = async (values: any) => {
+export default function EditLabInfo({
+  labId,
+  initialValues,
+}: EditLabInfoProps) {
+  const onFinish = async (values: unknown) => {
     // TODO: Implement the update logic
     console.log("Form values:", values);
   };
@@ -20,4 +23,4 @@ export default function EditLabInfo({ labId, initialValues }: EditLabInfoProps) 
       submitButtonText="Atualizar laboratório"
     />
   );
-} 
+}

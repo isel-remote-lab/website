@@ -11,11 +11,11 @@ interface RoleDropdownMenuProps {
   isTemporary?: boolean;
 }
 
-export function RoleDropdownMenu({ 
-  currentRole, 
-  userRole, 
+export function RoleDropdownMenu({
+  currentRole,
+  userRole,
   onRoleChange,
-  isTemporary = false 
+  isTemporary = false,
 }: RoleDropdownMenuProps): MenuProps["items"] {
   const items: MenuProps["items"] = [];
 
@@ -32,9 +32,10 @@ export function RoleDropdownMenu({
   }
 
   // Teacher role option
-  if (isTemporary 
-    ? currentRole !== Role.TEACHER && userRole !== Role.STUDENT 
-    : userRole !== Role.TEACHER
+  if (
+    isTemporary
+      ? currentRole !== Role.TEACHER && userRole !== Role.STUDENT
+      : userRole !== Role.TEACHER
   ) {
     items.push({
       key: "teacher",
@@ -47,9 +48,10 @@ export function RoleDropdownMenu({
   }
 
   // Admin role option
-  if (isTemporary 
-    ? currentRole !== Role.ADMIN && userRole === Role.ADMIN 
-    : userRole !== Role.ADMIN
+  if (
+    isTemporary
+      ? currentRole !== Role.ADMIN && userRole === Role.ADMIN
+      : userRole !== Role.ADMIN
   ) {
     items.push({
       key: "admin",
@@ -62,4 +64,4 @@ export function RoleDropdownMenu({
   }
 
   return items;
-} 
+}

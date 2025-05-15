@@ -10,9 +10,9 @@ export default async function UserInfoPage({
   const { id } = await params;
 
   // TODO: Fetch the lab data from the API
-  let user = await usersService.getUserById(id)
+  const user = await usersService.getUserById(id);
 
-  user.image = await getUserImage(user.email!) || ""
+  user.image = (await getUserImage(user.email)) || "";
 
   return (
     <DefaultPage>

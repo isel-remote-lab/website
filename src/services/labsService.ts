@@ -1,5 +1,6 @@
-import { fetchWithCookie, Uris } from '~/services/api';
-import Laboratory, { LaboratoryRequest } from '~/types/laboratory';
+import { fetchWithCookie, Uris } from "~/services/api";
+import { type LaboratoryRequest } from "~/types/laboratory";
+import type Laboratory from "~/types/laboratory";
 
 /**
  * Laboratory service for handling laboratory-related API calls
@@ -25,11 +26,11 @@ export const labsService = {
    * @returns Created laboratory
    */
   createLab: async (labData: LaboratoryRequest): Promise<number> => {
-    const uri = Uris.Laboratories.GET_ALL
+    const uri = Uris.Laboratories.GET_ALL;
     try {
       const response = await fetchWithCookie(uri, {
-        method: 'POST',
-        data: labData
+        method: "POST",
+        data: labData,
       });
       return response.data.data.laboratory_id;
     } catch (error: any) {
@@ -43,7 +44,7 @@ export const labsService = {
    * @returns Laboratory data
    */
   getLabById: async (labId: number): Promise<Laboratory> => {
-    const uri = Uris.Laboratories.GET_BY_ID.replace('{id}', labId.toString());
+    const uri = Uris.Laboratories.GET_BY_ID.replace("{id}", labId.toString());
     try {
       const response = await fetchWithCookie(uri);
       return response.data.laboratory;
@@ -58,12 +59,15 @@ export const labsService = {
    * @param labData - Updated laboratory data
    * @returns Updated laboratory
    */
-  updateLab: async (labId: number, labData: LaboratoryRequest): Promise<Laboratory> => {
+  updateLab: async (
+    labId: number,
+    labData: LaboratoryRequest,
+  ): Promise<Laboratory> => {
     const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
     try {
       const response = await fetchWithCookie(uri, {
-        method: 'PUT',
-        data: labData
+        method: "PUT",
+        data: labData,
       });
       return response.data.data.laboratory;
     } catch (error: any) {
@@ -79,10 +83,10 @@ export const labsService = {
     const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
     try {
       await fetchWithCookie(uri, {
-        method: 'DELETE'
+        method: "DELETE",
       });
     } catch (error: any) {
       throw new Error(`Failed to delete laboratory: ${error.message}`);
     }
-  }
-}; 
+  },
+};

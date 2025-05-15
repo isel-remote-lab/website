@@ -1,14 +1,14 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 // Base API prefix
-const DOCKER_URL = "http://api:8080"
-const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
-const API_PREFIX = `${BASE_URL}/api/v1`
-const AUTH_URI = `${API_PREFIX}/auth`
-const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`
-const LOGOUT_URI = `${AUTH_URI}/logout`
-const USERS_URI = `${API_PREFIX}/users`
-const LABORATORIES_URI = `${API_PREFIX}/laboratories`
+const DOCKER_URL = "http://api:8080";
+const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+const API_PREFIX = `${BASE_URL}/api/v1`;
+const AUTH_URI = `${API_PREFIX}/auth`;
+const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`;
+const LOGOUT_URI = `${AUTH_URI}/logout`;
+const USERS_URI = `${API_PREFIX}/users`;
+const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
 
 /**
  * API URIs for user-related operations
@@ -32,17 +32,17 @@ export const Uris = {
      * URI for creating a user
      */
     CREATE: USERS_URI,
-    
+
     /**
      * URI for getting a user by ID
      */
     GET: `${USERS_URI}/{id}`,
-    
+
     /**
      * URI for getting a user by email
      */
     GET_BY_EMAIL: USERS_URI,
-    
+
     /**
      * URI for getting a user by OAuth ID
      */
@@ -66,8 +66,8 @@ export const Uris = {
     /**
      * URI for getting a laboratory by ID
      */
-    GET_BY_ID: `${LABORATORIES_URI}/{id}`
-  }
+    GET_BY_ID: `${LABORATORIES_URI}/{id}`,
+  },
 };
 
 /**
@@ -79,9 +79,9 @@ export const Uris = {
 export const replaceParams = (uri: string, params: object): string => {
   let result = uri;
   Object.entries(params).forEach(([key, value]) => {
-    result = result.replace(`{${key}}`, value)
-  })
-  return result
+    result = result.replace(`{${key}}`, value);
+  });
+  return result;
 };
 
 /**
@@ -90,22 +90,30 @@ export const replaceParams = (uri: string, params: object): string => {
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchWithLogs = async (uri: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
+export const fetchWithLogs = async (
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<AxiosResponse> => {
   try {
     const response = await axios({
       url: uri,
       ...options,
       headers: {
         ...options.headers,
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+      },
     });
-    return response
-  } catch (error) {
-    console.error('Error fetching:', error)
-    throw error
+    return response;
+  } catch (error: any) {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/api/auth/signin";
+      }
+    }
+    console.error("Error fetching:", error);
+    throw error;
   }
-}
+};
 
 /**
  * Fetch API with API key
@@ -114,17 +122,21 @@ export const fetchWithLogs = async (uri: string, options: AxiosRequestConfig = {
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchWithApiKey = async (uri: string, data: any = {}, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
+export const fetchWithApiKey = async (
+  uri: string,
+  data: any = {},
+  options: AxiosRequestConfig = {},
+): Promise<AxiosResponse> => {
   const config: AxiosRequestConfig = {
     ...options,
     headers: {
       ...(options.headers || {}),
-      'X-API-Key': process.env.API_KEY || '',
+      "X-API-Key": process.env.API_KEY || "",
     },
   };
 
-  return await axios.post(uri, data, config)
-}
+  return await axios.post(uri, data, config);
+};
 
 /**
  * Fetch API with cookie
@@ -132,10 +144,12 @@ export const fetchWithApiKey = async (uri: string, data: any = {}, options: Axio
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchWithCookie = async (uri: string, options: AxiosRequestConfig = {}): Promise<AxiosResponse> => {
+export const fetchWithCookie = async (
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<AxiosResponse> => {
   return fetchWithLogs(uri, {
     ...options,
-    withCredentials: true // This ensures the session cookie is sent with the request
+    withCredentials: true, // This ensures the session cookie is sent with the request
   });
-}
-  
+};

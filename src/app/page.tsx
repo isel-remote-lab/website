@@ -1,6 +1,10 @@
-"use client"
+"use client";
 
-import { CalendarOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  PlusOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
@@ -16,8 +20,7 @@ export const labs = await labsService.getAllLabs();
 
 const cardStyle = {
   width: labsWidth,
-  height: 145,
-  //hoverable: true,
+  height: 130,
   border: "none",
 };
 
@@ -44,34 +47,39 @@ export default function Dashboard() {
   return (
     <Layout style={{ padding: "1%" }}>
       <Title level={2}>Os meus laboratórios</Title>
-      <Divider/>
+      <Divider />
       <Flex wrap gap="small">
-        {
-          labs.map((lab, index) => {
-            const labId = index + 1;
-            return (
-            <Card
-              key={labId}
-              style={cardStyle}
-              actions={getLabActions(labId)}
-            >
+        {labs.map((lab, index) => {
+          const labId = index + 1;
+          return (
+            <Card key={labId} style={cardStyle} actions={getLabActions(labId)}>
               <Link href={`/labs/${labId}`} key={labId}>
                 <Title level={4} style={{ textAlign: "center" }}>
                   {lab.labName}
                 </Title>
               </Link>
             </Card>
-            );
-          })
-        }
-        {tempRole === "teacher" ?
+          );
+        })}
+        {tempRole === "teacher" ? (
           <Link href="/labs/create">
             <Tooltip title="Criar laboratório">
               <Button style={cardStyle} icon={<PlusOutlined />} size="large" />
             </Tooltip>
           </Link>
-        : labs.length == 0 && (
-          <Button style={{...cardStyle, cursor: "default", padding: 10}} icon={<Empty description="Nenhum laboratório disponível" />} size="large"/>
+        ) : (
+          labs.length == 0 && (
+            <Button
+              style={{ ...cardStyle, cursor: "default"}}
+              icon={
+                <Empty
+                  description="Nenhum laboratório disponível"
+                  imageStyle={{ height: 80 }}
+                />
+              }
+              size="large"
+            />
+          )
         )}
       </Flex>
     </Layout>

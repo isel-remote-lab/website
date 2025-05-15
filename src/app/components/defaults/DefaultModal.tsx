@@ -1,6 +1,6 @@
 "use client";
 
-import { Divider, Modal } from "antd";
+import { Modal } from "antd";
 import { useRouter } from "next/navigation";
 
 interface DefaultModelProps {

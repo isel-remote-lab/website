@@ -6,6 +6,7 @@ import { labsService } from "~/services/labsService";
  * @returns The page content
  */
 export default async function LabPage({ params }: { params: { id: string } }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id } = await params;
   const lab = await labsService.getLabById(parseInt(id));
   // TODO: Add is on queue verification and show a message if the user is not allowed to access the lab

@@ -2,15 +2,21 @@
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
 import { labsService } from "~/services/labsService";
-import { LaboratoryRequest } from "~/types/laboratory";
+import { type LaboratoryRequest } from "~/types/laboratory";
 import { useRouter } from "next/navigation";
 
 export default function CreateLabInfo() {
   const router = useRouter();
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: {
+    duration: string;
+    name: string;
+    description: string | null;
+    queueLimit: number;
+  }) => {
     // Convert date string to minutes
-    const durationDate = new Date(values.duration)
-    const durationInMinutes = durationDate.getHours() * 60 + durationDate.getMinutes()
+    const durationDate = new Date(values.duration);
+    const durationInMinutes =
+      durationDate.getHours() * 60 + durationDate.getMinutes();
 
     const labData: LaboratoryRequest = {
       labName: values.name,
@@ -19,15 +25,15 @@ export default function CreateLabInfo() {
       labDuration: durationInMinutes,
     };
 
-    const response = await labsService.createLab(labData)
+    const response = await labsService.createLab(labData);
     if (response) {
-      router.push(`/labs/${response}`)
+      router.push(`/labs/${response}`);
     }
   };
 
   return (
     <LabInfoForm
-      onFinish={onFinish}
+      onFinish={onFinish as (values: unknown) => void}
       submitButtonText="Criar laboratório"
     />
   );
