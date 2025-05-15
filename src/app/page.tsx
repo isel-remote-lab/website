@@ -16,8 +16,8 @@ export const labs = await labsService.getAllLabs();
 
 const cardStyle = {
   width: labsWidth,
-  height: "100%",
-  hoverable: true,
+  height: 145,
+  //hoverable: true,
   border: "none",
 };
 
@@ -46,11 +46,7 @@ export default function Dashboard() {
       <Title level={2}>Os meus laboratórios</Title>
       <Divider/>
       <Flex wrap gap="small">
-        {(labs.length == 0) ? (
-          <Button style={cardStyle} icon={<PlusOutlined />} size="large">
-            <Empty description="Nenhum laboratório disponível" />
-          </Button>
-        ) : (
+        {
           labs.map((lab, index) => {
             const labId = index + 1;
             return (
@@ -67,14 +63,15 @@ export default function Dashboard() {
             </Card>
             );
           })
-        )}
-        
-        {tempRole === "teacher" && (
+        }
+        {tempRole === "teacher" ?
           <Link href="/labs/create">
             <Tooltip title="Criar laboratório">
               <Button style={cardStyle} icon={<PlusOutlined />} size="large" />
             </Tooltip>
           </Link>
+        : labs.length == 0 && (
+          <Button style={{...cardStyle, cursor: "default", padding: 10}} icon={<Empty description="Nenhum laboratório disponível" />} size="large"/>
         )}
       </Flex>
     </Layout>

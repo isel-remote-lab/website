@@ -3,15 +3,15 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
+COPY package-lock.json ./
 
-# Install pnpm and dependencies
-RUN npm install -g pnpm
-RUN pnpm install
+# Install dependencies with verbose logging
+RUN npm install --loglevel verbose
 
 # Copy source files (excluding node_modules)
 COPY . .
 
 EXPOSE 3000
 
-CMD ["pnpm", "dev"] 
+CMD ["npm", "run", "dev"] 

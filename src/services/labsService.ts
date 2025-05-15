@@ -24,14 +24,14 @@ export const labsService = {
    * @param labData - Laboratory data
    * @returns Created laboratory
    */
-  createLab: async (labData: LaboratoryRequest): Promise<Laboratory> => {
-    const uri = Uris.Laboratories.GET_ALL;
+  createLab: async (labData: LaboratoryRequest): Promise<number> => {
+    const uri = Uris.Laboratories.GET_ALL
     try {
       const response = await fetchWithCookie(uri, {
         method: 'POST',
         data: labData
       });
-      return response.data.data.laboratory;
+      return response.data.data.laboratory_id;
     } catch (error: any) {
       throw new Error(`Failed to create laboratory: ${error.message}`);
     }
