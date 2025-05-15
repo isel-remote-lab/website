@@ -1,4 +1,4 @@
-import { fetchWithCookie, Uris } from "~/services/api";
+import { fetchWithCookie, replaceParams, Uris } from "~/services/api";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import type Laboratory from "~/types/laboratory";
 
@@ -44,7 +44,7 @@ export const labsService = {
    * @returns Laboratory data
    */
   getLabById: async (labId: number): Promise<Laboratory> => {
-    const uri = Uris.Laboratories.GET_BY_ID.replace("{id}", labId.toString());
+    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
     try {
       const response = await fetchWithCookie(uri);
       return response.data.laboratory;
@@ -63,7 +63,7 @@ export const labsService = {
     labId: number,
     labData: LaboratoryRequest,
   ): Promise<Laboratory> => {
-    const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
+    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
     try {
       const response = await fetchWithCookie(uri, {
         method: "PUT",
@@ -80,7 +80,7 @@ export const labsService = {
    * @param labId - Laboratory ID
    */
   deleteLab: async (labId: number): Promise<void> => {
-    const uri = `${Uris.Laboratories.GET_ALL}/${labId}`;
+    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
     try {
       await fetchWithCookie(uri, {
         method: "DELETE",

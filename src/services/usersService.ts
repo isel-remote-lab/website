@@ -138,7 +138,7 @@ export const usersService = {
    * @returns User data
    */
   getUserByEmail: async (email: string): Promise<UserResponse> => {
-    const uri = `${Uris.Users.GET_BY_EMAIL}?email=${encodeURIComponent(email)}`;
+    const uri = replaceParams(Uris.Users.GET_BY_EMAIL, { email: email });
     try {
       const response = await fetchWithCookie(uri);
       return response.data as unknown as UserResponse;

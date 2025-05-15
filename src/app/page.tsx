@@ -74,7 +74,7 @@ export default function Dashboard() {
               icon={
                 <Empty
                   description="Nenhum laboratório disponível"
-                  imageStyle={{ height: 80 }}
+                  styles={{ image: { height: 80 } }}
                 />
               }
               size="large"

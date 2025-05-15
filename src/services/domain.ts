@@ -1,7 +1,9 @@
+const DOMAIN_CONFIG_PATH = process.env.DOMAIN_CONFIG_PATH
+
 interface LabConfig {
-  optional: boolean;
   min: number;
   max: number;
+  optional: boolean;
   unit?: string;
 }
 
@@ -15,7 +17,7 @@ interface DomainConfig {
 }
 
 const domainConfig: DomainConfig = require(
-  process.env.DOMAIN_CONFIG_PATH || "../../../api/host/src/main/resources/domain-config.json",
+  DOMAIN_CONFIG_PATH || "../../domain-config.json" || "../../../api/host/src/main/resources/domain-config.json",
 );
 
 export const labConfig = {
