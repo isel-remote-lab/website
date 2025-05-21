@@ -1,13 +1,10 @@
-import { type AxiosResponse } from "axios";
 import {
   Uris,
-  fetchWithCookie,
   replaceParams,
   fetchWithApiKey,
+  fetchWithAuthHeader,
 } from "~/services/api";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
-import { parse } from "cookie";
-import { cookies } from "next/headers";
 import { type UserInfo } from "~/app/users/[id]/UserInfo";
 import { type Role } from "~/types/role";
 
@@ -51,6 +48,7 @@ export type UpdateUserRoleRequest = {
  * Set cookies from the response
  * @param response - The response from the fetch request
  */
+/*
 async function setCookies(response: AxiosResponse) {
   const headerCookies = response.headers["set-cookie"];
   if (headerCookies && headerCookies.length > 0) {
@@ -70,6 +68,7 @@ async function setCookies(response: AxiosResponse) {
     });
   }
 }
+*/
 
 /**
  * User service for handling user-related API calls
@@ -84,7 +83,7 @@ export const usersService = {
     const uri = Uris.LOGIN;
     try {
       const response = await fetchWithApiKey(uri, userData);
-      await setCookies(response);
+      //await setCookies(response);
       return response.data.data as unknown as SignInResponse;
     } catch (error: unknown) {
       console.error("Error signing in:", error);
@@ -100,7 +99,7 @@ export const usersService = {
   signOut: async () => {
     const uri = Uris.LOGOUT;
     try {
-      await fetchWithCookie(uri, {
+      await fetchWithAuthHeader(uri, {
         method: "POST",
       });
     } catch (error: unknown) {
@@ -118,7 +117,7 @@ export const usersService = {
   getUserById: async (userId: string): Promise<UserResponse> => {
     const uri = replaceParams(Uris.Users.GET, { id: userId });
     try {
-      const response = await fetchWithCookie(uri);
+      const response = await fetchWithAuthHeader(uri);
 
       const user = response.data.data.user as unknown as UserResponse;
 
@@ -140,7 +139,7 @@ export const usersService = {
   getUserByEmail: async (email: string): Promise<UserResponse> => {
     const uri = replaceParams(Uris.Users.GET_BY_EMAIL, { email: email });
     try {
-      const response = await fetchWithCookie(uri);
+      const response = await fetchWithAuthHeader(uri);
       return response.data as unknown as UserResponse;
     } catch (error: unknown) {
       throw new Error(
@@ -159,7 +158,7 @@ export const usersService = {
   ): Promise<UserResponse> => {
     const uri = Uris.Users.UPDATE_ROLE;
     try {
-      const response = await fetchWithCookie(uri, {
+      const response = await fetchWithAuthHeader(uri, {
         method: "PUT",
         data,
       });

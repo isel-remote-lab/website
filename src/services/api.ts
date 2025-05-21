@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { auth } from "~/server/auth";
 
 // Base API prefix
 const DOCKER_URL = "http://api:8080";
@@ -151,5 +152,27 @@ export const fetchWithCookie = async (
   return fetchWithLogs(uri, {
     ...options,
     withCredentials: true, // This ensures the session cookie is sent with the request
+  });
+};
+
+/**
+ * Fetch API with Authorization header
+ * @param uri - The URI to fetch
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
+ */
+export const fetchWithAuthHeader = async (
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<AxiosResponse> => {
+  const session = await auth();
+  const userToken = session?.user.userToken;
+
+  return fetchWithLogs(uri, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Authorization": `Bearer ${userToken}`,
+    },
   });
 };

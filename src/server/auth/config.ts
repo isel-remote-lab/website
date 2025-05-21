@@ -17,11 +17,13 @@ import { RoleLetter, roleLetterToRole } from "~/types/role";
 declare module "next-auth" {
   interface User {
     dbUser?: UserResponse;
+    userToken?: string;
   }
 
   interface Session extends DefaultSession {
     user: {
       oauthUserToken: string;
+      userToken: string;
     } & UserResponse &
       DefaultSession["user"];
   }
@@ -85,7 +87,7 @@ export const authConfig = {
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
           user.dbUser = signInResponse.user;
-
+          user.userToken = signInResponse.token;
           return true;
         }
       } catch (error) {
@@ -106,6 +108,7 @@ export const authConfig = {
       // If we have user data from signIn, store it in the token
       if (user) {
         token.user = user.dbUser;
+        token.userToken = user.userToken;
       }
 
       return token;
@@ -124,12 +127,15 @@ export const authConfig = {
 
       // Add the user data to the session
       const dbUser = token.user as UserResponse;
+      const userToken = token.userToken as string;
+
       if (dbUser) {
         sessionUser.userId = dbUser.userId;
         sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
         sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString(
           "pt-PT",
         );
+        sessionUser.userToken = userToken;
       }
 
       return session;
