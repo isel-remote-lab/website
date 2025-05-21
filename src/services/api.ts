@@ -106,11 +106,11 @@ export const fetchWithLogs = async (
     });
     return response;
   } catch (error: any) {
-    if (error.response && error.response.status === 401) {
+    /*if (error.response && error.response.status === 401) {
       if (typeof window !== "undefined") {
         window.location.href = "/api/auth/signin";
       }
-    }
+    }*/
     console.error("Error fetching:", error);
     throw error;
   }
