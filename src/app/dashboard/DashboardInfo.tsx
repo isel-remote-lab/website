@@ -10,7 +10,7 @@ import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
 
-const labsWidth = 300;
+const labsWidth = 280;
 
 const cardStyle = {
   width: labsWidth,
@@ -42,7 +42,7 @@ export default function DashboardInfo({ labs }: { labs: any[] }) {
     <Layout style={{ padding: "1%" }}>
       <Title level={2}>Os meus laboratórios</Title>
       <Divider />
-      <Flex wrap gap="small">
+      <Flex wrap gap="small" justify="center">
         {labs.map((lab, index) => {
           const labId = index + 1;
           return (

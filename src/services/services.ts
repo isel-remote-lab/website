@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { redirect } from "next/navigation";
-
 import { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
 
@@ -92,22 +91,6 @@ export async function fetchWithApiKey(
 }
 
 /**
- * Fetch API with cookie
- * @param uri - The URI to fetch
- * @param options - The options for the axios request
- * @returns The response from the axios request
- */
-export async function fetchWithCookie(
-  uri: string,
-  options: AxiosRequestConfig = {},
-): Promise<any> {
-  return await fetchApi(uri, {
-    ...options,
-    withCredentials: true, // This ensures the session cookie is sent with the request
-  });
-}
-
-/**
  * Fetch API with Authorization header
  * @param uri - The URI to fetch
  * @param options - The options for the axios request
@@ -128,3 +111,21 @@ export async function fetchWithAuthHeader(
     },
   });
 }
+
+/**
+ * Fetch API with cookie
+ * @param uri - The URI to fetch
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
+ */
+/*
+export async function fetchWithCookie(
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<any> {
+  return await fetchApi(uri, {
+    ...options,
+    withCredentials: true, // This ensures the session cookie is sent with the request
+  });
+}
+*/

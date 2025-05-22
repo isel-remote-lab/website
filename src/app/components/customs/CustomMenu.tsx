@@ -49,13 +49,14 @@ export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
   ];
 
   const menuHeight = 64;
+  const logoSize = 60;
 
   const menuItems: MenuProps["items"] = [
     {
       key: "logo",
       label: (
         <Link href="/" style={{ display: "flex", alignItems: "center" }}>
-          <Image src="/black-logo.svg" alt="RL" width={60} height={0} />
+          <Image src="/black-logo.svg" alt="RL" width={logoSize} height={logoSize} />
         </Link>
       ),
     },
