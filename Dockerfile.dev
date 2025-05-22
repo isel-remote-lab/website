@@ -9,9 +9,6 @@ COPY ./website/package-lock.json ./
 # Install dependencies with verbose logging
 RUN npm install --loglevel verbose
 
-# Copy source files (excluding node_modules)
-COPY ./website .
-
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"] 

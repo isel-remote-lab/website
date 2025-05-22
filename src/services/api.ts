@@ -104,13 +104,13 @@ export const fetchWithLogs = async (
         "Content-Type": "application/json",
       },
     });
-    return response;
+    return response.data.data;
   } catch (error: any) {
-    /*if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       if (typeof window !== "undefined") {
         window.location.href = "/api/auth/signin";
       }
-    }*/
+    }
     console.error("Error fetching:", error);
     throw error;
   }
@@ -128,15 +128,16 @@ export const fetchWithApiKey = async (
   data: any = {},
   options: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
-  const config: AxiosRequestConfig = {
+  return await fetchWithLogs(uri, {
+    ...options,
+    method: "POST",
+    data: data,
     ...options,
     headers: {
-      ...(options.headers || {}),
-      "X-API-Key": process.env.API_KEY || "",
+      ...options.headers,
+      "X-API-Key": process.env.API_KEY,
     },
-  };
-
-  return await axios.post(uri, data, config);
+  });
 };
 
 /**
@@ -149,7 +150,7 @@ export const fetchWithCookie = async (
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
-  return fetchWithLogs(uri, {
+  return await fetchWithLogs(uri, {
     ...options,
     withCredentials: true, // This ensures the session cookie is sent with the request
   });
@@ -168,7 +169,7 @@ export const fetchWithAuthHeader = async (
   const session = await auth();
   const userToken = session?.user.userToken;
 
-  return fetchWithLogs(uri, {
+  return await fetchWithLogs(uri, {
     ...options,
     headers: {
       ...options.headers,

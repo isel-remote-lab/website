@@ -26,8 +26,11 @@ export default function CreateLabInfo() {
     };
 
     const response = await labsService.createLab(labData);
+
+    console.log(response);
     if (response) {
-      router.push(`/labs/${response}`);
+      const labId = response.id;
+      router.push(`/labs/${labId}`);
     }
   };
 

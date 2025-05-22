@@ -94,7 +94,7 @@ export const usersService = {
     try {
       const response = await fetchWithAuthHeader(uri);
 
-      const user = response.data.data.user as unknown as UserResponse;
+      const user = response.data.data as unknown as UserResponse;
 
       user.role = roleLetterToRole(user.role as unknown as RoleLetter);
       user.createdAt = new Date(user.createdAt).toLocaleDateString("pt-PT");

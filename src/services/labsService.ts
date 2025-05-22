@@ -25,14 +25,14 @@ export const labsService = {
    * @param labData - Laboratory data
    * @returns Created laboratory
    */
-  createLab: async (labData: LaboratoryRequest): Promise<number> => {
+  createLab: async (labData: LaboratoryRequest): Promise<Laboratory> => {
     const uri = Uris.Laboratories.GET_ALL;
     try {
-      const response = await fetchWithAuthHeader(uri, {
+      const response = await fetchWithCookie(uri, {
         method: "POST",
         data: labData,
       });
-      return response.data.data.laboratory_id;
+      return response.data.data;
     } catch (error: any) {
       throw new Error(`Failed to create laboratory: ${error.message}`);
     }
@@ -46,8 +46,8 @@ export const labsService = {
   getLabById: async (labId: number): Promise<Laboratory> => {
     const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
     try {
-      const response = await fetchWithCookie(uri);
-      return response.data.laboratory;
+      const response = await fetchWithAuthHeader(uri);
+      return response.data.data;
     } catch (error: any) {
       throw new Error(`Failed to get laboratory: ${error.message}`);
     }

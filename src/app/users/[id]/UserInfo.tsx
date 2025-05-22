@@ -23,7 +23,7 @@ export type UserInfo = {
   createdAt: string;
 };
 
-export default async function UserInfo({
+export default function UserInfo({
   name,
   email,
   role,

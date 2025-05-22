@@ -3,11 +3,7 @@ import DefaultModal from "~/app/components/defaults/DefaultModal";
 import EditLabInfo from "~/app/labs/[id]/settings/EditLabInfo";
 import { labs } from "~/app/page";
 
-export default async function LaboratorySettingsModal({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function LaboratorySettingsModal({ params }: { params: { id: string } }) {
   const { id } = params;
   const labName = labs[Number(id) - 1];
 

@@ -1,15 +1,10 @@
-"use client"
-
 import Laboratory from "~/types/laboratory"
 
 export default async function LabInfo({
   labName,
-  labDescription,
-  labDuration,
-  labQueueLimit,
-  labCreatedAt,
-  labOwnerId,
 }: Laboratory) {
+  console.log(labName)
+
   return (
     <h1>Laboratório: {labName}</h1>
   );
