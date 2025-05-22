@@ -2,8 +2,9 @@ import {
   Uris,
   replaceParams,
   fetchWithApiKey,
-  fetchWithAuthHeader,
+  fetchWithAuthHeader
 } from "~/services/api";
+import { setCookies } from "~/server/auth/config";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import { type UserInfo } from "~/app/users/[id]/UserInfo";
 import { type Role } from "~/types/role";
@@ -45,32 +46,6 @@ export type UpdateUserRoleRequest = {
 };
 
 /**
- * Set cookies from the response
- * @param response - The response from the fetch request
- */
-/*
-async function setCookies(response: AxiosResponse) {
-  const headerCookies = response.headers["set-cookie"];
-  if (headerCookies && headerCookies.length > 0) {
-    headerCookies.forEach(async (cookie: string) => {
-      const parsedCookie = parse(cookie);
-      const [cookieName, cookieValue] = Object.entries(parsedCookie)[0] as [
-        string,
-        string,
-      ];
-      const httpOnly = cookie.includes("httponly;");
-
-      (await cookies()).set({
-        name: cookieName,
-        value: cookieValue,
-        httpOnly: httpOnly,
-      });
-    });
-  }
-}
-*/
-
-/**
  * User service for handling user-related API calls
  */
 export const usersService = {
@@ -83,7 +58,7 @@ export const usersService = {
     const uri = Uris.LOGIN;
     try {
       const response = await fetchWithApiKey(uri, userData);
-      //await setCookies(response);
+      await setCookies(response);
       return response.data.data as unknown as SignInResponse;
     } catch (error: unknown) {
       console.error("Error signing in:", error);

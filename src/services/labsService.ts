@@ -1,4 +1,4 @@
-import { fetchWithCookie, replaceParams, Uris } from "~/services/api";
+import { fetchWithAuthHeader, fetchWithCookie, replaceParams, Uris } from "~/services/api";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import type Laboratory from "~/types/laboratory";
 
@@ -28,7 +28,7 @@ export const labsService = {
   createLab: async (labData: LaboratoryRequest): Promise<number> => {
     const uri = Uris.Laboratories.GET_ALL;
     try {
-      const response = await fetchWithCookie(uri, {
+      const response = await fetchWithAuthHeader(uri, {
         method: "POST",
         data: labData,
       });

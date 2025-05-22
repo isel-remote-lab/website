@@ -7,6 +7,9 @@ import {
   type UserRequest,
 } from "~/services/usersService";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
+import { AxiosResponse } from "axios";
+import { cookies } from "next/headers.js";
+import { parse } from "cookie";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -84,6 +87,7 @@ export const authConfig = {
 
         // Sign in the user
         const signInResponse = await usersService.signIn(userRequest);
+        
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
           user.dbUser = signInResponse.user;
@@ -155,3 +159,27 @@ export const authConfig = {
     },
   },
 } satisfies NextAuthConfig;
+
+/**
+ * Set cookies from the response
+ * @param response - The response from the fetch request
+ */
+export const setCookies = async (response: AxiosResponse) => {
+  const headerCookies = response.headers["set-cookie"];
+  if (headerCookies && headerCookies.length > 0) {
+    headerCookies.forEach(async (cookie: string) => {
+      const parsedCookie = parse(cookie);
+      const [cookieName, cookieValue] = Object.entries(parsedCookie)[0] as [
+        string,
+        string,
+      ];
+      const httpOnly = cookie.includes("httponly;");
+
+      (await cookies()).set({
+        name: cookieName,
+        value: cookieValue,
+        httpOnly: httpOnly,
+      });
+    });
+  }
+}
