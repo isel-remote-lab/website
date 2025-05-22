@@ -1,7 +1,7 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-import { labsService } from "~/services/labsService";
+import { createLab } from "~/services/labsService";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import { useRouter } from "next/navigation";
 
@@ -25,7 +25,7 @@ export default function CreateLabInfo() {
       labDuration: durationInMinutes,
     };
 
-    const response = await labsService.createLab(labData);
+    const response = await createLab(labData);
 
     console.log(response);
     if (response) {

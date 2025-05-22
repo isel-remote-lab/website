@@ -1,35 +1,40 @@
+import { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
-import axios from "axios";
+import { fetchWithErrorHandling } from "../services";
 
+/**
+ * Fetches data from Microsoft Graph API
+ * @param uri - The URI to fetch
+ * @param options - The options for the fetch
+ * @returns The response from the fetch
+ */
+export async function fetchMicrosoftApi(uri: string, options: AxiosRequestConfig = {}) {
+  const session = await auth();
+  const accessToken = session!.user.oauthUserToken;
+
+  return await fetchWithErrorHandling(uri, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+}
 /**
  * Fetches the user's profile picture from Microsoft Graph API
  * and returns it as a base64 encoded string.
  * @returns The user's profile picture as a base64 encoded string
  */
 export async function getUserOwnImage() {
-  const session = await auth();
-  const accessToken = session!.user.oauthUserToken;
+  const uri = "https://graph.microsoft.com/v1.0/me/photo/$value";
 
-  try {
-    const res = await axios.get(
-      "https://graph.microsoft.com/v1.0/me/photo/$value",
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        responseType: "arraybuffer",
-      },
-    );
+  const data = await fetchMicrosoftApi(uri, {
+    responseType: "arraybuffer",
+  });
 
-    if (res.status === 200) {
-      const base64 = Buffer.from(res.data).toString("base64");
-      return `data:image/jpeg;base64,${base64}`;
-    } else {
-      console.error("Failed to get user profile picture, status:", res.status);
-    }
-  } catch (error) {
-    console.error("Failed to get user profile picture:", error);
-  }
+  console.log(data);
+
+  const base64 = Buffer.from(data).toString("base64");
+  return `data:image/jpeg;base64,${base64}`;
 }
 
 /**
@@ -39,27 +44,12 @@ export async function getUserOwnImage() {
  * @returns The user's profile picture as a base64 encoded string
  */
 export async function getUserImage(userPrincipalName: string) {
-  const session = await auth();
-  const accessToken = session!.user.oauthUserToken;
+  const uri = `https://graph.microsoft.com/v1.0/users/${userPrincipalName}/photo/$value`;
 
-  try {
-    const res = await axios.get(
-      `https://graph.microsoft.com/v1.0/users/${userPrincipalName}/photo/$value`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        responseType: "arraybuffer",
-      },
-    );
+  const data = await fetchMicrosoftApi(uri, {
+    responseType: "arraybuffer",
+  });
 
-    if (res.status === 200) {
-      const base64 = Buffer.from(res.data).toString("base64");
-      return `data:image/jpeg;base64,${base64}`;
-    } else {
-      console.error("Failed to get user profile picture, status:", res.status);
-    }
-  } catch (error) {
-    console.error("Failed to get user profile picture:", error);
-  }
+  const base64 = Buffer.from(data).toString("base64");
+  return `data:image/jpeg;base64,${base64}`;
 }

@@ -1,147 +1,64 @@
-import {
-  Uris,
-  replaceParams,
-  fetchWithApiKey,
-  fetchWithAuthHeader
-} from "~/services/api";
-import { setCookies } from "~/server/auth/config";
+import Uris from "~/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
-import { type UserInfo } from "~/app/users/[id]/UserInfo";
-import { type Role } from "~/types/role";
+import { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
+import { fetchWithApiKey, fetchWithAuthHeader, replaceParams } from "./services";
 
 /**
- * User data interface
+ * Sign in a user
+ * @param userData - User data
+ * @returns User data
  */
-export type User = {
-  userId: number;
-} & UserInfo;
+export async function signIn(userData: UserRequest): Promise<SignInResponse> {
+  const uri = Uris.LOGIN;
+  const response = await fetchWithApiKey(uri, userData);
+  //await setCookies(response);
+  return response;
+}
 
 /**
- * User login request data interface
+ * Sign out the current user
  */
-export type UserRequest = {
-  name: string;
-  email: string;
-};
+export async function signOut() {
+  const uri = Uris.LOGOUT;
+  return await fetchWithAuthHeader(uri, {
+    method: "POST",
+  });
+}
 
 /**
- * User response data interface
+ * Get a user by ID
+ * @param userId - User ID
+ * @returns User data
  */
-export type UserResponse = User;
+export async function getUserById(userId: string): Promise<UserResponse> {
+  const uri = await replaceParams(Uris.Users.GET, { id: userId });
+  const user = await fetchWithAuthHeader(uri);
+  user.role = roleLetterToRole(user.role as unknown as RoleLetter);
+  user.createdAt = new Date(user.createdAt).toLocaleDateString("pt-PT");
+  return user;
+}
 
 /**
- * Sign in response data interface
+ * Get a user by email
+ * @param email - User email
+ * @returns User data
  */
-export type SignInResponse = {
-  user: UserResponse;
-  token: string;
-};
+export async function getUserByEmail(email: string): Promise<UserResponse> {
+  const uri = await replaceParams(Uris.Users.GET_BY_EMAIL, { email: email });
+  return await fetchWithAuthHeader(uri);
+}
 
 /**
- * Update user role request data interface
+ * Update a user's role
+ * @param data - User email and new role
+ * @returns Updated user data
  */
-export type UpdateUserRoleRequest = {
-  email: string;
-  role: Role;
-};
-
-/**
- * User service for handling user-related API calls
- */
-export const usersService = {
-  /**
-   * Sign in a user
-   * @param userData - User data
-   * @returns User data
-   */
-  signIn: async (userData: UserRequest): Promise<SignInResponse> => {
-    const uri = Uris.LOGIN;
-    try {
-      const response = await fetchWithApiKey(uri, userData);
-      await setCookies(response);
-      return response.data.data as unknown as SignInResponse;
-    } catch (error: unknown) {
-      console.error("Error signing in:", error);
-      throw new Error(
-        `Failed to sign in: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  },
-
-  /**
-   * Sign out the current user
-   */
-  signOut: async () => {
-    const uri = Uris.LOGOUT;
-    try {
-      await fetchWithAuthHeader(uri, {
-        method: "POST",
-      });
-    } catch (error: unknown) {
-      throw new Error(
-        `Failed to sign out: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  },
-
-  /**
-   * Get a user by ID
-   * @param userId - User ID
-   * @returns User data
-   */
-  getUserById: async (userId: string): Promise<UserResponse> => {
-    const uri = replaceParams(Uris.Users.GET, { id: userId });
-    try {
-      const response = await fetchWithAuthHeader(uri);
-
-      const user = response.data.data as unknown as UserResponse;
-
-      user.role = roleLetterToRole(user.role as unknown as RoleLetter);
-      user.createdAt = new Date(user.createdAt).toLocaleDateString("pt-PT");
-      return user;
-    } catch (error: unknown) {
-      throw new Error(
-        `Failed to get user: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  },
-
-  /**
-   * Get a user by email
-   * @param email - User email
-   * @returns User data
-   */
-  getUserByEmail: async (email: string): Promise<UserResponse> => {
-    const uri = replaceParams(Uris.Users.GET_BY_EMAIL, { email: email });
-    try {
-      const response = await fetchWithAuthHeader(uri);
-      return response.data as unknown as UserResponse;
-    } catch (error: unknown) {
-      throw new Error(
-        `Failed to get user by email: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  },
-
-  /**
-   * Update a user's role
-   * @param data - User email and new role
-   * @returns Updated user data
-   */
-  updateUserRole: async (
-    data: UpdateUserRoleRequest,
-  ): Promise<UserResponse> => {
-    const uri = Uris.Users.UPDATE_ROLE;
-    try {
-      const response = await fetchWithAuthHeader(uri, {
-        method: "PUT",
-        data,
-      });
-      return response.data as unknown as UserResponse;
-    } catch (error: unknown) {
-      throw new Error(
-        `Failed to update user role: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-    }
-  },
-};
+export async function updateUserRole(
+  data: UpdateUserRoleRequest,
+): Promise<UserResponse> {
+  const uri = Uris.Users.UPDATE_ROLE;
+  return await fetchWithAuthHeader(uri, {
+    method: "PUT",
+    data,
+  });
+}

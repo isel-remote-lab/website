@@ -12,16 +12,9 @@ import { Role } from "~/types/role";
 import ChangeRoleDropdown from "~/app/components/dropdowns/ChangeRoleDropdown";
 import { useTempRole } from "~/contexts/TempRoleContext";
 import { useSession } from "next-auth/react";
+import { type UserInfo } from "~/types/user";
 
 export const avatarSize = 250;
-
-export type UserInfo = {
-  name: string;
-  email: string;
-  role: Role;
-  image: string;
-  createdAt: string;
-};
 
 export default function UserInfo({
   name,

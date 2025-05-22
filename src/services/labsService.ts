@@ -1,92 +1,64 @@
-import { fetchWithAuthHeader, fetchWithCookie, replaceParams, Uris } from "~/services/api";
+import { fetchWithAuthHeader, replaceParams } from "~/services/services";
+import Uris from "~/services/uris";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import type Laboratory from "~/types/laboratory";
 
 /**
- * Laboratory service for handling laboratory-related API calls
+ * Get all laboratories
+ * @returns List of laboratories
  */
-export const labsService = {
-  /**
-   * Get all laboratories
-   * @returns List of laboratories
-   */
-  getAllLabs: async (): Promise<Laboratory[]> => {
-    const uri = Uris.Laboratories.GET_ALL;
-    try {
-      const response = await fetchWithCookie(uri);
-      return response.data.data;
-    } catch (error: any) {
-      throw new Error(`Failed to get laboratories: ${error.message}`);
-    }
-  },
+export async function getAllLabs(): Promise<Laboratory[]> {
+  const uri = Uris.Laboratories.GET_ALL;
+  return await fetchWithAuthHeader(uri);
+}
 
-  /**
-   * Create a new laboratory
-   * @param labData - Laboratory data
-   * @returns Created laboratory
-   */
-  createLab: async (labData: LaboratoryRequest): Promise<Laboratory> => {
-    const uri = Uris.Laboratories.GET_ALL;
-    try {
-      const response = await fetchWithCookie(uri, {
-        method: "POST",
-        data: labData,
-      });
-      return response.data.data;
-    } catch (error: any) {
-      throw new Error(`Failed to create laboratory: ${error.message}`);
-    }
-  },
+/**
+ * Create a new laboratory
+ * @param labData - Laboratory data
+ * @returns Created laboratory
+ */
+export async function createLab(labData: LaboratoryRequest): Promise<Laboratory> {
+  const uri = Uris.Laboratories.GET_ALL;
+  return await fetchWithAuthHeader(uri, {
+    method: "POST",
+    data: labData,
+  });
+}
 
-  /**
-   * Get a laboratory by ID
-   * @param labId - Laboratory ID
-   * @returns Laboratory data
-   */
-  getLabById: async (labId: number): Promise<Laboratory> => {
-    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
-    try {
-      const response = await fetchWithAuthHeader(uri);
-      return response.data.data;
-    } catch (error: any) {
-      throw new Error(`Failed to get laboratory: ${error.message}`);
-    }
-  },
+/**
+ * Get a laboratory by ID
+ * @param labId - Laboratory ID
+ * @returns Laboratory data
+ */
+export async function getLabById(labId: number): Promise<Laboratory> {
+  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  return await fetchWithAuthHeader(uri);
+}
 
-  /**
-   * Update a laboratory
-   * @param labId - Laboratory ID
-   * @param labData - Updated laboratory data
-   * @returns Updated laboratory
-   */
-  updateLab: async (
-    labId: number,
-    labData: LaboratoryRequest,
-  ): Promise<Laboratory> => {
-    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
-    try {
-      const response = await fetchWithCookie(uri, {
-        method: "PUT",
-        data: labData,
-      });
-      return response.data.data.laboratory;
-    } catch (error: any) {
-      throw new Error(`Failed to update laboratory: ${error.message}`);
-    }
-  },
+/**
+ * Update a laboratory
+ * @param labId - Laboratory ID
+ * @param labData - Updated laboratory data
+ * @returns Updated laboratory
+ */
+export async function updateLab(
+  labId: number,
+  labData: LaboratoryRequest,
+): Promise<Laboratory> {
+  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  return await fetchWithAuthHeader(uri, {
+    method: "PUT",
+    data: labData,
+  });
+}
 
-  /**
-   * Delete a laboratory
-   * @param labId - Laboratory ID
-   */
-  deleteLab: async (labId: number): Promise<void> => {
-    const uri = replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
-    try {
-      await fetchWithCookie(uri, {
-        method: "DELETE",
-      });
-    } catch (error: any) {
-      throw new Error(`Failed to delete laboratory: ${error.message}`);
-    }
-  },
-};
+/**
+ * Delete a laboratory
+ * @param labId - Laboratory ID
+ */
+export async function deleteLab(labId: number): Promise<void> {
+  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  await fetchWithAuthHeader(uri, {
+    method: "DELETE",
+  });
+}

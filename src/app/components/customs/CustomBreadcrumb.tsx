@@ -3,9 +3,8 @@
 import { Breadcrumb } from "antd";
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { usePathname } from "next/navigation";
-import { labs } from "~/app/page";
 import { itemRender } from "~/server/browserHistoryItemRender";
-
+import type Laboratory from "~/types/laboratory";
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}
@@ -45,7 +44,7 @@ const translations: Record<string, string> = {
  * @param {string} pathname - The current pathname
  * @returns {Breadcrumb.Item[]} - The breadcrumb items
  */
-function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
+function generateBreadcrumbItems(pathname: string, labs: Laboratory[]): BreadcrumbItemType[] {
   // Split the pathname into an array of path segments
   const pathnames = pathname.split("/").filter((x) => x);
 
@@ -83,7 +82,7 @@ function generateBreadcrumbItems(pathname: string): BreadcrumbItemType[] {
   return [...breadcrumbDashboard, ...items];
 }
 
-export default function CustomBreadcrumb() {
+export default function CustomBreadcrumb({ labs }: { labs: Laboratory[] }) {
   const pathname = usePathname();
   if (!pathname) return null;
 
@@ -95,7 +94,7 @@ export default function CustomBreadcrumb() {
   return (
     <Breadcrumb
       itemRender={itemRender}
-      items={generateBreadcrumbItems(pathname)}
+      items={generateBreadcrumbItems(pathname, labs)}
       style={{ padding: 24 }}
     />
   );

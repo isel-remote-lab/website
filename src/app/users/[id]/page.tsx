@@ -1,4 +1,4 @@
-import { usersService } from "~/services/usersService";
+import { getUserById } from "~/services/usersService";
 import DefaultPage from "~/app/components/defaults/DefaultPage";
 import UserInfo from "~/app/users/[id]/UserInfo";
 import { getUserImage } from "~/services/microsoft/microsoftApiService";
@@ -10,7 +10,7 @@ export default async function UserInfoPage({
   const { id } = await params;
 
   // TODO: Fetch the lab data from the API
-  const user = await usersService.getUserById(id);
+  const user = await getUserById(id) as any;
 
   user.image = (await getUserImage(user.email)) || "";
 

@@ -8,12 +8,12 @@ import Image from "next/image";
 import Search from "antd/es/input/Search";
 import CrateLabTopButton from "../buttons/topButtons/CrateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
-
+import type Laboratory from "~/types/laboratory";
 /**
  * Client menu component
  * @returns The client menu component
  */
-export default async function CustomMenu() {
+export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
   const session = await auth();
 
   const { role } = session!.user;
@@ -61,7 +61,7 @@ export default async function CustomMenu() {
     },
     {
       key: "breadcrumb",
-      label: <CustomBreadcrumb />,
+      label: <CustomBreadcrumb labs={labs} />,
       style: { fontSize: 18, fontWeight: "bold" },
     },
     {
@@ -85,7 +85,7 @@ export default async function CustomMenu() {
     },
     {
       key: "create-lab",
-      label: <CrateLabTopButton role={role} />,
+      label: <CrateLabTopButton role={role}/>,
       style: { marginLeft: "auto" },
     },
     {

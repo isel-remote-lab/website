@@ -1,15 +1,12 @@
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import {
-  type UserResponse,
-  usersService,
-  type UserRequest,
-} from "~/services/usersService";
 import { RoleLetter, roleLetterToRole } from "~/types/role";
 import { AxiosResponse } from "axios";
 import { cookies } from "next/headers.js";
 import { parse } from "cookie";
+import { UserRequest, UserResponse } from "~/types/user.js";
+import { signIn, signOut } from "~/services/usersService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -86,7 +83,7 @@ export const authConfig = {
         };
 
         // Sign in the user
-        const signInResponse = await usersService.signIn(userRequest);
+        const signInResponse = await signIn(userRequest);
         
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback
@@ -152,7 +149,7 @@ export const authConfig = {
     async signOut() {
       try {
         // Sign out the user on the backend
-        await usersService.signOut();
+        await signOut();
       } catch (error) {
         console.error("Error during sign out:", error);
       }
