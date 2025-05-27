@@ -86,7 +86,7 @@ export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
     },
     {
       key: "create-lab",
-      label: <CrateLabTopButton role={role}/>,
+      label: <CrateLabTopButton />,
       style: { marginLeft: "auto" },
     },
     {

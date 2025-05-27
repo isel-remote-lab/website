@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
 import { fetchWithErrorHandling } from "../services";
 
@@ -17,7 +17,7 @@ export async function fetchMicrosoftApi(uri: string, options: AxiosRequestConfig
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  });
+  }) as string;
 }
 /**
  * Fetches the user's profile picture from Microsoft Graph API
@@ -29,7 +29,7 @@ export async function getUserOwnImage() {
 
   const data = await fetchMicrosoftApi(uri, {
     responseType: "arraybuffer",
-  });
+  }) as unknown as ArrayBuffer;
 
   const base64 = Buffer.from(data).toString("base64");
   return `data:image/jpeg;base64,${base64}`;
@@ -46,7 +46,7 @@ export async function getUserImage(userPrincipalName: string) {
 
   const data = await fetchMicrosoftApi(uri, {
     responseType: "arraybuffer",
-  });
+  }) as unknown as ArrayBuffer;
 
   const base64 = Buffer.from(data).toString("base64");
   return `data:image/jpeg;base64,${base64}`;

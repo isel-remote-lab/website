@@ -11,7 +11,7 @@ export default async function AccountInfo() {
     name: user.name,
     email: user.email,
     role: user.role,
-    image: userImage!,
+    image: userImage,
     createdAt: user.createdAt,
   };
 

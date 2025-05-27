@@ -19,7 +19,7 @@ interface TempRoleContextProps {
 
 const TempRoleContext = createContext<TempRoleContextProps>({
   tempRole: Role.STUDENT,
-  setTempRole: () => {},
+  setTempRole: () => console.log("role changed"),
 });
 
 interface TempRoleProviderProps {

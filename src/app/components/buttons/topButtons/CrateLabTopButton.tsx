@@ -4,19 +4,16 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
+import { Role } from "~/types/role";
 
-interface CrateLabTopButtonProps {
-  role: string;
-}
-
-export default function CrateLabTopButton({ role }: CrateLabTopButtonProps) {
+export default function CrateLabTopButton() {
   const { tempRole } = useTempRole();
 
   return (
     <>
       {
         /* If the user is watching the page as a teacher, show the create lab option */
-        tempRole === "teacher" && (
+        tempRole === Role.TEACHER && (
           <div style={{ position: "relative", zIndex: 1 }}>
             <Tooltip
               title="Criar laboratório"

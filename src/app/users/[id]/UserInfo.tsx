@@ -64,7 +64,7 @@ export default function UserInfo({
           </Title>
           {isAdminAndNotOwnProfile && (
             <Tooltip title="Mudar role">
-              <ChangeRoleDropdown role={role} onRoleChange={() => {}} />
+              <ChangeRoleDropdown role={role} onRoleChange={() => console.log("role changed")} />
             </Tooltip>
           )}
         </Flex>

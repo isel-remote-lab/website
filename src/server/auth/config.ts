@@ -1,11 +1,8 @@
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
-import { RoleLetter, roleLetterToRole } from "~/types/role";
-import { AxiosResponse } from "axios";
-import { cookies } from "next/headers.js";
-import { parse } from "cookie";
-import { UserRequest, UserResponse } from "~/types/user.js";
+import { type RoleLetter, roleLetterToRole } from "~/types/role";
+import type { UserRequest, UserResponse } from "~/types/user.js";
 import { signIn, signOut } from "~/services/usersService";
 
 /**
@@ -46,7 +43,7 @@ export const authConfig = {
       },
       profile(profile) {
         return {
-          name: profile.name,
+          name: profile.name as string,
           email: profile.email,
         };
       },
@@ -161,6 +158,7 @@ export const authConfig = {
  * Set cookies from the response
  * @param response - The response from the fetch request
  */
+/*
 export const setCookies = async (response: AxiosResponse) => {
   const headerCookies = response.headers["set-cookie"];
   if (headerCookies && headerCookies.length > 0) {
@@ -180,3 +178,4 @@ export const setCookies = async (response: AxiosResponse) => {
     });
   }
 }
+*/

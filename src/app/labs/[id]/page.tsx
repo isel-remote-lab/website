@@ -6,7 +6,7 @@ import LabInfo from "./LabInfo";
  * @param param0 The parameters of the page
  * @returns The page content
  */
-export default async function LabPage({ params }: { params: { id: string } }) {
+export default async function LabPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const lab = await getLabById(parseInt(id));
 

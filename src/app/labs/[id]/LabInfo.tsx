@@ -1,8 +1,6 @@
-import Laboratory from "~/types/laboratory"
+import type Laboratory from "~/types/laboratory";
 
-export default async function LabInfo({
-  labName,
-}: Laboratory) {
+export default async function LabInfo({ labName }: Laboratory) {
   console.log(labName)
 
   return (

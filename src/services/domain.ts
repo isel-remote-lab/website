@@ -1,4 +1,4 @@
-const DOMAIN_CONFIG_PATH = process.env.DOMAIN_CONFIG_PATH
+const DOMAIN_CONFIG_PATH = process.env.DOMAIN_CONFIG_PATH ?? "../../domain-config.json" ?? "../../../api/host/src/main/resources/domain-config.json";
 
 interface LabConfig {
   min: number;
@@ -16,13 +16,13 @@ interface DomainConfig {
   };
 }
 
-const domainConfig: DomainConfig = require(
-  DOMAIN_CONFIG_PATH || "../../domain-config.json" || "../../../api/host/src/main/resources/domain-config.json",
-);
+const domainConfig = await import(DOMAIN_CONFIG_PATH) as DomainConfig;
+
+const laboratory = domainConfig.laboratory;
 
 export const labConfig = {
-  name: domainConfig.laboratory.labName,
-  description: domainConfig.laboratory.labDescription,
-  queueLimit: domainConfig.laboratory.labQueueLimit,
-  duration: domainConfig.laboratory.labDuration,
+  name: laboratory.labName,
+  description: laboratory.labDescription,
+  queueLimit: laboratory.labQueueLimit,
+  duration: laboratory.labDuration,
 };

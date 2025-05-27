@@ -35,7 +35,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const role = session?.user?.role!;
+  const role = session!.user.role;
   const labs = await getAllLabs();
 
   return (

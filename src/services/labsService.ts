@@ -9,7 +9,7 @@ import type Laboratory from "~/types/laboratory";
  */
 export async function getAllLabs(): Promise<Laboratory[]> {
   const uri = Uris.Laboratories.GET_ALL;
-  return await fetchWithAuthHeader(uri);
+  return await fetchWithAuthHeader(uri) as Laboratory[];
 }
 
 /**
@@ -22,7 +22,7 @@ export async function createLab(labData: LaboratoryRequest): Promise<Laboratory>
   return await fetchWithAuthHeader(uri, {
     method: "POST",
     data: labData,
-  });
+  }) as Laboratory;
 }
 
 /**
@@ -32,7 +32,7 @@ export async function createLab(labData: LaboratoryRequest): Promise<Laboratory>
  */
 export async function getLabById(labId: number): Promise<Laboratory> {
   const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
-  return await fetchWithAuthHeader(uri);
+  return await fetchWithAuthHeader(uri) as Laboratory;
 }
 
 /**
@@ -49,7 +49,7 @@ export async function updateLab(
   return await fetchWithAuthHeader(uri, {
     method: "PUT",
     data: labData,
-  });
+  }) as Laboratory;
 }
 
 /**

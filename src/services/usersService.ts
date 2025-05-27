@@ -1,6 +1,6 @@
 import Uris from "~/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
-import { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
+import type { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
 import { fetchWithApiKey, fetchWithAuthHeader, replaceParams } from "./services";
 
 /**
@@ -10,7 +10,7 @@ import { fetchWithApiKey, fetchWithAuthHeader, replaceParams } from "./services"
  */
 export async function signIn(userData: UserRequest): Promise<SignInResponse> {
   const uri = Uris.LOGIN;
-  const response = await fetchWithApiKey(uri, userData);
+  const response = await fetchWithApiKey(uri, userData) as SignInResponse;
   //await setCookies(response);
   return response;
 }
@@ -22,7 +22,7 @@ export async function signOut() {
   const uri = Uris.LOGOUT;
   return await fetchWithAuthHeader(uri, {
     method: "POST",
-  });
+  }) as void;
 }
 
 /**
@@ -32,7 +32,7 @@ export async function signOut() {
  */
 export async function getUserById(userId: string): Promise<UserResponse> {
   const uri = await replaceParams(Uris.Users.GET, { id: userId });
-  const user = await fetchWithAuthHeader(uri);
+  const user = await fetchWithAuthHeader(uri) as UserResponse;
   user.role = roleLetterToRole(user.role as unknown as RoleLetter);
   user.createdAt = new Date(user.createdAt).toLocaleDateString("pt-PT");
   return user;
@@ -45,7 +45,7 @@ export async function getUserById(userId: string): Promise<UserResponse> {
  */
 export async function getUserByEmail(email: string): Promise<UserResponse> {
   const uri = await replaceParams(Uris.Users.GET_BY_EMAIL, { email: email });
-  return await fetchWithAuthHeader(uri);
+  return await fetchWithAuthHeader(uri) as UserResponse;
 }
 
 /**
@@ -60,5 +60,5 @@ export async function updateUserRole(
   return await fetchWithAuthHeader(uri, {
     method: "PUT",
     data,
-  });
+  }) as UserResponse;
 }

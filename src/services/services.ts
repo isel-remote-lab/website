@@ -1,8 +1,8 @@
 "use server";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { redirect } from "next/navigation";
-import { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import { auth } from "~/server/auth";
 
 /**
@@ -14,7 +14,7 @@ import { auth } from "~/server/auth";
 export async function replaceParams(uri: string, params: object): Promise<string> {
   let result = uri;
   Object.entries(params).forEach(([key, value]) => {
-    result = result.replace(`{${key}}`, value);
+    result = result.replace(`{${key}}`, value as string);
   });
   return result;
 }
@@ -28,7 +28,7 @@ export async function replaceParams(uri: string, params: object): Promise<string
 export async function fetchWithErrorHandling(
   uri: string,
   options: AxiosRequestConfig = {},
-): Promise<any> {
+): Promise<unknown> {
   try {
     return (await axios({
       url: uri,
@@ -37,8 +37,8 @@ export async function fetchWithErrorHandling(
         ...options.headers,
       },
     })).data;
-  } catch (error: any) {
-    if (error.response.status === 401) {
+  } catch (error: unknown) {
+    if (error instanceof AxiosError && error.response?.status === 401) {
       if (typeof window !== "undefined") {
         // If the code is running on the client side, make the redirect happen on the client side
         window.location.href = "/api/auth/signin";
@@ -60,10 +60,10 @@ export async function fetchWithErrorHandling(
 async function fetchApi(
   uri: string,
   options: AxiosRequestConfig = {},
-): Promise<any> {
+): Promise<unknown> {
   return (await fetchWithErrorHandling(uri, {
     ...options,
-  })).data
+  }) as AxiosResponse).data;
 }
 
 /**
@@ -75,9 +75,9 @@ async function fetchApi(
  */
 export async function fetchWithApiKey(
   uri: string,
-  data: any = {},
+  data: unknown = {},
   options: AxiosRequestConfig = {},
-): Promise<any> {
+): Promise<unknown> {
   return await fetchApi(uri, {
     ...options,
     method: "POST",
@@ -99,7 +99,7 @@ export async function fetchWithApiKey(
 export async function fetchWithAuthHeader(
   uri: string,
   options: AxiosRequestConfig = {},
-): Promise<any> {
+  ): Promise<unknown> {
   const session = await auth();
   const userToken = session?.user.userToken;
 
@@ -109,7 +109,7 @@ export async function fetchWithAuthHeader(
       ...options.headers,
       "Authorization": `Bearer ${userToken}`,
     },
-  });
+  }) as AxiosResponse;
 }
 
 /**

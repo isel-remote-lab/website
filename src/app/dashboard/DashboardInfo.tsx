@@ -9,6 +9,8 @@ import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
+import type Laboratory from "~/types/laboratory";
+import { Role } from "~/types/role";
 
 const labsWidth = 280;
 
@@ -18,7 +20,7 @@ const cardStyle = {
   border: "none",
 };
 
-export default function DashboardInfo({ labs }: { labs: any[] }) {
+export default function DashboardInfo({ labs }: { labs: Laboratory[] }) {
   const { tempRole } = useTempRole();
 
   function getLabActions(labId: number) {
@@ -28,7 +30,7 @@ export default function DashboardInfo({ labs }: { labs: any[] }) {
           <CalendarOutlined />
         </Link>
       </Tooltip>,
-      tempRole === "teacher" && (
+      tempRole === Role.TEACHER && (
         <Tooltip title="Editar laboratório" key="settings">
           <Link href={`/labs/${labId}/settings`}>
             <SettingOutlined />
@@ -42,7 +44,7 @@ export default function DashboardInfo({ labs }: { labs: any[] }) {
     <Layout style={{ padding: "1%" }}>
       <Title level={2}>Os meus laboratórios</Title>
       <Divider />
-      <Flex wrap gap="small" justify="center">
+      <Flex wrap gap="small">
         {labs.map((lab, index) => {
           const labId = index + 1;
           return (
@@ -55,7 +57,7 @@ export default function DashboardInfo({ labs }: { labs: any[] }) {
             </Card>
           );
         })}
-        {tempRole === "teacher" ? (
+        {tempRole === Role.TEACHER ? (
           <Link href="/labs/create">
             <Tooltip title="Criar laboratório">
               <Button style={cardStyle} icon={<PlusOutlined />} size="large" />
