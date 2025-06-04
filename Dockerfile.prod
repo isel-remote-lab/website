@@ -76,6 +76,11 @@ EXPOSE 3000
 
 ENV PORT=3000
 
+# Trust host for authentication
 ENV AUTH_TRUST_HOST=true
 
+# Disable Next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Start the server, host name is 0.0.0.0 to allow access from outside the container, and use the standalone server.js file
 CMD HOSTNAME="0.0.0.0" node .next/standalone/server.js

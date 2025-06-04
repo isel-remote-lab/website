@@ -9,6 +9,7 @@ import Menu from "./components/customs/CustomMenu";
 import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
 import { getAllLabs } from "~/services/labsService";
+import { redirect } from "next/navigation";
 
 /**
  * Metadata for the Remote Lab application
@@ -35,7 +36,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const role = session!.user.role;
+  if (!session || !session.user) {
+    redirect("/api/auth/signin");
+  }
+  const role = session.user.role;
   const labs = await getAllLabs();
 
   return (
