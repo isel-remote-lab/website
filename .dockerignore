@@ -32,3 +32,10 @@ build
 .cache
 .npm
 .eslintcache
+
+# Dockerfiles
+Dockerfile.prod
+Dockerfile.dev
+
+# Next
+.next
