@@ -79,8 +79,12 @@ export const authConfig = {
           email: user.email,
         };
 
+        console.log("Signed in with microsoft")
+        
         // Sign in the user
         const signInResponse = await signIn(userRequest);
+
+        console.log("Sign in response:", signInResponse);
         
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback

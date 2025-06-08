@@ -9,6 +9,10 @@ COPY ./website/package-lock.json ./
 # Install dependencies with verbose logging
 RUN npm install --loglevel verbose
 
+ARG DOMAIN_CONFIG_PATH
+
+ENV DOMAIN_CONFIG_PATH=$DOMAIN_CONFIG_PATH
+
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"] 

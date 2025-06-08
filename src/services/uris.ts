@@ -1,10 +1,17 @@
 // Base API prefix
-const DOCKER_URL = "http://api:8080";
-const BASE_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+const BASE_URL = "http://nginx";
+
 const API_PREFIX = `${BASE_URL}/api/v1`;
-const AUTH_URI = `${API_PREFIX}/auth`;
-const LOGIN_URI = `${DOCKER_URL}/api/v1/auth/login`;
-const LOGOUT_URI = `${AUTH_URI}/logout`;
+
+const PRIVATE_PREFIX = `${API_PREFIX}/_private`;
+
+const AUTH_PREFIX = `${PRIVATE_PREFIX}/auth`;
+
+const DOMAIN_URI = `${PRIVATE_PREFIX}/domain`;
+
+const LOGIN_URI = `${AUTH_PREFIX}/login`;
+const LOGOUT_URI = `${AUTH_PREFIX}/logout`;
+
 const USERS_URI = `${API_PREFIX}/users`;
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
 
@@ -12,6 +19,11 @@ const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
  * API URIs for user-related operations
  */
 export default {
+  /**
+   * URI for the domain endpoint
+   */
+  DOMAIN: DOMAIN_URI,
+
   /**
    * URI for the login endpoint
    */

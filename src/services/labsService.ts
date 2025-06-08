@@ -1,5 +1,6 @@
-import { fetchWithAuthHeader, replaceParams } from "~/services/services";
-import Uris from "~/services/uris";
+import { fetchWithAuthHeader } from "~/services/api/server/serverServices";
+import { fetchOnClientWithAuthHeader, replaceParams } from "~/services/api/services";
+import uris from "~/services/uris";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import type Laboratory from "~/types/laboratory";
 
@@ -8,21 +9,8 @@ import type Laboratory from "~/types/laboratory";
  * @returns List of laboratories
  */
 export async function getAllLabs(): Promise<Laboratory[]> {
-  const uri = Uris.Laboratories.GET_ALL;
+  const uri = uris.Laboratories.GET_ALL;
   return await fetchWithAuthHeader(uri) as Laboratory[];
-}
-
-/**
- * Create a new laboratory
- * @param labData - Laboratory data
- * @returns Created laboratory
- */
-export async function createLab(labData: LaboratoryRequest): Promise<Laboratory> {
-  const uri = Uris.Laboratories.GET_ALL;
-  return await fetchWithAuthHeader(uri, {
-    method: "POST",
-    data: labData,
-  }) as Laboratory;
 }
 
 /**
@@ -31,8 +19,21 @@ export async function createLab(labData: LaboratoryRequest): Promise<Laboratory>
  * @returns Laboratory data
  */
 export async function getLabById(labId: number): Promise<Laboratory> {
-  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  const uri = await replaceParams(uris.Laboratories.GET_BY_ID, { id: labId });
   return await fetchWithAuthHeader(uri) as Laboratory;
+}
+
+/**
+ * Create a new laboratory
+ * @param labData - Laboratory data
+ * @returns Created laboratory
+ */
+export async function createLab(labData: LaboratoryRequest): Promise<Laboratory> {
+  const uri = uris.Laboratories.GET_ALL;
+  return await fetchOnClientWithAuthHeader(uri, {
+    method: "POST",
+    data: labData,
+  }) as Laboratory;
 }
 
 /**
@@ -45,7 +46,7 @@ export async function updateLab(
   labId: number,
   labData: LaboratoryRequest,
 ): Promise<Laboratory> {
-  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  const uri = await replaceParams(uris.Laboratories.GET_BY_ID, { id: labId });
   return await fetchWithAuthHeader(uri, {
     method: "PUT",
     data: labData,
@@ -57,7 +58,7 @@ export async function updateLab(
  * @param labId - Laboratory ID
  */
 export async function deleteLab(labId: number): Promise<void> {
-  const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
+  const uri = await replaceParams(uris.Laboratories.GET_BY_ID, { id: labId });
   await fetchWithAuthHeader(uri, {
     method: "DELETE",
   });

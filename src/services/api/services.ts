@@ -1,5 +1,3 @@
-"use server";
-
 import axios, { AxiosError } from "axios";
 import { redirect } from "next/navigation";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -25,7 +23,7 @@ export async function replaceParams(uri: string, params: object): Promise<string
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchWithErrorHandling(
+export async function fetchOnClientWithErrorHandling(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
@@ -57,37 +55,13 @@ export async function fetchWithErrorHandling(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-async function fetchApi(
+export async function fetchApiOnClient(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  return (await fetchWithErrorHandling(uri, {
+  return (await fetchOnClientWithErrorHandling(uri, {
     ...options,
   }) as AxiosResponse).data;
-}
-
-/**
- * Fetch API with API key
- * @param uri - The URI to fetch
- * @param data - The data to send
- * @param options - The options for the axios request
- * @returns The response from the axios request
- */
-export async function fetchWithApiKey(
-  uri: string,
-  data: unknown = {},
-  options: AxiosRequestConfig = {},
-): Promise<unknown> {
-  return await fetchApi(uri, {
-    ...options,
-    method: "POST",
-    data: data,
-    ...options,
-    headers: {
-      ...options.headers,
-      "X-API-Key": process.env.API_KEY,
-    },
-  });
 }
 
 /**
@@ -96,14 +70,14 @@ export async function fetchWithApiKey(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchWithAuthHeader(
+export async function fetchOnClientWithAuthHeader(
   uri: string,
   options: AxiosRequestConfig = {},
   ): Promise<unknown> {
   const session = await auth();
   const userToken = session?.user.userToken;
 
-  return await fetchApi(uri, {
+  return await fetchApiOnClient(uri, {
     ...options,
     headers: {
       ...options.headers,

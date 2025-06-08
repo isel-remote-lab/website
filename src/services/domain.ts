@@ -1,4 +1,5 @@
-const DOMAIN_CONFIG_PATH = process.env.DOMAIN_CONFIG_PATH ?? "../../domain-config.json" ?? "../../../api/host/src/main/resources/domain-config.json";
+import { fetchWithApiKey } from "./api/server/serverServices";
+import Uris from "./uris";
 
 interface LabConfig {
   min: number;
@@ -16,7 +17,9 @@ interface DomainConfig {
   };
 }
 
-const domainConfig = await import(DOMAIN_CONFIG_PATH) as DomainConfig;
+const domainConfig = await fetchWithApiKey(Uris.DOMAIN) as DomainConfig;
+
+console.log(domainConfig);
 
 const laboratory = domainConfig.laboratory;
 

@@ -10,11 +10,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY ./website/package.json ./
-COPY ./website/yarn.lock* ./
-COPY ./website/package-lock.json* ./
-COPY ./website/pnpm-lock.yaml* ./
-COPY ./website/.npmrc* ./
+COPY website/package.json website/yarn.lock* website/package-lock.json* website/pnpm-lock.yaml* website/.npmrc* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -22,11 +18,12 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ./website/. .
+COPY website/ .
 
 # Declare build arguments
 ARG NEXTAUTH_URL
@@ -43,10 +40,7 @@ ENV NEXTAUTH_URL=$NEXTAUTH_URL \
     AUTH_MICROSOFT_ENTRA_ID_ID=$AUTH_MICROSOFT_ENTRA_ID_ID \
     AUTH_MICROSOFT_ENTRA_ID_SECRET=$AUTH_MICROSOFT_ENTRA_ID_SECRET \
     API_KEY=$API_KEY \
-    DOMAIN_CONFIG_PATH=${DOMAIN_CONFIG_PATH:-./domain-config.json}
-
-# Copy domain config from parent api folder
-COPY ../api/host/src/main/resources/domain-config.json ./domain-config.json
+    DOMAIN_CONFIG_PATH=$DOMAIN_CONFIG_PATH
 
 RUN npm run build
 
@@ -54,33 +48,26 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ARG DOMAIN_CONFIG_PATH
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+ENV NODE_ENV=production \
+    DOMAIN_CONFIG_PATH=$DOMAIN_CONFIG_PATH
 
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+# TODO: mount domain-config.json from parent api folder
+COPY --from=builder /app/domain-config.json ./domain-config.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./
 
 EXPOSE 3000
 
-ENV PORT=3000
-
-# Trust host for authentication
 # Trust host for authentication
 ENV AUTH_TRUST_HOST=true
 
 # Disable Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Start the server, host name is 0.0.0.0 to allow access from outside the container, and use the standalone server.js file
-CMD HOSTNAME="0.0.0.0" node .next/standalone/server.js
+ENV PORT=3000
+
+CMD npm start
