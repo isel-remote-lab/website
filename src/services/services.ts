@@ -23,7 +23,7 @@ export async function replaceParams(uri: string, params: object): Promise<string
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchOnClientWithErrorHandling(
+export async function fetchWithErrorHandling(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
@@ -55,13 +55,38 @@ export async function fetchOnClientWithErrorHandling(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchApiOnClient(
+export async function fetchApi(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  return (await fetchOnClientWithErrorHandling(uri, {
+  return (await fetchWithErrorHandling(uri, {
     ...options,
   }) as AxiosResponse).data;
+}
+
+/**
+ * Fetch API with API key
+ * @param uri - The URI to fetch
+ * @param data - The data to send
+ * @param options - The options for the axios request
+ * @returns The response from the axios request
+ */
+export async function fetchWithApiKey(
+  uri: string,
+  data: unknown = {},
+  options: AxiosRequestConfig = {},
+): Promise<unknown> {
+  console.log(process.env.API_KEY);
+  return await fetchApi(uri, {
+    ...options,
+    method: "POST",
+    data: data,
+    ...options,
+    headers: {
+      ...options.headers,
+      "X-API-Key": process.env.API_KEY,
+    },
+  });
 }
 
 /**
@@ -70,14 +95,14 @@ export async function fetchApiOnClient(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchOnClientWithAuthHeader(
+export async function fetchWithAuthHeader(
   uri: string,
   options: AxiosRequestConfig = {},
   ): Promise<unknown> {
   const session = await auth();
   const userToken = session?.user.userToken;
 
-  return await fetchApiOnClient(uri, {
+  return await fetchApi(uri, {
     ...options,
     headers: {
       ...options.headers,

@@ -4,9 +4,16 @@
  */
 import "./src/env.js";
 
+const url = process.env.NEXTAUTH_URL ? new URL(process.env.NEXTAUTH_URL).hostname : 'localhost:3000';
+
 /** @type {import("next").NextConfig} */
 const config = {
-
+  allowedDevOrigins: [url],
+  experimental: {
+    serverActions: {
+      allowedOrigins: [url],
+    },
+  },
 };
 
 export default config;

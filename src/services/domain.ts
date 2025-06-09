@@ -1,4 +1,4 @@
-import { fetchWithApiKey } from "./api/server/serverServices";
+import { fetchWithApiKey } from "./services";
 import Uris from "./uris";
 
 interface LabConfig {

@@ -1,8 +1,7 @@
 import Uris from "~/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
-import { fetchWithApiKey, fetchWithAuthHeader } from "./api/server/serverServices";
-import { replaceParams } from "./api/services";
+import { fetchWithApiKey, fetchWithAuthHeader, replaceParams } from "./services";
 
 /**
  * Sign in a user

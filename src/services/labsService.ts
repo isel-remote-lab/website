@@ -1,5 +1,4 @@
-import { fetchWithAuthHeader } from "~/services/api/server/serverServices";
-import { fetchOnClientWithAuthHeader, replaceParams } from "~/services/api/services";
+import { fetchWithAuthHeader, replaceParams } from "~/services/services";
 import uris from "~/services/uris";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import type Laboratory from "~/types/laboratory";
@@ -30,7 +29,7 @@ export async function getLabById(labId: number): Promise<Laboratory> {
  */
 export async function createLab(labData: LaboratoryRequest): Promise<Laboratory> {
   const uri = uris.Laboratories.GET_ALL;
-  return await fetchOnClientWithAuthHeader(uri, {
+  return await fetchWithAuthHeader(uri, {
     method: "POST",
     data: labData,
   }) as Laboratory;

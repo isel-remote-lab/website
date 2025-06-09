@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
-import { fetchWithErrorHandling } from "../api/server/serverServices";
+import { fetchWithErrorHandling } from "../services";
 
 /**
  * Fetches data from Microsoft Graph API
