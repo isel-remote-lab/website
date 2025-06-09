@@ -22,7 +22,7 @@ const labConfig = (await getDomainConfig()).laboratory
 export const formItems: FormItemConfig[] = [
   {
     label: "Nome",
-    name: "name",
+    name: "labName",
     rules: [
       {
         required: !labConfig.labName.optional,
@@ -48,7 +48,7 @@ export const formItems: FormItemConfig[] = [
   },
   {
     label: "Descrição",
-    name: "description",
+    name: "labDescription",
     rules: [
       {
         required: !labConfig.labDescription.optional,
@@ -73,7 +73,7 @@ export const formItems: FormItemConfig[] = [
   },
   {
     label: "Duração das sessões",
-    name: "duration",
+    name: "labDuration",
     rules: [
       {
         required: !labConfig.labDuration.optional,
@@ -143,7 +143,7 @@ export const formItems: FormItemConfig[] = [
   },
   {
     label: "Limite da fila de espera",
-    name: "queueLimit",
+    name: "labQueueLimit",
     rules: [
       {
         required: !labConfig.labQueueLimit.optional,
@@ -188,8 +188,8 @@ export default function LabInfoForm({
     if (initialValues) {
       form.setFieldsValue({
         ...initialValues,
-        duration: initialValues.labDuration
-          ? dayjs(initialValues.labDuration, "HH:mm")
+        labDuration: initialValues.labDuration
+          ? dayjs().hour(Math.floor(initialValues.labDuration / 60)).minute(initialValues.labDuration % 60)
           : undefined,
       });
     }
@@ -199,7 +199,7 @@ export default function LabInfoForm({
     <Form
       form={form}
       initialValues={{
-        queueLimit: 1,
+        labQueueLimit: 1,
       }}
       onFinish={onFinish}
     >
@@ -216,6 +216,16 @@ export default function LabInfoForm({
       <Form.Item>
         <Button type="primary" htmlType="submit">
           {submitButtonText}
+        </Button>
+        <Button 
+          type="default" 
+          style={{ marginLeft: 8 }}
+          onClick={() => {
+            // TODO: Implement group addition logic
+            console.log("Add groups clicked");
+          }}
+        >
+          Manage Groups
         </Button>
       </Form.Item>
     </Form>
