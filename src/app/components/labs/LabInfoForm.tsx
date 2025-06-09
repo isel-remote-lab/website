@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import dayjs from "dayjs";
 import { type Rule } from "antd/es/form";
 import type Laboratory from "~/types/laboratory";
-import { labConfig } from "~/services/domain";
+import { getDomainConfig } from "~/services/domain";
 
 interface FormItemConfig {
   label: string;
@@ -15,22 +15,24 @@ interface FormItemConfig {
   component: React.ReactNode;
 }
 
+const labConfig = (await getDomainConfig()).laboratory;
+
 export const formItems: FormItemConfig[] = [
   {
     label: "Nome",
     name: "name",
     rules: [
       {
-        required: !labConfig.name.optional,
+        required: !labConfig.labName.optional,
         message: "Por favor insira um nome!",
       },
       {
-        min: labConfig.name.min,
-        message: `O nome deve ter pelo menos ${labConfig.name.min} caracteres!`,
+        min: labConfig.labName.min,
+        message: `O nome deve ter pelo menos ${labConfig.labName.min} caracteres!`,
       },
       {
-        max: labConfig.name.max,
-        message: `O nome deve ter no máximo ${labConfig.name.max} caracteres!`,
+        max: labConfig.labName.max,
+        message: `O nome deve ter no máximo ${labConfig.labName.max} caracteres!`,
       },
     ],
     component: (
@@ -47,16 +49,16 @@ export const formItems: FormItemConfig[] = [
     name: "description",
     rules: [
       {
-        required: !labConfig.description.optional,
+        required: !labConfig.labDescription.optional,
         message: "Por favor insira uma descrição!",
       },
       {
-        min: labConfig.description.min,
-        message: `A descrição deve ter pelo menos ${labConfig.description.min} caracteres!`,
+        min: labConfig.labDescription.min,
+        message: `A descrição deve ter pelo menos ${labConfig.labDescription.min} caracteres!`,
       },
       {
-        max: labConfig.description.max,
-        message: `A descrição deve ter no máximo ${labConfig.description.max} caracteres!`,
+        max: labConfig.labDescription.max,
+        message: `A descrição deve ter no máximo ${labConfig.labDescription.max} caracteres!`,
       },
     ],
     component: (
@@ -72,7 +74,7 @@ export const formItems: FormItemConfig[] = [
     name: "duration",
     rules: [
       {
-        required: !labConfig.duration.optional,
+        required: !labConfig.labDuration.optional,
         message: "Por favor insira a duração!",
       },
       {
@@ -80,22 +82,22 @@ export const formItems: FormItemConfig[] = [
           if (value) {
             const totalMinutes = value.hour() * 60 + value.minute();
             if (
-              labConfig.duration.min !== undefined &&
-              totalMinutes < labConfig.duration.min
+              labConfig.labDuration.min !== undefined &&
+              totalMinutes < labConfig.labDuration.min
             ) {
               return Promise.reject(
                 new Error(
-                  `A duração mínima é de ${labConfig.duration.min / 60} horas!`,
+                  `A duração mínima é de ${labConfig.labDuration.min / 60} horas!`,
                 ),
               );
             }
             if (
-              labConfig.duration.max !== undefined &&
-              totalMinutes > labConfig.duration.max
+              labConfig.labDuration.max !== undefined &&
+              totalMinutes > labConfig.labDuration.max
             ) {
               return Promise.reject(
                 new Error(
-                  `A duração máxima é de ${labConfig.duration.max / 60} horas!`,
+                  `A duração máxima é de ${labConfig.labDuration.max / 60} horas!`,
                 ),
               );
             }
@@ -115,7 +117,7 @@ export const formItems: FormItemConfig[] = [
         needConfirm={false}
         placeholder="Duração das sessões"
         disabledTime={() => {
-          const maxMinutes = labConfig.duration.max;
+          const maxMinutes = labConfig.labDuration.max;
           return {
             disabledHours: () =>
               Array.from({ length: 24 }, (_, i) => i).filter(
@@ -142,25 +144,25 @@ export const formItems: FormItemConfig[] = [
     name: "queueLimit",
     rules: [
       {
-        required: !labConfig.queueLimit.optional,
+        required: !labConfig.labQueueLimit.optional,
         message: "Por favor insira o limite!",
       },
       {
         type: "number",
-        min: labConfig.queueLimit.min,
-        message: `O limite da fila deve ser no mínimo ${labConfig.queueLimit.min}!`,
+        min: labConfig.labQueueLimit.min,
+        message: `O limite da fila deve ser no mínimo ${labConfig.labQueueLimit.min}!`,
       },
       {
         type: "number",
-        max: labConfig.queueLimit.max,
-        message: `O limite da fila deve ser no máximo ${labConfig.queueLimit.max}!`,
+        max: labConfig.labQueueLimit.max,
+        message: `O limite da fila deve ser no máximo ${labConfig.labQueueLimit.max}!`,
       },
     ],
     component: (
       <InputNumber
         autoSave="true"
-        min={labConfig.queueLimit.min}
-        max={labConfig.queueLimit.max}
+        min={labConfig.labQueueLimit.min}
+        max={labConfig.labQueueLimit.max}
         placeholder="Limite da fila de espera"
       />
     ),

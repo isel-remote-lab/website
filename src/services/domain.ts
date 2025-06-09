@@ -1,60 +1,45 @@
+import DomainConfig from "~/types/domain";
 import { fetchWithApiKey } from "./services";
 import Uris from "./uris";
 
-interface LabConfig {
-  min: number;
-  max: number;
-  optional: boolean;
-  unit?: string;
-}
+let domainConfig: DomainConfig | null = null;
 
-interface DomainConfig {
+// Fallback configuration in case the API is not available
+const fallbackConfig: DomainConfig = {
   laboratory: {
-    labName: LabConfig;
-    labDescription: LabConfig;
-    labQueueLimit: LabConfig;
-    labDuration: LabConfig;
-  };
-}
-
-// TODO: Add the domain fetch to the start of the app, so that it runs only once
-
-/*
-const domainConfig = await fetchWithApiKey(Uris.DOMAIN, {}, {
-  method: "GET",
-}) as DomainConfig;
- */
-
-//const laboratory = domainConfig.laboratory;
-
-/*
-export const labConfig = {
-  name: laboratory.labName,
-  description: laboratory.labDescription,
-  queueLimit: laboratory.labQueueLimit,
-  duration: laboratory.labDuration,
+    labName: {
+      min: 1,
+      max: 10,
+      optional: false,
+    },
+    labDescription: {
+      min: 1,
+      max: 10,
+      optional: true,
+    },
+    labQueueLimit: {
+      min: 1,
+      max: 10,
+      optional: false,
+    },
+    labDuration: {
+      min: 1,
+      max: 10,
+      optional: false,
+    },
+  },
 };
-*/
 
-export const labConfig = {
-  name: {
-    min: 1,
-    max: 10,
-    optional: false,
-  },
-  description: {
-    min: 1,
-    max: 10,
-    optional: true,
-  },
-  queueLimit: {
-    min: 1,
-    max: 10,
-    optional: false,
-  },
-  duration: {
-    min: 1,
-    max: 10,
-    optional: false,
-  },
+export const getDomainConfig = async (): Promise<DomainConfig> => {
+  if (!domainConfig) {
+    try {
+      domainConfig = await fetchWithApiKey(Uris.DOMAIN, {}, {
+        method: "GET",
+      }) as DomainConfig;
+    } catch (error) {
+      console.error("Failed to fetch domain configuration:", error);
+      domainConfig = fallbackConfig;
+    }
+  }
+  return domainConfig;
 };
