@@ -38,7 +38,7 @@ export const getDomainConfig = async (): Promise<DomainConfig> => {
       }) as DomainConfig;
     } catch (error) {
       console.error("Failed to fetch domain configuration:", error);
-      domainConfig = fallbackConfig;
+      return fallbackConfig;
     }
   }
   return domainConfig;

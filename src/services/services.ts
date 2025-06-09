@@ -28,23 +28,13 @@ export async function fetchWithErrorHandling(
   options: AxiosRequestConfig = {},
 ): Promise<unknown> { 
   try {
-    console.log('Making request to:', uri);
-    console.log('Request options:', {
-      method: options.method,
-      headers: options.headers,
-      data: options.data,
-    });
-    
-    const response = await axios({
+    return await axios({
       url: uri,
       ...options,
       headers: {
         ...options.headers,
       },
     });
-    
-    console.log('Response status:', response.status);
-    return response.data;
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       console.error('Request failed with details:', {
