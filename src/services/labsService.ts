@@ -31,7 +31,7 @@ export async function createLab(labData: LaboratoryRequest): Promise<Laboratory>
   const uri = uris.Laboratories.GET_ALL;
   return await fetchWithAuthHeader(uri, {
     method: "POST",
-    data: labData,
+    data: labData
   }) as Laboratory;
 }
 

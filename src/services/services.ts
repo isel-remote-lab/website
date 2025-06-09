@@ -26,24 +26,50 @@ export async function replaceParams(uri: string, params: object): Promise<string
 export async function fetchWithErrorHandling(
   uri: string,
   options: AxiosRequestConfig = {},
-): Promise<unknown> {
+): Promise<unknown> { 
   try {
-    return (await axios({
+    console.log('Making request to:', uri);
+    console.log('Request options:', {
+      method: options.method,
+      headers: options.headers,
+      data: options.data,
+    });
+    
+    const response = await axios({
       url: uri,
       ...options,
       headers: {
         ...options.headers,
       },
-    })).data;
+    });
+    
+    console.log('Response status:', response.status);
+    return response.data;
   } catch (error: unknown) {
-    if (error instanceof AxiosError && error.response?.status === 401) {
-      if (typeof window !== "undefined") {
-        // If the code is running on the client side, make the redirect happen on the client side
-        window.location.href = "/api/auth/signin";
-      } else {
-        // If the code is running on the server side, make the redirect happen on the server side
-        redirect("/api/auth/signin");
+    if (error instanceof AxiosError) {
+      console.error('Request failed with details:', {
+        message: error.message,
+        code: error.code,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        responseData: error.response?.data,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers,
+          data: error.config?.data,
+        }
+      });
+      
+      if (error.response?.status === 401) {
+        if (typeof window !== "undefined") {
+          window.location.href = "/api/auth/signin";
+        } else {
+          redirect("/api/auth/signin");
+        }
       }
+    } else {
+      console.error('Unknown error:', error);
     }
     throw error;
   }
@@ -76,12 +102,10 @@ export async function fetchWithApiKey(
   data: unknown = {},
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  console.log(process.env.API_KEY);
   return await fetchApi(uri, {
     ...options,
-    method: "POST",
+    method: options.method || "POST",
     data: data,
-    ...options,
     headers: {
       ...options.headers,
       "X-API-Key": process.env.API_KEY,
@@ -108,7 +132,7 @@ export async function fetchWithAuthHeader(
       ...options.headers,
       "Authorization": `Bearer ${userToken}`,
     },
-  }) as AxiosResponse;
+  });
 }
 
 /**
