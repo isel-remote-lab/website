@@ -7,8 +7,6 @@ import dayjs from "dayjs";
 import { type Rule } from "antd/es/form";
 import type Laboratory from "~/types/laboratory";
 import { getDomainConfig } from "~/server/services/domain";
-import DomainConfig from "~/types/domain";
-import { ApiResponse } from "~/types/api";
 
 interface FormItemConfig {
   label: string;

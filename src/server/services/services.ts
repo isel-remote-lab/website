@@ -2,9 +2,9 @@
 
 import axios, { AxiosError } from "axios";
 import { redirect } from "next/navigation";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
-import { ApiResponse } from "~/types/api";
+import type { ApiResponse } from "~/types/api";
 
 /**
  * Helper function to replace path parameters in URIs

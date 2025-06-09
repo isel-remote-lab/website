@@ -63,8 +63,6 @@ export default function DefaultModal({
           onMouseOut={() => {
             setDisabled(true);
           }}
-          onFocus={() => {}}
-          onBlur={() => {}}
         >
           {title}
         </div>
