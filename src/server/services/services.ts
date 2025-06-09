@@ -1,3 +1,5 @@
+"use server";
+
 import axios, { AxiosError } from "axios";
 import { redirect } from "next/navigation";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -37,11 +39,13 @@ export async function fetchWithErrorHandling(
       },
     })).data;
   } catch (error: unknown) {
-    if (error instanceof AxiosError && error.response?.status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/api/auth/signin";
-      } else {
-        redirect("/api/auth/signin");
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 401) {
+        if (typeof window !== "undefined") {
+          window.location.href = "/api/auth/signin";
+        } else {
+          redirect("/api/auth/signin");
+        }
       }
     }
   }
@@ -57,7 +61,7 @@ export async function fetchApiData(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  return (await fetchWithErrorHandling(uri, options) as ApiResponse<unknown>).data;
+  return (await fetchWithErrorHandling(uri, options) as ApiResponse<unknown>).data
 }
 
 /**
