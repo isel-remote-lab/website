@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { redirect } from "next/navigation";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import { auth } from "~/server/auth";
+import { ApiResponse } from "~/types/api";
 
 /**
  * Helper function to replace path parameters in URIs
@@ -28,40 +29,21 @@ export async function fetchWithErrorHandling(
   options: AxiosRequestConfig = {},
 ): Promise<unknown> { 
   try {
-    return await axios({
+    return (await axios({
       url: uri,
       ...options,
       headers: {
         ...options.headers,
       },
-    });
+    })).data;
   } catch (error: unknown) {
-    if (error instanceof AxiosError) {
-      console.error('Request failed with details:', {
-        message: error.message,
-        code: error.code,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        responseData: error.response?.data,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method,
-          headers: error.config?.headers,
-          data: error.config?.data,
-        }
-      });
-      
-      if (error.response?.status === 401) {
-        if (typeof window !== "undefined") {
-          window.location.href = "/api/auth/signin";
-        } else {
-          redirect("/api/auth/signin");
-        }
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      if (typeof window !== "undefined") {
+        window.location.href = "/api/auth/signin";
+      } else {
+        redirect("/api/auth/signin");
       }
-    } else {
-      console.error('Unknown error:', error);
     }
-    throw error;
   }
 }
 
@@ -71,13 +53,11 @@ export async function fetchWithErrorHandling(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchApi(
+export async function fetchApiData(
   uri: string,
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  return (await fetchWithErrorHandling(uri, {
-    ...options,
-  }) as AxiosResponse).data;
+  return (await fetchWithErrorHandling(uri, options) as ApiResponse<unknown>).data;
 }
 
 /**
@@ -87,14 +67,14 @@ export async function fetchApi(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchWithApiKey(
+export async function fetchDataWithApiKey(
   uri: string,
   data: unknown = {},
   options: AxiosRequestConfig = {},
 ): Promise<unknown> {
-  return await fetchApi(uri, {
+  return await fetchApiData(uri, {
     ...options,
-    method: options.method || "POST",
+    method: options.method ?? "POST",
     data: data,
     headers: {
       ...options.headers,
@@ -109,14 +89,14 @@ export async function fetchWithApiKey(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export async function fetchWithAuthHeader(
+export async function fetchDataWithAuthHeader(
   uri: string,
   options: AxiosRequestConfig = {},
   ): Promise<unknown> {
   const session = await auth();
   const userToken = session?.user.userToken;
 
-  return await fetchApi(uri, {
+  return await fetchApiData(uri, {
     ...options,
     headers: {
       ...options.headers,

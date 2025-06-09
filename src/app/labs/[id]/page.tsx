@@ -1,4 +1,4 @@
-import { getLabById } from "~/services/labsService";
+import { getLabById } from "~/server/services/labsService";
 import LabInfo from "./LabInfo";
 
 /**

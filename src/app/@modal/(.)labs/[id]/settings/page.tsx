@@ -1,4 +1,4 @@
-import { getLabById } from "~/services/labsService";
+import { getLabById } from "~/server/services/labsService";
 import DefaultModal from "~/app/components/defaults/DefaultModal";
 import EditLabInfo from "~/app/labs/[id]/settings/EditLabInfo";
 

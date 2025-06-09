@@ -3,7 +3,7 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { UserRequest, UserResponse } from "~/types/user.js";
-import { signIn, signOut } from "~/services/usersService";
+import { signIn, signOut } from "../services/usersService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -78,13 +78,9 @@ export const authConfig = {
           name: user.name,
           email: user.email,
         };
-
-        console.log("Signed in with microsoft")
         
         // Sign in the user
         const signInResponse = await signIn(userRequest);
-
-        console.log("Sign in response:", signInResponse);
         
         if (signInResponse) {
           // Store the user data in the user object to be used in jwt callback

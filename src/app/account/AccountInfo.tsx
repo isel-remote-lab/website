@@ -1,5 +1,5 @@
 import UserInfo from "../users/[id]/UserInfo";
-import { getUserOwnImage } from "~/services/microsoft/microsoftApiService";
+import { getUserOwnImage } from "~/server/services/microsoft/microsoftApiService";
 import { auth } from "~/server/auth";
 import { redirect } from "next/navigation";
 

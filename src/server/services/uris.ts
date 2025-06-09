@@ -18,7 +18,7 @@ const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
 /**
  * API URIs for user-related operations
  */
-export default {
+export const Uris = {
   /**
    * URI for the domain endpoint
    */

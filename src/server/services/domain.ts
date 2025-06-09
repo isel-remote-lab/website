@@ -1,6 +1,7 @@
-import DomainConfig from "~/types/domain";
-import { fetchWithApiKey } from "./services";
-import Uris from "./uris";
+import type DomainConfig from "~/types/domain";
+import { fetchDataWithApiKey } from "./services";
+import { Uris } from "./uris";
+import { ApiResponse } from "~/types/api";
 
 let domainConfig: DomainConfig | null = null;
 
@@ -32,13 +33,14 @@ const fallbackConfig: DomainConfig = {
 
 export const getDomainConfig = async (): Promise<DomainConfig> => {
   if (!domainConfig) {
+    console.log("Fetching domain configuration...");
     try {
-      domainConfig = await fetchWithApiKey(Uris.DOMAIN, {}, {
+      domainConfig = await fetchDataWithApiKey(Uris.DOMAIN, {}, {
         method: "GET",
       }) as DomainConfig;
     } catch (error) {
       console.error("Failed to fetch domain configuration:", error);
-      return fallbackConfig;
+      throw error;
     }
   }
   return domainConfig;

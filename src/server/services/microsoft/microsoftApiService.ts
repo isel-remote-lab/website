@@ -12,12 +12,12 @@ export async function fetchMicrosoftApi(uri: string, options: AxiosRequestConfig
   const session = await auth();
   const accessToken = session!.user.oauthUserToken;
 
-  return await fetchWithErrorHandling(uri, {
+  return (await fetchWithErrorHandling(uri, {
     ...options,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  }) as string;
+  })) as string;
 }
 /**
  * Fetches the user's profile picture from Microsoft Graph API

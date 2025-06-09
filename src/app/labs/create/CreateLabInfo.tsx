@@ -1,7 +1,7 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-import { createLab } from "~/services/labsService";
+import { createLab } from "~/server/services/labsService";
 import { type LaboratoryRequest } from "~/types/laboratory";
 import { useRouter } from "next/navigation";
 

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getUserOwnImage } from "~/services/microsoft/microsoftApiService";
+import { getUserOwnImage } from "~/server/services/microsoft/microsoftApiService";
 
 /**
  * User avatar component

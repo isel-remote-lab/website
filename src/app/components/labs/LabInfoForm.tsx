@@ -6,7 +6,9 @@ import { useEffect } from "react";
 import dayjs from "dayjs";
 import { type Rule } from "antd/es/form";
 import type Laboratory from "~/types/laboratory";
-import { getDomainConfig } from "~/services/domain";
+import { getDomainConfig } from "~/server/services/domain";
+import DomainConfig from "~/types/domain";
+import { ApiResponse } from "~/types/api";
 
 interface FormItemConfig {
   label: string;
@@ -15,7 +17,7 @@ interface FormItemConfig {
   component: React.ReactNode;
 }
 
-const labConfig = (await getDomainConfig()).laboratory;
+const labConfig = (await getDomainConfig()).laboratory
 
 export const formItems: FormItemConfig[] = [
   {

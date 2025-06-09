@@ -8,7 +8,7 @@ import { SessionProvider } from "next-auth/react";
 import Menu from "./components/customs/CustomMenu";
 import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
-import { getAllLabs } from "~/services/labsService";
+import { getAllLabs } from "~/server/services/labsService";
 import { redirect } from "next/navigation";
 
 /**

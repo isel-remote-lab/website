@@ -1,7 +1,7 @@
-import { getUserById } from "~/services/usersService";
+import { getUserById } from "~/server/services/usersService";
 import DefaultPage from "~/app/components/defaults/DefaultPage";
 import UserInfo from "~/app/users/[id]/UserInfo";
-import { getUserImage } from "~/services/microsoft/microsoftApiService";
+import { getUserImage } from "~/server/services/microsoft/microsoftApiService";
 export default async function UserInfoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
