@@ -1,10 +1,11 @@
 "use client";
 
 import { List, Typography, Button } from 'antd';
-import type { Laboratory } from '~/types/laboratory';
 import { getUserGroups } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
 import type { GroupResponse } from '~/types/group';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
+import GroupInfoForm from '~/app/components/labs/groups/GroupInfoForm';
 
 interface ManageGroupsInfoProps {
   labId: string;
@@ -13,6 +14,7 @@ interface ManageGroupsInfoProps {
 export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
   const [groups, setGroups] = useState<GroupResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -29,9 +31,45 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
     fetchGroups();
   }, []);
 
+  const handleFormFinish = async (values: unknown) => {
+    // TODO: Implement group creation logic
+    setShowForm(false);
+    // Refresh groups list after creation
+    const fetchedGroups = await getUserGroups();
+    setGroups(fetchedGroups);
+  };
+
+  const createGroup = () => {
+    setShowForm(true);
+  };
+
+  if (showForm) {
+    return (
+      <div>
+        <Button 
+          type="default" 
+          style={{ marginBottom: 16 }}
+          onClick={() => setShowForm(false)}
+        >
+          <ArrowLeftOutlined />
+          Voltar
+        </Button>
+        <GroupInfoForm
+          onFinish={handleFormFinish}
+          submitButtonText="Criar Grupo"
+        />
+      </div>
+    );
+  }
+
   return (
     <div>
-      <Button type="default" style={{ marginBottom: 16, width: "100%" }}>
+      <Button 
+        type="default" 
+        style={{ marginBottom: 16, width: "100%" }}
+        onClick={createGroup}
+      >
+        <PlusOutlined />
         Criar Grupo
       </Button>
       <List

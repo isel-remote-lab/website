@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, InputNumber, TimePicker } from "antd";
+import { Button, Form, InputNumber, TimePicker, Tooltip } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -11,6 +11,8 @@ import { FormItemConfig } from "~/types/form";
 import DomainConfig, { RestrictionsObjects } from "~/types/domain";
 import addDurationFormComponent, { formatDuration } from "../formComponents/addDurationFormComponent";
 import React from "react";
+import Link from "next/link";
+import { GroupOutlined, SettingOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 
 /**
  * Get the label for a field based on its name
@@ -185,6 +187,11 @@ export default function DefaultForm({
   // Check if the form is being used to edit a laboratory
   const isEditLaboratory = Boolean(initialValues?.id && type === "laboratory");
 
+  const handleGroupsDrawerClose = () => {
+    setIsGroupsDrawerOpen(false);
+    window.history.pushState({}, '', `/labs/${initialValues?.id}/settings`);
+  };
+
   return (
     <>
       <Form
@@ -207,24 +214,16 @@ export default function DefaultForm({
             {submitButtonText}
           </Button>
           {isEditLaboratory && (
-            <Button 
-              type="default" 
-              style={{ marginLeft: 8 }}
-              onClick={() => setIsGroupsDrawerOpen(true)}
-            >
-              Gerir Grupos
+          <Tooltip title="Gerir Grupos" key="groups">
+            <Button type="default" style={{ marginLeft: 8 }}>
+              <Link href={`/labs/${initialValues?.id}/settings/groups`}>
+                <UsergroupAddOutlined />
+              </Link>
             </Button>
+          </Tooltip>
           )}
         </Form.Item>
       </Form>
-
-      <DefaultDrawer
-        title="Gerir Grupos"
-        open={isGroupsDrawerOpen}
-        onClose={() => setIsGroupsDrawerOpen(false)}
-      >
-        {isEditLaboratory && initialValues && <ManageGroupsInfo labId={initialValues.id} />}
-      </DefaultDrawer>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
 import { auth } from "~/server/auth";
-import { fetchWithErrorHandling } from "../services";
+import { fetchOnServerWithErrorHandling } from "../services";
 
 /**
  * Fetches data from Microsoft Graph API
@@ -12,7 +12,7 @@ export async function fetchMicrosoftApi(uri: string, options: AxiosRequestConfig
   const session = await auth();
   const accessToken = session!.user.oauthUserToken;
 
-  return (await fetchWithErrorHandling(uri, {
+  return (await fetchOnServerWithErrorHandling(uri, {
     ...options,
     headers: {
       Authorization: `Bearer ${accessToken}`,

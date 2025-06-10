@@ -7,7 +7,7 @@ COPY ./website/package.json ./
 COPY ./website/package-lock.json ./
 
 # Install dependencies with verbose logging
-RUN npm install --loglevel verbose
+RUN npm install --legacy-peer-deps --loglevel verbose
 
 ARG DOMAIN_CONFIG_PATH
 

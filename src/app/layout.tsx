@@ -48,11 +48,11 @@ export default async function RootLayout({
         <SessionProvider>
           <CheckLogin>
             <TempRoleProvider role={role}>
-              <Menu labs={labs} />
-              <Content style={{ padding: 24 }}>
-                {children}
-                {modal}
-              </Content>
+                <Menu labs={labs} />
+                <Content style={{ padding: 24 }}>
+                  {children}
+                  {modal}
+                </Content>
             </TempRoleProvider>
           </CheckLogin>
         </SessionProvider>
