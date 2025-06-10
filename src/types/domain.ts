@@ -2,18 +2,44 @@
  * Domain configuration interface
  */
 export default interface DomainConfig {
-  laboratory: {
-    labName: LabEntryConfig;
-    labDescription: LabEntryConfig;
-    labQueueLimit: LabEntryConfig;
-    labDuration: LabEntryConfig;
-  };
+  user: UserRestrictions;
+  laboratory: LaboratoryRestrictions;
+  group: GroupRestrictions;
 }
 
 /**
- * Laboratory entry configuration interface
+ * User restrictions interface
  */
-interface LabEntryConfig {
+interface UserRestrictions {
+  tokenSizeInBytes: number;
+  tokenTtl: number;
+  tokenRollingTtl: number;
+  tokenTtlDurationUnit: string;
+  maxTokensPerUser: number;
+}
+
+/**
+ * Laboratory restrictions interface
+ */
+interface LaboratoryRestrictions {
+  labName: Properties;
+  labDescription: Properties;
+  labDuration: Properties;
+  labQueueLimit: Properties;
+}
+
+/**
+ * Group restrictions interface
+ */
+interface GroupRestrictions {
+  groupName: Properties;
+  groupDescription: Properties;
+}
+
+/**
+ * Properties interface
+ */
+interface Properties {
   min: number;
   max: number;
   optional: boolean;

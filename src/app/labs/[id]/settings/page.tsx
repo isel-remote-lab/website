@@ -7,8 +7,6 @@ export default async function LaboratorySettingsPage({ params }: { params: Promi
   const initialValues = await getLabById(Number(id));
   const labName = initialValues?.labName || "";
 
-  // TODO: Fetch the lab data from the API
-
   return (
     <DefaultPage title={`Configurações de ${labName}`}>
       <EditLabInfo initialValues={initialValues} />

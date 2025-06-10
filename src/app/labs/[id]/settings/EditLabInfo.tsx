@@ -1,7 +1,7 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory } from "~/types/laboratory";
 
 interface EditLabInfoProps {
   initialValues?: Laboratory;

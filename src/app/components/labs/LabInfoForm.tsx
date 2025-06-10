@@ -2,11 +2,14 @@
 
 import { Button, Form, InputNumber, TimePicker } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { type Rule } from "antd/es/form";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory } from "~/types/laboratory";
 import { getDomainConfig } from "~/server/services/domain";
+import { useRouter } from "next/navigation";
+import ManageGroupsInfo from "~/app/labs/[id]/settings/groups/ManageGroupsInfo";
+import DefaultDrawer from "../defaults/DefaultDrawer";
 
 interface FormItemConfig {
   label: string;
@@ -181,6 +184,8 @@ export default function LabInfoForm({
   submitButtonText,
 }: LabInfoFormProps) {
   const [form] = Form.useForm();
+  const router = useRouter();
+  const [isGroupsDrawerOpen, setIsGroupsDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (initialValues) {
@@ -194,38 +199,45 @@ export default function LabInfoForm({
   }, [initialValues, form]);
 
   return (
-    <Form
-      form={form}
-      initialValues={{
-        labQueueLimit: 1,
-      }}
-      onFinish={onFinish}
-    >
-      {formItems.map((item) => (
-        <Form.Item
-          key={item.name}
-          label={item.label}
-          name={item.name}
-          rules={item.rules}
-        >
-          {item.component}
+    <>
+      <Form
+        form={form}
+        initialValues={{
+          labQueueLimit: 1,
+        }}
+        onFinish={onFinish}
+      >
+        {formItems.map((item) => (
+          <Form.Item
+            key={item.name}
+            label={item.label}
+            name={item.name}
+            rules={item.rules}
+          >
+            {item.component}
+          </Form.Item>
+        ))}
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            {submitButtonText}
+          </Button>
+          <Button 
+            type="default" 
+            style={{ marginLeft: 8 }}
+            onClick={() => setIsGroupsDrawerOpen(true)}
+          >
+            Gerir Grupos
+          </Button>
         </Form.Item>
-      ))}
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          {submitButtonText}
-        </Button>
-        <Button 
-          type="default" 
-          style={{ marginLeft: 8 }}
-          onClick={() => {
-            // TODO: Implement group addition logic
-            console.log("Add groups clicked");
-          }}
-        >
-          Manage Groups
-        </Button>
-      </Form.Item>
-    </Form>
+      </Form>
+
+      <DefaultDrawer
+        title="Gerir Grupos"
+        open={isGroupsDrawerOpen}
+        onClose={() => setIsGroupsDrawerOpen(false)}
+      >
+        {initialValues && <ManageGroupsInfo laboratory={initialValues} />}
+      </DefaultDrawer>
+    </>
   );
 }

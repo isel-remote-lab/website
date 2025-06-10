@@ -1,9 +1,9 @@
+import type { Group } from "./group";
+
 /**
  * Laboratory interface
  */
-export default interface Laboratory extends LaboratoryResponse {
-  id: number;
-}
+export type Laboratory = LaboratoryResponse;
 
 /**
  * Laboratory request data interface
@@ -19,10 +19,12 @@ export interface LaboratoryRequest {
  * Laboratory response data interface
  */
 export interface LaboratoryResponse {
+  id: number;
   labName: string;
   labDescription: string | null;
   labDuration: number;
   labQueueLimit: number;
   labCreatedAt: Date;
   labOwnerId: number;
+  groups?: Group[];
 }
