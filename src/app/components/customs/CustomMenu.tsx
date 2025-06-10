@@ -8,7 +8,7 @@ import Image from "next/image";
 import Search from "antd/es/input/Search";
 import CrateLabTopButton from "../buttons/topButtons/CrateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory } from "~/types/laboratory";
 /**
  * Client menu component
  * @returns The client menu component

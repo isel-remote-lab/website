@@ -1,18 +1,42 @@
+"use client";
+
 import { List, Typography, Button } from 'antd';
 import type { Laboratory } from '~/types/laboratory';
+import { getUserGroups } from '~/server/services/groupsService';
+import { useEffect, useState } from 'react';
+import type { GroupResponse } from '~/types/group';
 
 interface ManageGroupsInfoProps {
-  laboratory: Laboratory;
+  labId: string;
 }
 
-export default function ManageGroupsInfo({ laboratory }: ManageGroupsInfoProps) {
+export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
+  const [groups, setGroups] = useState<GroupResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const fetchedGroups = await getUserGroups();
+        setGroups(fetchedGroups);
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
   return (
     <div>
-      <Button type="primary" style={{ marginBottom: 16 }}>
+      <Button type="default" style={{ marginBottom: 16, width: "100%" }}>
         Criar Grupo
       </Button>
       <List
-        dataSource={laboratory.groups}
+        loading={loading}
+        dataSource={groups}
         renderItem={(group) => (
           <List.Item>
             <div>

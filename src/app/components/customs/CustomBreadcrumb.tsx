@@ -4,7 +4,7 @@ import { Breadcrumb } from "antd";
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { usePathname } from "next/navigation";
 import { itemRender } from "~/server/browserHistoryItemRender";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory } from "~/types/laboratory";
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}

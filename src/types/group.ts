@@ -7,8 +7,8 @@ export type Group = GroupResponse;
  * Group request data interface
  */
 export interface GroupRequest {
-  groupName: string | null;
-  groupDescription: string | null;
+  groupName: string;
+  groupDescription: string;
 }
 
 /**
@@ -16,8 +16,8 @@ export interface GroupRequest {
  */
 export interface GroupResponse {
   id: number;
-  groupName: string | null;
-  groupDescription: string | null;
+  groupName: string;
+  groupDescription: string;
   ownerId: number;
   createdAt: Date;
 }

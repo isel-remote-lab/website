@@ -1,7 +1,6 @@
 import { fetchDataWithAuthHeader, replaceParams } from "~/server/services/services";
 import { Uris } from "~/server/services/uris";
-import { type LaboratoryRequest } from "~/types/laboratory";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory, LaboratoryRequest } from "~/types/laboratory";
 
 /**
  * Get all laboratories

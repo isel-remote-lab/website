@@ -14,6 +14,7 @@ const LOGOUT_URI = `${AUTH_PREFIX}/logout`;
 
 const USERS_URI = `${API_PREFIX}/users`;
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
+const GROUPS_URI = `${API_PREFIX}/groups`;
 
 /**
  * API URIs for user-related operations
@@ -77,5 +78,15 @@ export const Uris = {
      * URI for getting a laboratory by ID
      */
     GET_BY_ID: `${LABORATORIES_URI}/{id}`,
+  },
+
+  /**
+   * URI for group-related operations
+   */
+  Groups: {
+    /**
+     * URI for getting all groups
+     */
+    GET_ALL: GROUPS_URI,
   },
 }

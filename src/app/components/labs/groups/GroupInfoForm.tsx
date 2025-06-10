@@ -1,20 +1,20 @@
-import type { Laboratory } from "~/types/laboratory";
-import DefaultForm from "../defaults/DefaultForm";
+import type { Group } from "~/types/group";
+import DefaultForm from "../../defaults/DefaultForm";
 
-interface LabInfoFormProps {
-  initialValues?: Laboratory;
+interface GroupInfoFormProps {
+  initialValues?: Group;
   onFinish: (values: unknown) => void;
   submitButtonText: string;
 }
 
-export default function LabInfoForm({
+export default function GroupInfoForm({
   initialValues,
   onFinish,
   submitButtonText,
-}: LabInfoFormProps) {
+}: GroupInfoFormProps) {
   return (
     <DefaultForm
-      type="laboratory"
+      type="group"
       initialValues={initialValues}
       onFinish={onFinish}
       submitButtonText={submitButtonText}

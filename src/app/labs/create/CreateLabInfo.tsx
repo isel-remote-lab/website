@@ -3,10 +3,9 @@
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
 import { createLab } from "~/server/services/labsService";
 import { type LaboratoryRequest } from "~/types/laboratory";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function CreateLabInfo() {
-  const router = useRouter();
   const onFinish = async (values: {
     duration: string;
     name: string;
@@ -30,7 +29,7 @@ export default function CreateLabInfo() {
     console.log(response);
     if (response) {
       const labId = response.id;
-      router.push(`/labs/${labId}`);
+      redirect(`/labs/${labId}`);
     }
   };
 

@@ -8,6 +8,11 @@ export default interface DomainConfig {
 }
 
 /**
+ * Restrictions objects interface
+ */
+export type RestrictionsObjects = DomainConfig[keyof DomainConfig];
+
+/**
  * User restrictions interface
  */
 interface UserRestrictions {
@@ -21,25 +26,25 @@ interface UserRestrictions {
 /**
  * Laboratory restrictions interface
  */
-interface LaboratoryRestrictions {
-  labName: Properties;
-  labDescription: Properties;
-  labDuration: Properties;
-  labQueueLimit: Properties;
+export interface LaboratoryRestrictions {
+  labName: Restrictions;
+  labDescription: Restrictions;
+  labDuration: Restrictions;
+  labQueueLimit: Restrictions;
 }
 
 /**
  * Group restrictions interface
  */
-interface GroupRestrictions {
-  groupName: Properties;
-  groupDescription: Properties;
+export interface GroupRestrictions {
+  groupName: Restrictions;
+  groupDescription: Restrictions;
 }
 
 /**
- * Properties interface
+ * Restrictions interface
  */
-interface Properties {
+export interface Restrictions {
   min: number;
   max: number;
   optional: boolean;

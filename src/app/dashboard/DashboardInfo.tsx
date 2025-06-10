@@ -9,7 +9,7 @@ import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
-import type Laboratory from "~/types/laboratory";
+import type { Laboratory } from "~/types/laboratory";
 import { Role } from "~/types/role";
 
 const labsWidth = 280;
