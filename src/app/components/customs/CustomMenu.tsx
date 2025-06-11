@@ -8,13 +8,20 @@ import Image from "next/image";
 import Search from "antd/es/input/Search";
 import CrateLabTopButton from "../buttons/topButtons/CreateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
-import type { Laboratory } from "~/types/laboratory";
+import type { LaboratoryResponse } from "~/types/laboratory";
 import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
+import { GroupResponse } from "~/types/group";
+
+interface CustomMenuProps {
+  labs: LaboratoryResponse[];
+  groups: GroupResponse[];
+}
+
 /**
  * Client menu component
  * @returns The client menu component
  */
-export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
+export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
   const session = await auth();
 
   const { role } = session!.user;
@@ -63,7 +70,7 @@ export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
     },
     {
       key: "breadcrumb",
-      label: <CustomBreadcrumb labs={labs} />,
+      label: <CustomBreadcrumb labs={labs} groups={groups} />,
       style: { fontSize: 18, fontWeight: "bold" },
     },
     {

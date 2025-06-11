@@ -25,11 +25,13 @@ export default function DashboardInfo({ labs }: { labs: Laboratory[] }) {
 
   function getLabActions(labId: number) {
     return [
+      /*
       <Tooltip title="Calendário do laboratório" key="calendar">
         <Link href={`/labs/${labId}/calendar`}>
           <CalendarOutlined />
         </Link>
       </Tooltip>,
+      */
       tempRole === Role.TEACHER && (
         <Tooltip title="Editar laboratório" key="settings">
           <Link href={`/labs/${labId}/settings`}>

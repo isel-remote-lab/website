@@ -10,6 +10,7 @@ import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
 import { getAllLabs } from "~/server/services/labsService";
 import { redirect } from "next/navigation";
+import { getUserGroups } from "~/server/services/groupsService";
 
 /**
  * Metadata for the Remote Lab application
@@ -41,6 +42,7 @@ export default async function RootLayout({
   }
   const role = session.user.role;
   const labs = await getAllLabs();
+  const groups = await getUserGroups();
 
   return (
     <html>
@@ -48,7 +50,7 @@ export default async function RootLayout({
         <SessionProvider>
           <CheckLogin>
             <TempRoleProvider role={role}>
-                <Menu labs={labs} />
+                <Menu labs={labs} groups={groups} />
                 <Content style={{ padding: 24 }}>
                   {children}
                   {modal}

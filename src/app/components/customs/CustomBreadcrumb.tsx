@@ -4,8 +4,8 @@ import { Breadcrumb } from "antd";
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { usePathname } from "next/navigation";
 import { itemRender } from "~/server/browserHistoryItemRender";
-import { Group, GroupFields } from "~/types/group";
-import { LaboratoryFields, type Laboratory } from "~/types/laboratory";
+import { GroupFields, GroupResponse } from "~/types/group";
+import { LaboratoryFields, LaboratoryResponse } from "~/types/laboratory";
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}
@@ -42,8 +42,8 @@ const translations: Record<string, string> = {
 
 interface generateBreadcrumbItemsProps {
   pathname: string;
-  labs: Laboratory[];
-  groups: Group[];
+  labs: LaboratoryResponse[];
+  groups: GroupResponse[];
 }
 
 /**
@@ -97,8 +97,8 @@ function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbI
 }
 
 interface CustomBreadcrumbProps {
-  labs: Laboratory[];
-  groups: Group[];
+  labs: LaboratoryResponse[];
+  groups: GroupResponse[];
 }
 
 export default function CustomBreadcrumb({ labs = [], groups = [] }: CustomBreadcrumbProps) {
