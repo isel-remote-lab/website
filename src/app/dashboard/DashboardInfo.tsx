@@ -9,7 +9,7 @@ import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
-import type { Laboratory } from "~/types/laboratory";
+import { LaboratoryFields, type Laboratory } from "~/types/laboratory";
 import { Role } from "~/types/role";
 
 const labsWidth = 280;
@@ -51,7 +51,7 @@ export default function DashboardInfo({ labs }: { labs: Laboratory[] }) {
             <Card key={labId} style={cardStyle} actions={getLabActions(labId)}>
               <Link href={`/labs/${labId}`} key={labId}>
                 <Title level={4} style={{ textAlign: "center" }}>
-                  {lab.labName}
+                  {lab[LaboratoryFields.NAME]}
                 </Title>
               </Link>
             </Card>

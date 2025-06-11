@@ -1,6 +1,6 @@
 "use server";
 
-import type DomainConfig from "~/types/domain";
+import type { DomainConfig } from "~/types/domain";
 import { fetchDataWithApiKey } from "./services";
 import { Uris } from "./uris";
 

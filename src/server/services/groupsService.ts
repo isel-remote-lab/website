@@ -1,7 +1,6 @@
-import { Group, GroupRequest } from "~/types/group";
+import type { Group, GroupRequest } from "~/types/group";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";
-import { fetchDataWithAuthHeader } from "~/services/clientServices";
 
 /**
  * Get all groups
@@ -19,7 +18,7 @@ export async function getUserGroups(): Promise<Group[]> {
  */
 export async function createGroup(group: GroupRequest): Promise<Group> {
     const uri = Uris.Groups.GET_ALL;
-    return await fetchDataWithAuthHeader(uri, {
+    return await fetchDataOnServerWithAuthHeader(uri, {
         method: "POST",
         data: group
     }) as Group;

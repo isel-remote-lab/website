@@ -4,38 +4,33 @@ import { Button, Form, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import { getDomainConfig } from "~/server/services/domain";
-import { FormItemConfig } from "~/types/form";
-import DomainConfig, { RestrictionsObjects } from "~/types/domain";
-import addDurationFormComponent, { formatDuration } from "../formComponents/addDurationFormComponent";
+import type { FormItemConfig } from "~/types/form";
+import type { DomainConfig, Restrictions, RestrictionsObjects as RestrictionObjects } from "~/types/domain";
+import addDurationFormComponent from "../formComponents/addDurationFormComponent";
 import React from "react";
+import { formatLaboratory, formatNumberToDayjs, LaboratoryFields } from "~/types/laboratory";
+import type { LaboratoryRequest } from "~/types/laboratory";
+import { GroupRequest } from "~/types/group";
 
 /**
- * Get the label for a field based on its name
- * @param name - The name of the field
- * @returns The label for the field
+ * Type for the request objects
  */
-const getFieldLabel = (name: string): string => {
-  let label: string;
+export type RequestTypes = LaboratoryRequest | GroupRequest;
 
-  if (name.endsWith('Name')) {
-    label = "Nome";
-  } else if (name.endsWith('Description')) {
-    label = "Descrição";
-  } else {
-    switch (name) {
-      case "labDuration":
-        label = "Duração das sessões";
-        break;
-      case "labQueueLimit":
-        label = "Limite da fila de espera";
-        break;
-      default:
-        label = name.charAt(0).toUpperCase() + name.slice(1);
-    }
-  }
+/**
+ * Type for the keys of the request objects
+ */
+type RequestKeys = keyof LaboratoryRequest | keyof GroupRequest;
 
-  return label;
-};
+/**
+ * Labels for the request keys
+ */
+const requestKeysFieldLabels: Record<RequestKeys, string> = {
+  name: "Nome",
+  description: "Descrição",
+  duration: "Duração das sessões",
+  queueLimit: "Limite da fila de espera"
+}
 
 /**
  * Get the form items for a given type
@@ -43,7 +38,62 @@ const getFieldLabel = (name: string): string => {
  * @returns The form items
  */
 interface GetFormItemsProps {
-  config: RestrictionsObjects;
+  config: RestrictionObjects;
+}
+
+/**
+ * Get the min and max messages for a given component
+ * @param component - The component to get the min and max messages for
+ * @param min - The minimum value
+ * @param max - The maximum value
+ * @returns The min and max messages
+ */
+const getMinMaxMessages = (component: React.ReactNode, min: number, max: number) => {
+  // Type for the message parts
+  type MessageParts = {
+    prefix: string;
+    suffix: string;
+    min: string;
+    max: string;
+  }
+
+  // Message parts for the different component types
+  const messageParts: Record<string, MessageParts> = {
+    TextArea: {
+      prefix: "Tem de ter no",
+      suffix: "caracteres!",
+      min: "mínimo",
+      max: "máximo"
+    },
+    InputNumber: {
+      prefix: "Tem de ser",
+      suffix: "!",
+      min: "mínimo",
+      max: "máximo"
+    }
+  }
+
+  // Get the component type
+  const componentType = React.isValidElement(component) ? component.type : typeof component;
+
+  let currentMessageParts: MessageParts;
+
+  switch (componentType) {
+    case TextArea:
+      currentMessageParts = messageParts["TextArea"]!;
+      break;
+    case InputNumber:
+      currentMessageParts = messageParts["InputNumber"]!;
+      break;
+    default:
+      throw new Error(`Invalid component type: ${componentType}`);
+  }
+
+  // Get the min and max messages
+  const minMessage = `${currentMessageParts.prefix} ${currentMessageParts.min} ${min} ${currentMessageParts.suffix}`;
+  const maxMessage = `${currentMessageParts.prefix} ${currentMessageParts.max} ${max} ${currentMessageParts.suffix}`; 
+
+  return { minMessage, maxMessage };
 }
 
 /**
@@ -56,51 +106,57 @@ const getFormItems = async ({ config }: GetFormItemsProps): Promise<FormItemConf
   const formItems: FormItemConfig[] = [];
 
   // Iterate over the config and create the form items
-  Object.entries(config).forEach(([name , restrictions]) => {
-    const label = getFieldLabel(name);
-    const placeholder = label + " do " + (name.includes('Duration') ? "laboratório" : "grupo");
+  Object.entries(config).forEach(([str , restrictions]: [string, Restrictions]) => {
+    // Convert the string to a RequestKeys type
+    const fieldName = str as RequestKeys;
 
-    // Default form item configuration
-    const formItem: FormItemConfig = {
-      label: label,
-      name: name,
-      rules: [
-        {
-          required: !restrictions.optional,
-          message: `Por favor insira um valor!`,
-        },
-      ],
-      component: <TextArea autoSave="true" autoCorrect="true" placeholder={placeholder} rows={1}/>,
-    };
+    // Only add form items for fields that are known
+    if (fieldName in requestKeysFieldLabels) {
+      // Get the label for the field
+      const label = requestKeysFieldLabels[fieldName];
 
-    // Determine the appropriate component based on the field type
-    if (name.includes('Duration')) {
-      addDurationFormComponent({ restrictions, formItem });
-    } else {
-      if (name.includes('QueueLimit')) {
-        formItem.component = <InputNumber autoSave="true" min={restrictions.min} max={restrictions.max}/>;
-      } else {
-        const message = `Tem de ter no`;
-        const minMessage = `${message} mínimo ${restrictions.min} caracteres!`;
-        const maxMessage = `${message} máximo ${restrictions.max} caracteres!`;
+      // Default form item configuration
+      const formItem: FormItemConfig = {
+        label: label,
+        name: fieldName,
+        rules: [
+          {
+            required: !restrictions?.optional,
+            message: `Por favor insira um valor!`,
+          },
+        ],
+        component: <TextArea autoSave="true" autoCorrect="true" placeholder={label} rows={1}/>,
+      };
 
-        // Add min/max rules if they exist and if the field is not a duration
-        if (restrictions.min !== undefined) {
+      const min = restrictions!.min!;
+      const max = restrictions!.max!;
+
+      // Determine the appropriate component based on the field type
+      switch (fieldName) {
+        case LaboratoryFields.DURATION:
+          addDurationFormComponent({ restrictions, formItem }) as React.ReactNode;
+          break;
+        case LaboratoryFields.QUEUE_LIMIT:
+          formItem.component = <InputNumber autoSave="true" min={min} max={max}/> as React.ReactNode;
+          break;
+        default:
+          // Get the min and max messages for the component
+          const { minMessage, maxMessage } = getMinMaxMessages(formItem.component, min, max);
+          
           formItem.rules.push({
-            min: restrictions.min,
+            min: min,
             message: minMessage,
           });
-        }
-        if (restrictions.max !== undefined) {
+
           formItem.rules.push({
-            max: restrictions.max,
+            max: max,
             message: maxMessage,
           });
-        }
+          
       }
-    }
 
-    formItems.push(formItem);
+      formItems.push(formItem);
+    }
   });
 
   return formItems;
@@ -110,8 +166,8 @@ const getFormItems = async ({ config }: GetFormItemsProps): Promise<FormItemConf
  * Default form props
  */
 interface DefaultFormProps {
-  type: keyof DomainConfig;
-  initialValues?: Record<string, any>;
+  configType: keyof DomainConfig;
+  initialValues?: RequestTypes;
   onFinish: (values: unknown) => void;
   submitButtonText: string;
   children?: React.ReactNode;
@@ -121,7 +177,7 @@ interface DefaultFormProps {
  * Default form component
  */
 export default function DefaultForm({
-  type,
+  configType,
   initialValues,
   onFinish,
   submitButtonText,
@@ -129,47 +185,52 @@ export default function DefaultForm({
 }: DefaultFormProps) {
   const [form] = Form.useForm();
   const [formItems, setFormItems] = useState<FormItemConfig[]>([]);
-  const [initialFormValues, setInitialFormValues] = useState<Record<string, any>>({});
 
   // Load form items and set initial values
   useEffect(() => {
     const loadFormData = async () => {
       try {
-        const config = (await getDomainConfig())[type];
-        const items = await getFormItems({ config });
-        setFormItems(items);
+        // Get the config for the form
+        const config = (await getDomainConfig())[configType];
+
+        // Get the form items
+        const formItems = await getFormItems({ config });
+
+        // Set the form items
+        setFormItems(formItems);
         
+        // If there are initial values, set them in the form
         if (initialValues) {
-          const formattedValues = { ...initialValues };
-          if (initialValues?.labDuration) {
-            formattedValues.labDuration = formatDuration(initialValues.labDuration);
-          }
+          // Format the initial values if they are a LaboratoryRequest
+          const formattedValues = LaboratoryFields.DURATION in initialValues ? formatLaboratory(initialValues) : initialValues;
+          
+          // Set the initial values in the form
           form.setFieldsValue(formattedValues);
         } else {
-          // Set initial values based on restrictions
+          // Set minimum values for numeric components
           const values = Object.fromEntries(
-            items.map(item => {
-              const restrictions = config[item.name as keyof RestrictionsObjects] as { min?: number };
+            formItems.map(formItem => {
+              // Get the minimum value for the component
+              const min = (config[formItem.name as keyof typeof config] as Restrictions)!.min;
               
               // Check if the component is a React element and get its type
-              const componentType = React.isValidElement(item.component) ? item.component.type : null;
+              const componentType = React.isValidElement(formItem.component) ? formItem.component.type : null;
               
               // Set initial values only for numeric components
               if (componentType === InputNumber) {
-                return [item.name, restrictions.min];
+                return [formItem.name, min];
               }
               
               // For Duration, format the duration with minimum of 1 minute
-              if (item.name.includes('Duration')) {
-                const duration = formatDuration(restrictions.min!);
-                return [item.name, duration];
+              if (formItem.name === LaboratoryFields.DURATION) {
+                const duration = formatNumberToDayjs(min);
+                return [formItem.name, duration];
               }
               
               // For other components (like TextArea), don't set initial value
-              return [item.name, undefined];
+              return [formItem.name, undefined];
             })
           );
-          setInitialFormValues(values);
           form.setFieldsValue(values);
         }
       } catch (error) {
@@ -177,14 +238,14 @@ export default function DefaultForm({
       }
     };
 
+    // Load the form data (defined above)
     loadFormData();
-  }, [type, form]);
+  }, [configType, form]);
 
   return (
     <>
       <Form
         form={form}
-        initialValues={initialFormValues}
         onFinish={onFinish}
       >
         {formItems.map((item) => (

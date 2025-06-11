@@ -1,22 +1,24 @@
-import type { Group } from "~/types/group";
+import type { Group, GroupRequest } from "~/types/group";
 import DefaultForm from "../../defaults/DefaultForm";
 
 interface GroupInfoFormProps {
   initialValues?: Group;
-  onFinish: (values: unknown) => void;
   submitButtonText: string;
 }
 
+const handleFormFinish = (values: unknown) => {
+  // TODO: Implement group creation logic
+};
+
 export default function GroupInfoForm({
   initialValues,
-  onFinish,
   submitButtonText,
 }: GroupInfoFormProps) {
   return (
     <DefaultForm
-      type="group"
+      configType="group"
       initialValues={initialValues}
-      onFinish={onFinish}
+      onFinish={handleFormFinish}
       submitButtonText={submitButtonText}
     />
   );

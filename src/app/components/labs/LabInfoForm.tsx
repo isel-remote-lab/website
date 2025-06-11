@@ -1,11 +1,11 @@
-import type { Laboratory } from "~/types/laboratory";
+import type { LaboratoryResponse } from "~/types/laboratory";
 import DefaultForm from "../defaults/DefaultForm";
 import Link from "next/link";
 import { Button, Tooltip } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 
 interface LabInfoFormProps {
-  initialValues?: Laboratory;
+  initialValues?: LaboratoryResponse;
   onFinish: (values: unknown) => void;
   submitButtonText: string;
 }
@@ -17,7 +17,7 @@ export default function LabInfoForm({
 }: LabInfoFormProps) {
   return (
     <DefaultForm
-      type="laboratory"
+      configType="laboratory"
       initialValues={initialValues}
       onFinish={onFinish}
       submitButtonText={submitButtonText}

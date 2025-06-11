@@ -1,7 +1,10 @@
+import { GroupRequest } from "./group";
+import { LaboratoryRequest } from "./laboratory";
+
 /**
  * Domain configuration interface
  */
-export default interface DomainConfig {
+export interface DomainConfig {
   user: UserRestrictions;
   laboratory: LaboratoryRestrictions;
   group: GroupRestrictions;
@@ -26,21 +29,16 @@ interface UserRestrictions {
 /**
  * Laboratory restrictions interface
  */
-export interface LaboratoryRestrictions {
-  labName: Restrictions;
-  labDescription: Restrictions;
-  labDuration: Restrictions;
-  labQueueLimit: Restrictions;
-}
+export type LaboratoryRestrictions = {
+  [K in keyof LaboratoryRequest]?: Restrictions;
+};
 
 /**
  * Group restrictions interface
  */
-export interface GroupRestrictions {
-  groupName: Restrictions;
-  groupDescription: Restrictions;
-}
-
+export type GroupRestrictions = {
+  [K in keyof GroupRequest]?: Restrictions;
+};
 /**
  * Restrictions interface
  */
@@ -50,3 +48,4 @@ export interface Restrictions {
   optional: boolean;
   unit?: string;
 }
+

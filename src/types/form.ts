@@ -1,4 +1,4 @@
-import { Rule } from "antd/es/form";
+import type { Rule } from "antd/es/form";
 
 /**
  * Form item configuration interface

@@ -2,31 +2,15 @@
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
 import { createLab } from "~/server/services/labsService";
-import { type LaboratoryRequest } from "~/types/laboratory";
+import { formatLaboratoryRequest, Laboratory } from "~/types/laboratory";
 import { redirect } from "next/navigation";
 
 export default function CreateLabInfo() {
-  const onFinish = async (values: {
-    duration: string;
-    name: string;
-    description: string | null;
-    queueLimit: number;
-  }) => {
-    // Convert date string to minutes
-    const durationDate = new Date(values.duration);
-    const durationInMinutes =
-      durationDate.getHours() * 60 + durationDate.getMinutes();
-
-    const labData: LaboratoryRequest = {
-      labName: values.name,
-      labDescription: values.description !== "" ? values.description : null,
-      labQueueLimit: values.queueLimit,
-      labDuration: durationInMinutes,
-    };
+  const onFinish = async (values: Laboratory) => {
+    const labData = formatLaboratoryRequest(values);
 
     const response = await createLab(labData);
 
-    console.log(response);
     if (response) {
       const labId = response.id;
       redirect(`/labs/${labId}`);

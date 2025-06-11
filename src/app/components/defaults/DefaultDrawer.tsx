@@ -26,7 +26,7 @@ export default function DefaultDrawer({
   title = null,
   children = null,
   open = false,
-  onClose = () => {},
+  onClose = () => {/* do nothing */},
 }: DefaultDrawerProps) {
   return (
     <Drawer

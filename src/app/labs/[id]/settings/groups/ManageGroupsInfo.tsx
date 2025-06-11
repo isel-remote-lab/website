@@ -3,7 +3,7 @@
 import { List, Typography, Button } from 'antd';
 import { getUserGroups } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
-import type { GroupResponse } from '~/types/group';
+import { GroupFields, type GroupResponse } from '~/types/group';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import GroupInfoForm from '~/app/components/labs/groups/GroupInfoForm';
 
@@ -28,16 +28,8 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
       }
     };
 
-    fetchGroups();
+    void fetchGroups();
   }, []);
-
-  const handleFormFinish = async (values: unknown) => {
-    // TODO: Implement group creation logic
-    setShowForm(false);
-    // Refresh groups list after creation
-    const fetchedGroups = await getUserGroups();
-    setGroups(fetchedGroups);
-  };
 
   const createGroup = () => {
     setShowForm(true);
@@ -55,7 +47,6 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
           Voltar
         </Button>
         <GroupInfoForm
-          onFinish={handleFormFinish}
           submitButtonText="Criar Grupo"
         />
       </div>
@@ -78,8 +69,8 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
         renderItem={(group) => (
           <List.Item>
             <div>
-              <Typography.Title level={5}>{group.groupName}</Typography.Title>
-              <Typography.Paragraph>{group.groupDescription}</Typography.Paragraph>
+              <Typography.Title level={5}>{group[GroupFields.NAME]}</Typography.Title>
+              <Typography.Paragraph>{group[GroupFields.DESCRIPTION]}</Typography.Paragraph>
               <Typography.Text type="secondary">
                 Created at: {new Date(group.createdAt).toLocaleDateString()}
               </Typography.Text>

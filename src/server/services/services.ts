@@ -1,7 +1,10 @@
 "use server";
 
 import type { AxiosRequestConfig } from "axios";
-import { fetchApiData, fetchDataWithAuthHeader, fetchWithErrorHandling } from "~/services/clientServices";
+import axios, { AxiosError } from "axios";
+import { redirect } from "next/navigation";
+import { auth } from "~/server/auth";
+import { ApiResponse } from "~/types/api";
 
 /**
  * Helper function to replace path parameters in URIs
@@ -23,7 +26,31 @@ export async function replaceParams(uri: string, params: object): Promise<string
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchOnServerWithErrorHandling = fetchWithErrorHandling;
+export async function fetchOnServerWithErrorHandling(
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<unknown> { 
+  try {
+    return (await axios({
+      url: uri,
+      ...options,
+      headers: {
+        ...options.headers,
+      },
+    })).data;
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 401) {
+        if (typeof window !== "undefined") {
+          window.location.href = "/api/auth/signin";
+        } else {
+          redirect("/api/auth/signin");
+        }
+      }
+      console.error(error.response?.data ?? error.message);
+    }
+  }
+}
 
 /**
  * Helper function to fetch API response data object
@@ -31,7 +58,12 @@ export const fetchOnServerWithErrorHandling = fetchWithErrorHandling;
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchApiDataOnServer = fetchApiData;
+export async function fetchApiDataOnServer(
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<unknown> {
+  return (await fetchOnServerWithErrorHandling(uri, options) as ApiResponse<unknown>).data;
+}
 
 /**
  * Fetch API with API key
@@ -62,4 +94,18 @@ export async function fetchDataWithApiKey(
  * @param options - The options for the axios request
  * @returns The response from the axios request
  */
-export const fetchDataOnServerWithAuthHeader = fetchDataWithAuthHeader;
+export async function fetchDataOnServerWithAuthHeader(
+  uri: string,
+  options: AxiosRequestConfig = {},
+): Promise<unknown> {
+  const session = await auth();
+  const userToken = session?.user.userToken;
+
+  return await fetchApiDataOnServer(uri, {
+    ...options,
+    headers: {
+      ...options.headers,
+      "Authorization": `Bearer ${userToken}`,
+    },
+  });
+}

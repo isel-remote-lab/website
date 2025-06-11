@@ -2,6 +2,7 @@ import { TimePicker } from "antd";
 import dayjs from "dayjs";
 import type { Restrictions } from "~/types/domain";
 import { FormItemConfig } from "~/types/form";
+import { formatNumberToDayjs } from "~/types/laboratory";
 
 /**
  * Duration form component props
@@ -9,15 +10,6 @@ import { FormItemConfig } from "~/types/form";
 interface DurationFormComponentProps {
   restrictions: Restrictions;
   formItem: FormItemConfig;
-}
-
-/**
- * Format a duration in minutes to a dayjs object
- * @param duration - The duration in minutes
- * @returns The formatted duration
- */
-export function formatDuration(duration: number) {
-  return dayjs().hour(Math.floor(duration / 60)).minute(duration % 60);
 }
 
 /**
@@ -73,7 +65,7 @@ export default function addDurationFormComponent({ restrictions, formItem }: Dur
           if (totalMinutes < minDuration) {
             return Promise.reject(
               new Error(
-                `A duração mínima é de ${formatDuration(minDuration).format('HH:mm')}!`,
+                `A duração mínima é de ${formatNumberToDayjs(minDuration).format('HH:mm')}!`,
               ),
             );
           }
@@ -82,7 +74,7 @@ export default function addDurationFormComponent({ restrictions, formItem }: Dur
           if (maxDuration !== undefined && totalMinutes > maxDuration) {
             return Promise.reject(
               new Error(
-                `A duração máxima é de ${formatDuration(maxDuration).format('HH:mm')}!`,
+                `A duração máxima é de ${formatNumberToDayjs(maxDuration).format('HH:mm')}!`,
               ),
             );
           }

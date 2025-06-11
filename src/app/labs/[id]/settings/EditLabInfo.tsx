@@ -1,10 +1,10 @@
 "use client";
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
-import type { Laboratory } from "~/types/laboratory";
+import type { LaboratoryResponse } from "~/types/laboratory";
 
 interface EditLabInfoProps {
-  initialValues?: Laboratory;
+  initialValues?: LaboratoryResponse;
 }
 
 export default function EditLabInfo({ initialValues }: EditLabInfoProps) {
