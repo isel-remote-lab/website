@@ -3,8 +3,8 @@ import AccountInfo from "~/app/account/AccountInfo";
 
 export default async function AccountModal() {
   const modalInitialSize = {
-    initialWidth: 650,
-    initialHeight: 610,
+    initialWidth: 675,
+    initialHeight: 625,
   }
 
   return (

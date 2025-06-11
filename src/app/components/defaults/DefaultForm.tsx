@@ -215,11 +215,11 @@ export default function DefaultForm({
           </Button>
           {isEditLaboratory && (
           <Tooltip title="Gerir Grupos" key="groups">
-            <Button type="default" style={{ marginLeft: 8 }}>
-              <Link href={`/labs/${initialValues?.id}/settings/groups`}>
+            <Link href={`/labs/${initialValues?.id}/settings/groups`}>
+              <Button type="default" style={{ marginLeft: 8 }}> 
                 <UsergroupAddOutlined />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Tooltip>
           )}
         </Form.Item>
