@@ -1,12 +1,13 @@
 "use client";
 
-import { List, Typography, Button } from 'antd';
+import { List, Typography, Button, Card } from 'antd';
 import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
 import { GroupFields, GroupRequest, type GroupResponse } from '~/types/group';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import GroupInfoForm from '~/app/components/labs/groups/GroupInfoForm';
 import { LaboratoryResponse } from '~/types/laboratory';
+import { useRouter } from 'next/navigation';
 
 interface ManageGroupsInfoProps {
   lab?: LaboratoryResponse;
@@ -16,6 +17,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   const [groups, setGroups] = useState<GroupResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -88,13 +90,14 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
         dataSource={groups}
         renderItem={(group) => (
           <List.Item>
-            <div>
+            <Card
+              hoverable
+              onClick={() => router.push(`/groups/${group.id}`)}
+              style={{ width: '100%' }}
+            >
               <Typography.Title level={5}>{group[GroupFields.NAME]}</Typography.Title>
               <Typography.Paragraph>{group[GroupFields.DESCRIPTION]}</Typography.Paragraph>
-              <Typography.Text type="secondary">
-                Created at: {new Date(group.createdAt).toLocaleDateString()}
-              </Typography.Text>
-            </div>
+            </Card>
           </List.Item>
         )}
       />

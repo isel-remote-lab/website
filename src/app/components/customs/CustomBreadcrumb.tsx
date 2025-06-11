@@ -4,7 +4,8 @@ import { Breadcrumb } from "antd";
 import { type BreadcrumbItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { usePathname } from "next/navigation";
 import { itemRender } from "~/server/browserHistoryItemRender";
-import type { Laboratory } from "~/types/laboratory";
+import { Group, GroupFields } from "~/types/group";
+import { LaboratoryFields, type Laboratory } from "~/types/laboratory";
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}
@@ -39,12 +40,18 @@ const translations: Record<string, string> = {
   device: "Dispositivo",
 };
 
+interface generateBreadcrumbItemsProps {
+  pathname: string;
+  labs: Laboratory[];
+  groups: Group[];
+}
+
 /**
  * Generates breadcrumb items based on the current pathname
  * @param {string} pathname - The current pathname
  * @returns {Breadcrumb.Item[]} - The breadcrumb items
  */
-function generateBreadcrumbItems(pathname: string, labs: Laboratory[]): BreadcrumbItemType[] {
+function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbItemsProps): BreadcrumbItemType[] {
   // Split the pathname into an array of path segments
   const pathnames = pathname.split("/").filter((x) => x);
 
@@ -60,13 +67,20 @@ function generateBreadcrumbItems(pathname: string, labs: Laboratory[]): Breadcru
     for (let i = 0; i < pathnames.length; i++) {
       const pathname = pathnames[i];
 
-      // Check if the pathname is a number (lab ID)
+      // Check if the pathname is a number (lab ID or group ID)
       if (/^\d+$/.test(pathname!)) {
-        const labId = pathname;
-        // TODO : Add logic to get the name of the lab from the database
-        const labName = labs[parseInt(labId!) - 1]?.labName;
-        // Convert Laboratory object to string for ReactNode compatibility
-        items[items.length - 1]!.title = labName ?? `Lab ${labId}`;
+        const id = pathname;
+
+        switch (pathnames[i - 1]) {
+          case "groups":
+            const groupName = groups[parseInt(id!) - 1]?.[GroupFields.NAME];
+            items[items.length - 1]!.title = groupName ?? `Grupo ${id}`;
+            break;
+          default:
+            const name = labs[parseInt(id!) - 1]?.[LaboratoryFields.NAME];
+            items[items.length - 1]!.title = name ?? `Lab ${id}`;
+            break;
+        }
       } else {
         const title =
           translations[pathname!] ??
@@ -82,7 +96,12 @@ function generateBreadcrumbItems(pathname: string, labs: Laboratory[]): Breadcru
   return [...breadcrumbDashboard, ...items];
 }
 
-export default function CustomBreadcrumb({ labs }: { labs: Laboratory[] }) {
+interface CustomBreadcrumbProps {
+  labs: Laboratory[];
+  groups: Group[];
+}
+
+export default function CustomBreadcrumb({ labs = [], groups = [] }: CustomBreadcrumbProps) {
   const pathname = usePathname();
   if (!pathname) return null;
 
@@ -94,7 +113,7 @@ export default function CustomBreadcrumb({ labs }: { labs: Laboratory[] }) {
   return (
     <Breadcrumb
       itemRender={itemRender}
-      items={generateBreadcrumbItems(pathname, labs)}
+      items={generateBreadcrumbItems({pathname, labs, groups})}
       style={{ padding: 24 }}
     />
   );

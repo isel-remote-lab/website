@@ -1,4 +1,4 @@
-import type { Group, GroupRequest } from "~/types/group";
+import type { GroupRequest, GroupResponse } from "~/types/group";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";
 
@@ -6,9 +6,9 @@ import { Uris } from "./uris";
  * Get all groups
  * @returns List of groups
  */
-export async function getUserGroups(): Promise<Group[]> {
+export async function getUserGroups(): Promise<GroupResponse[]> {
     const uri = Uris.Groups.GET_ALL;
-    return await fetchDataOnServerWithAuthHeader(uri) as Group[];
+    return await fetchDataOnServerWithAuthHeader(uri) as GroupResponse[];
 }
 
 /**
@@ -16,9 +16,19 @@ export async function getUserGroups(): Promise<Group[]> {
  * @param labId - Laboratory ID
  * @returns List of groups
  */
-export async function getLabGroups(labId: number): Promise<Group[]> {
+export async function getLabGroups(labId: number): Promise<GroupResponse[]> {
     const uri = Uris.Groups.GET_ALL_FROM_LABORATORY.replace("{id}", labId.toString());
-    return await fetchDataOnServerWithAuthHeader(uri) as Group[];
+    return await fetchDataOnServerWithAuthHeader(uri) as GroupResponse[];
+}
+
+/**
+ * Get a group by ID
+ * @param groupId - Group ID
+ * @returns Group
+ */
+export async function getGroupById(groupId: number): Promise<GroupResponse> {
+    const uri = Uris.Groups.GET_BY_ID.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri) as GroupResponse;
 }
 
 /**
@@ -26,10 +36,10 @@ export async function getLabGroups(labId: number): Promise<Group[]> {
  * @param group - Group data
  * @returns Created group
  */
-export async function createGroup(group: GroupRequest): Promise<Group> {
+export async function createGroup(group: GroupRequest): Promise<GroupResponse> {
     const uri = Uris.Groups.GET_ALL;
     return await fetchDataOnServerWithAuthHeader(uri, {
         method: "POST",
         data: group
-    }) as Group;
+    }) as GroupResponse;
 }

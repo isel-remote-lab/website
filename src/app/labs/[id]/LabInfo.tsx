@@ -1,5 +1,5 @@
-import { LaboratoryFields, type Laboratory } from "~/types/laboratory";
+import { LaboratoryFields, LaboratoryResponse } from "~/types/laboratory";
 
-export default function LabInfo({ [LaboratoryFields.NAME]: name }: Laboratory) {
+export default function LabInfo({ [LaboratoryFields.NAME]: name }: LaboratoryResponse) {
   return <h1>Laboratório: {name}</h1>
 }
