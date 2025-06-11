@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined, FileAddOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
@@ -22,7 +22,7 @@ export default function CrateLabTopButton() {
               styles={{ root: { zIndex: 1000 } }}
             >
               <Link href="/labs/create">
-                <PlusOutlined style={{ fontSize: "125%" }} />
+                <AppstoreAddOutlined style={{ fontSize: "125%" }} />
               </Link>
             </Tooltip>
           </div>

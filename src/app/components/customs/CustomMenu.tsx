@@ -6,9 +6,10 @@ import UserImage from "../UserImage";
 import { auth } from "~/server/auth";
 import Image from "next/image";
 import Search from "antd/es/input/Search";
-import CrateLabTopButton from "../buttons/topButtons/CrateLabTopButton";
+import CrateLabTopButton from "../buttons/topButtons/CreateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
 import type { Laboratory } from "~/types/laboratory";
+import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
 /**
  * Client menu component
  * @returns The client menu component
@@ -85,9 +86,13 @@ export default async function CustomMenu({ labs }: { labs: Laboratory[] }) {
       },
     },
     {
+      key: "manage-groups",
+      label: <ManageGroupsTopButton />,
+      style: { marginLeft: "auto" },
+    },
+    {
       key: "create-lab",
       label: <CrateLabTopButton />,
-      style: { marginLeft: "auto" },
     },
     {
       key: "change-role",

@@ -3,23 +3,25 @@
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
 import { createLab } from "~/server/services/labsService";
 import { formatLaboratoryRequest, Laboratory } from "~/types/laboratory";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function CreateLabInfo() {
-  const onFinish = async (values: Laboratory) => {
-    const labData = formatLaboratoryRequest(values);
+  const router = useRouter();
+
+  const onFinish = async (values: unknown) => {
+    const labData = formatLaboratoryRequest(values as Laboratory);
 
     const response = await createLab(labData);
 
     if (response) {
       const labId = response.id;
-      redirect(`/labs/${labId}`);
+      router.push(`/labs/${labId}`);
     }
   };
 
   return (
     <LabInfoForm
-      onFinish={onFinish as (values: unknown) => void}
+      onFinish={onFinish}
       submitButtonText="Criar laboratório"
     />
   );

@@ -88,5 +88,10 @@ export const Uris = {
      * URI for getting all groups
      */
     GET_ALL: GROUPS_URI,
+
+    /**
+     * URI for getting all groups from a laboratory
+     */
+    GET_ALL_FROM_LABORATORY: `${GROUPS_URI}/laboratory/{id}`,
   },
 }

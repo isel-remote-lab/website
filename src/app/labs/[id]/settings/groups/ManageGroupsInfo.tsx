@@ -1,17 +1,18 @@
 "use client";
 
 import { List, Typography, Button } from 'antd';
-import { getUserGroups } from '~/server/services/groupsService';
+import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
-import { GroupFields, type GroupResponse } from '~/types/group';
+import { GroupFields, GroupRequest, type GroupResponse } from '~/types/group';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import GroupInfoForm from '~/app/components/labs/groups/GroupInfoForm';
+import { LaboratoryResponse } from '~/types/laboratory';
 
 interface ManageGroupsInfoProps {
-  labId: string;
+  lab?: LaboratoryResponse;
 }
 
-export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
+export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   const [groups, setGroups] = useState<GroupResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -19,7 +20,13 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const fetchedGroups = await getUserGroups();
+        // TODO: Change fetch to get groups from laboratory
+        let fetchedGroups: GroupResponse[] = [];
+        if (lab) {
+          fetchedGroups = await getLabGroups(lab.id);
+        } else {
+          fetchedGroups = await getUserGroups();
+        }
         setGroups(fetchedGroups);
       } catch (error) {
         console.error('Error fetching groups:', error);
@@ -29,10 +36,22 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
     };
 
     void fetchGroups();
-  }, []);
+  }, [showForm]);
 
-  const createGroup = () => {
+  const createGroupButton = () => {
     setShowForm(true);
+  };
+
+  const onFinish = async (values: unknown) => {
+    console.log(values);
+
+    const response = await createGroup(values as GroupRequest);
+
+    // TODO: Add group to laboratory
+
+    if (response) {
+      setShowForm(false);
+    }
   };
 
   if (showForm) {
@@ -48,6 +67,7 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
         </Button>
         <GroupInfoForm
           submitButtonText="Criar Grupo"
+          onFinish={onFinish}
         />
       </div>
     );
@@ -58,7 +78,7 @@ export default function ManageGroupsInfo({ labId }: ManageGroupsInfoProps) {
       <Button 
         type="default" 
         style={{ marginBottom: 16, width: "100%" }}
-        onClick={createGroup}
+        onClick={createGroupButton}
       >
         <PlusOutlined />
         Criar Grupo
