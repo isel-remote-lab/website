@@ -1,18 +1,13 @@
 "use client";
 
-import { Button, Form, InputNumber, TimePicker, Tooltip } from "antd";
+import { Button, Form, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { getDomainConfig } from "~/server/services/domain";
-import ManageGroupsInfo from "~/app/labs/[id]/settings/groups/ManageGroupsInfo";
-import DefaultDrawer from "./DefaultDrawer";
 import { FormItemConfig } from "~/types/form";
 import DomainConfig, { RestrictionsObjects } from "~/types/domain";
 import addDurationFormComponent, { formatDuration } from "../formComponents/addDurationFormComponent";
 import React from "react";
-import Link from "next/link";
-import { GroupOutlined, SettingOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 
 /**
  * Get the label for a field based on its name
@@ -119,6 +114,7 @@ interface DefaultFormProps {
   initialValues?: Record<string, any>;
   onFinish: (values: unknown) => void;
   submitButtonText: string;
+  children?: React.ReactNode;
 }
 
 /**
@@ -128,10 +124,10 @@ export default function DefaultForm({
   type,
   initialValues,
   onFinish,
-  submitButtonText
+  submitButtonText,
+  children
 }: DefaultFormProps) {
   const [form] = Form.useForm();
-  const [isGroupsDrawerOpen, setIsGroupsDrawerOpen] = useState(false);
   const [formItems, setFormItems] = useState<FormItemConfig[]>([]);
   const [initialFormValues, setInitialFormValues] = useState<Record<string, any>>({});
 
@@ -184,14 +180,6 @@ export default function DefaultForm({
     loadFormData();
   }, [type, form]);
 
-  // Check if the form is being used to edit a laboratory
-  const isEditLaboratory = Boolean(initialValues?.id && type === "laboratory");
-
-  const handleGroupsDrawerClose = () => {
-    setIsGroupsDrawerOpen(false);
-    window.history.pushState({}, '', `/labs/${initialValues?.id}/settings`);
-  };
-
   return (
     <>
       <Form
@@ -213,15 +201,7 @@ export default function DefaultForm({
           <Button type="primary" htmlType="submit">
             {submitButtonText}
           </Button>
-          {isEditLaboratory && (
-          <Tooltip title="Gerir Grupos" key="groups">
-            <Link href={`/labs/${initialValues?.id}/settings/groups`}>
-              <Button type="default" style={{ marginLeft: 8 }}> 
-                <UsergroupAddOutlined />
-              </Button>
-            </Link>
-          </Tooltip>
-          )}
+           {children}
         </Form.Item>
       </Form>
     </>
