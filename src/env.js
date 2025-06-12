@@ -34,7 +34,6 @@ export const env = createEnv({
       .default("development"),
     API_KEY: z.string(),
     NEXTAUTH_URL: z.string(),
-    DOMAIN_CONFIG_PATH: z.string(),
   },
 
   /**
@@ -61,7 +60,6 @@ export const env = createEnv({
     API_KEY: process.env.API_KEY,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
-    DOMAIN_CONFIG_PATH: process.env.DOMAIN_CONFIG_PATH,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
