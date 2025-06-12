@@ -43,3 +43,17 @@ export async function createGroup(group: GroupRequest): Promise<GroupResponse> {
         data: group
     }) as GroupResponse;
 }
+
+/**
+ * Update a group
+ * @param groupId - Group ID
+ * @param group - Updated group data
+ * @returns Updated group
+ */
+export async function updateGroup(groupId: number, group: GroupRequest): Promise<GroupResponse> {
+    const uri = Uris.Groups.GET_BY_ID.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri, {
+        method: "PATCH",
+        data: group
+    }) as GroupResponse;
+}

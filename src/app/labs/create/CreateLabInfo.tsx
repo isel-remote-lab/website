@@ -2,7 +2,7 @@
 
 import LabInfoForm from "~/app/components/labs/LabInfoForm";
 import { createLab } from "~/server/services/labsService";
-import { formatLaboratoryRequest, Laboratory } from "~/types/laboratory";
+import { formatLaboratoryRequest, type Laboratory } from "~/types/laboratory";
 import { useRouter } from "next/navigation";
 
 export default function CreateLabInfo() {
@@ -15,6 +15,8 @@ export default function CreateLabInfo() {
 
     if (response) {
       const labId = response.id;
+
+      // TODO: Close modal when the lab is created
       router.push(`/labs/${labId}`);
     }
   };

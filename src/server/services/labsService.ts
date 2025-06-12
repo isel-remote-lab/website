@@ -47,7 +47,7 @@ export async function updateLab(
 ): Promise<LaboratoryResponse> {
   const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
   return await fetchDataOnServerWithAuthHeader(uri, {
-    method: "PUT",
+    method: "PATCH",
     data: labData,
   }) as LaboratoryResponse;
 }

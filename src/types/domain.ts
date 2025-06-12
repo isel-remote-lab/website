@@ -1,5 +1,5 @@
-import { GroupRequest } from "./group";
-import { LaboratoryRequest } from "./laboratory";
+import type { GroupRequest } from "./group";
+import type { LaboratoryRequest } from "./laboratory";
 
 /**
  * Domain configuration interface

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CalendarOutlined,
   PlusOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
@@ -9,7 +8,7 @@ import { Button, Card, Divider, Empty, Flex, Layout, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
-import { LaboratoryFields, type Laboratory } from "~/types/laboratory";
+import { LaboratoryFields, type LaboratoryResponse } from "~/types/laboratory";
 import { Role } from "~/types/role";
 
 const labsWidth = 280;
@@ -20,7 +19,11 @@ const cardStyle = {
   border: "none",
 };
 
-export default function DashboardInfo({ labs }: { labs: Laboratory[] }) {
+interface DashboardInfoProps {
+  labs: LaboratoryResponse[];
+}
+
+export default function DashboardInfo({ labs }: DashboardInfoProps) {
   const { tempRole } = useTempRole();
 
   function getLabActions(labId: number) {

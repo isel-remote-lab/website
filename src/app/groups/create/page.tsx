@@ -1,7 +1,7 @@
 "use client";
 
 import DefaultModal from "~/app/components/defaults/DefaultModal";
-import GroupInfoForm from "~/app/components/labs/groups/GroupInfoForm";
+import GroupInfoForm from "~/app/components/groups/GroupInfoForm";
 
 export default async function CreateGroupModal({ params }: { params: Promise<{ id: string }> }) {
   //const { id } = await params;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { DraggableModal, DraggableModalProvider, DraggableModalProps } from "@cubetiq/antd-modal";
+import { DraggableModal, DraggableModalProvider, type DraggableModalProps } from "@cubetiq/antd-modal";
 import "@cubetiq/antd-modal/dist/index.css";
 
 interface DefaultModelProps {

@@ -1,6 +1,5 @@
-import type { Group, GroupRequest } from "~/types/group";
-import DefaultForm from "../../defaults/DefaultForm";
-import { createGroup } from "~/server/services/groupsService";
+import type { Group } from "~/types/group";
+import DefaultForm from "../defaults/DefaultForm";
 
 interface GroupInfoFormProps {
   initialValues?: Group;

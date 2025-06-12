@@ -1,7 +1,7 @@
 import { TimePicker } from "antd";
-import dayjs from "dayjs";
+import type dayjs from "dayjs";
 import type { Restrictions } from "~/types/domain";
-import { FormItemConfig } from "~/types/form";
+import type{ FormItemConfig } from "~/types/form";
 import { formatNumberToDayjs } from "~/types/laboratory";
 
 /**

@@ -5,7 +5,6 @@ import { getUserImage } from "~/server/services/microsoft/microsoftApiService";
 export default async function UserInfoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // TODO: Fetch the lab data from the API
   const user = await getUserById(id);
 
   user.image = (await getUserImage(user.email)) || "";

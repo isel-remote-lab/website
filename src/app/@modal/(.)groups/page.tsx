@@ -1,6 +1,6 @@
 import ManageGroupsInfo from "~/app/labs/[id]/settings/groups/ManageGroupsInfo";
 import DefaultModal from "~/app/components/defaults/DefaultModal";
-import { LaboratoryFields, LaboratoryResponse } from "~/types/laboratory";
+import { LaboratoryFields, type LaboratoryResponse } from "~/types/laboratory";
 
 interface ManageGroupsModalProps {
   lab?: LaboratoryResponse;

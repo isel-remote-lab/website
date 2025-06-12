@@ -10,7 +10,7 @@ import CrateLabTopButton from "../buttons/topButtons/CreateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
 import type { LaboratoryResponse } from "~/types/laboratory";
 import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
-import { GroupResponse } from "~/types/group";
+import type { GroupResponse } from "~/types/group";
 
 interface CustomMenuProps {
   labs: LaboratoryResponse[];

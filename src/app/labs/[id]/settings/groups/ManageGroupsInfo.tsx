@@ -3,10 +3,10 @@
 import { List, Typography, Button, Card } from 'antd';
 import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
-import { GroupFields, GroupRequest, type GroupResponse } from '~/types/group';
+import { GroupFields, type GroupRequest, type GroupResponse } from '~/types/group';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
-import GroupInfoForm from '~/app/components/labs/groups/GroupInfoForm';
-import { LaboratoryResponse } from '~/types/laboratory';
+import GroupInfoForm from '~/app/components/groups/GroupInfoForm';
+import type { LaboratoryResponse } from '~/types/laboratory';
 import { useRouter } from 'next/navigation';
 
 interface ManageGroupsInfoProps {
@@ -38,7 +38,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
     };
 
     void fetchGroups();
-  }, [showForm]);
+  }, [showForm, lab]);
 
   const createGroupButton = () => {
     setShowForm(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import { TeamOutlined, UserAddOutlined } from "@ant-design/icons";
+import { TeamOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import Link from "next/link";
 import { useTempRole } from "~/contexts/TempRoleContext";
