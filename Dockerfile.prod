@@ -31,7 +31,6 @@ ARG AUTH_SECRET
 ARG AUTH_MICROSOFT_ENTRA_ID_ID
 ARG AUTH_MICROSOFT_ENTRA_ID_SECRET
 ARG API_KEY
-ARG DOMAIN_CONFIG_PATH
 
 # Define environment variables for the build
 ENV NEXTAUTH_URL=$NEXTAUTH_URL \
@@ -40,7 +39,6 @@ ENV NEXTAUTH_URL=$NEXTAUTH_URL \
     AUTH_MICROSOFT_ENTRA_ID_ID=$AUTH_MICROSOFT_ENTRA_ID_ID \
     AUTH_MICROSOFT_ENTRA_ID_SECRET=$AUTH_MICROSOFT_ENTRA_ID_SECRET \
     API_KEY=$API_KEY \
-    DOMAIN_CONFIG_PATH=$DOMAIN_CONFIG_PATH \
     NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
@@ -49,26 +47,17 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-# Declare build arguments
-ARG DOMAIN_CONFIG_PATH
-
 # Set environment variables
 ENV NODE_ENV=production \
-    DOMAIN_CONFIG_PATH=$DOMAIN_CONFIG_PATH \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
     AUTH_TRUST_HOST=true
 
-# Copy the domain config
-COPY --from=builder /app/domain-config.json ./domain-config.json
-
-# Copy the standalone build (Next.js 15)
-COPY --from=builder /app/.next/standalone ./standalone
-COPY --from=builder /app/public ./standalone/
-COPY --from=builder /app/.next/static ./standalone/.next/
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./
 
 EXPOSE 3000
 
-CMD ls -la
-
-#CMD node server.js
+CMD npm start
