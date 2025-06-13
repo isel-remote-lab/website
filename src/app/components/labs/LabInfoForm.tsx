@@ -22,13 +22,15 @@ export default function LabInfoForm({
       onFinish={onFinish}
       submitButtonText={submitButtonText}
     >
+      {initialValues && (
       <Tooltip title="Gerir Grupos" key="groups">
         <Link href={`/labs/${initialValues?.id}/settings/groups`}>
           <Button type="default" style={{ marginLeft: 8 }}> 
             <UsergroupAddOutlined />
-          </Button>
-        </Link>
-      </Tooltip>
+            </Button>
+          </Link>
+        </Tooltip>
+      )}
     </DefaultForm>
   );
 }

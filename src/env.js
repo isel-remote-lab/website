@@ -27,7 +27,6 @@ export const env = createEnv({
         : z.string().optional(),
     AUTH_MICROSOFT_ENTRA_ID_ID: z.string(),
     AUTH_MICROSOFT_ENTRA_ID_SECRET: z.string(),
-    X_API_KEY: z.string().optional(),
     API_MOCKING: z.enum(["0", "1"]).default("0"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -54,7 +53,6 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_MICROSOFT_ENTRA_ID_ID: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
     AUTH_MICROSOFT_ENTRA_ID_SECRET: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-    X_API_KEY: process.env.X_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
     API_MOCKING: process.env.API_MOCKING,
     API_KEY: process.env.API_KEY,
