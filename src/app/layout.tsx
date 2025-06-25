@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import "@xterm/xterm/css/xterm.css";
 
 import { type Metadata } from "next";
 import React from "react";
