@@ -15,6 +15,7 @@ const LOGOUT_URI = `${AUTH_PREFIX}/logout`;
 const USERS_URI = `${API_PREFIX}/users`;
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
 const GROUPS_URI = `${API_PREFIX}/groups`;
+const HARDWARE_URI = `${API_PREFIX}/hardware`;
 
 /**
  * API URIs for user-related operations
@@ -98,5 +99,25 @@ export const Uris = {
      * URI for getting a group by ID
      */
     GET_BY_ID: `${GROUPS_URI}/{id}`,
+  },
+
+  /**
+   * URI for hardware-related operations
+   */
+  Hardware: {
+    /**
+     * URI for getting all hardware
+     */
+    GET_ALL: HARDWARE_URI,
+
+    /**
+     * URI for getting a hardware by ID
+     */
+    GET_BY_ID: `${HARDWARE_URI}/{id}`,
+
+    /**
+     * URI for getting all hardware from a laboratory
+     */
+    GET_ALL_FROM_LABORATORY: `${HARDWARE_URI}/laboratory/{id}`,
   },
 }

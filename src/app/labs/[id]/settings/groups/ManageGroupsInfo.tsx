@@ -22,7 +22,6 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        // TODO: Change fetch to get groups from laboratory
         let fetchedGroups: GroupResponse[] = [];
         if (lab) {
           fetchedGroups = await getLabGroups(lab.id);
@@ -76,7 +75,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   }
 
   return (
-    <div>
+    <>
       <Button 
         type="default" 
         style={{ marginBottom: 16, width: "100%" }}
@@ -101,6 +100,6 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
           </List.Item>
         )}
       />
-    </div>
+    </>
   );
 }

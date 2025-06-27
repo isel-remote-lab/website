@@ -1,5 +1,6 @@
 import type { GroupRequest } from "./group";
 import type { LaboratoryRequest } from "./laboratory";
+import type { HardwareRequest } from "./hardware";
 
 /**
  * Domain configuration interface
@@ -8,6 +9,7 @@ export interface DomainConfig {
   user: UserRestrictions;
   laboratory: LaboratoryRestrictions;
   group: GroupRestrictions;
+  hardware: HardwareRestrictions;
 }
 
 /**
@@ -39,6 +41,14 @@ export type LaboratoryRestrictions = {
 export type GroupRestrictions = {
   [K in keyof GroupRequest]?: Restrictions;
 };
+
+/**
+ * Hardware restrictions interface
+ */
+export type HardwareRestrictions = {
+  [K in keyof HardwareRequest]?: Restrictions;
+};
+
 /**
  * Restrictions interface
  */

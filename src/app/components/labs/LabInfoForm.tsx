@@ -2,7 +2,7 @@ import type { LaboratoryResponse } from "~/types/laboratory";
 import DefaultForm from "../defaults/DefaultForm";
 import Link from "next/link";
 import { Button, Tooltip } from "antd";
-import { UsergroupAddOutlined } from "@ant-design/icons";
+import { LaptopOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 
 interface LabInfoFormProps {
   initialValues?: LaboratoryResponse;
@@ -23,13 +23,22 @@ export default function LabInfoForm({
       submitButtonText={submitButtonText}
     >
       {initialValues && (
-      <Tooltip title="Gerir Grupos" key="groups">
-        <Link href={`/labs/${initialValues?.id}/settings/groups`}>
-          <Button type="default" style={{ marginLeft: 8 }}> 
-            <UsergroupAddOutlined />
-            </Button>
-          </Link>
-        </Tooltip>
+        <>
+          <Tooltip title="Gerir Grupos" key="groups">
+            <Link href={`/labs/${initialValues?.id}/settings/groups`}>
+              <Button type="default" style={{ marginLeft: 8 }}> 
+                <UsergroupAddOutlined />
+              </Button>
+            </Link>
+          </Tooltip>
+          <Tooltip title="Gerir Hardware" key="hardware">
+            <Link href={`/labs/${initialValues?.id}/settings/hardware`}>
+              <Button type="default" style={{ marginLeft: 8 }}> 
+                <LaptopOutlined />
+              </Button>
+            </Link>
+          </Tooltip>
+        </>
       )}
     </DefaultForm>
   );

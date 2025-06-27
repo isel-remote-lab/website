@@ -11,16 +11,17 @@ import React from "react";
 import { formatLaboratory, formatNumberToDayjs, LaboratoryFields } from "~/types/laboratory";
 import type { LaboratoryRequest } from "~/types/laboratory";
 import type { GroupRequest } from "~/types/group";
+import type { HardwareRequest } from "~/types/hardware";
 
 /**
  * Type for the request objects
  */
-export type RequestTypes = LaboratoryRequest | GroupRequest;
+export type RequestTypes = LaboratoryRequest | GroupRequest | HardwareRequest;
 
 /**
  * Type for the keys of the request objects
  */
-type RequestKeys = keyof LaboratoryRequest | keyof GroupRequest;
+type RequestKeys = keyof LaboratoryRequest | keyof GroupRequest | keyof HardwareRequest;
 
 /**
  * Labels for the request keys
@@ -29,7 +30,12 @@ const requestKeysFieldLabels: Record<RequestKeys, string> = {
   name: "Nome",
   description: "Descrição",
   duration: "Duração das sessões",
-  queueLimit: "Limite da fila de espera"
+  queueLimit: "Limite da fila de espera",
+  serialNumber: "Número de série",
+  status: "Estado",
+  macAddress: "Endereço MAC",
+  ipAddress: "Endereço IP",
+  createdAt: "Data de criação"
 }
 
 /**
