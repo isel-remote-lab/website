@@ -76,9 +76,29 @@ export const Uris = {
     GET_ALL: LABORATORIES_URI,
 
     /**
+     * URI for getting all laboratories by user
+     */
+    GET_ALL_BY_USER: `${LABORATORIES_URI}/user/{userId}`, 
+
+    /**
      * URI for getting a laboratory by ID
      */
     GET_BY_ID: `${LABORATORIES_URI}/{id}`,
+
+    /**
+     * URI for getting all groups from a laboratory
+     */
+    GET_LABORATORY_GROUPS: `${LABORATORIES_URI}/{id}/groups`,
+
+    /**
+     * URI for updating the laboratory groups
+     */
+    ADD_GROUP_TO_LABORATORY: `${LABORATORIES_URI}/{id}/groups`,
+
+    /**
+     * URI for removing a group from a laboratory
+     */
+    REMOVE_GROUP_FROM_LABORATORY: `${LABORATORIES_URI}/{id}/groups`,
   },
 
   /**

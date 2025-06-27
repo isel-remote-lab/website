@@ -2,6 +2,7 @@
 
 import { List, Typography, Button, Card } from 'antd';
 import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
+import { addGroupToLab } from '~/server/services/labsService';
 import { useEffect, useState } from 'react';
 import { GroupFields, type GroupRequest, type GroupResponse } from '~/types/group';
 import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
@@ -46,7 +47,9 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   const onFinish = async (values: unknown) => {
     const response = await createGroup(values as GroupRequest);
 
-    // TODO: Add group to laboratory
+    if (lab) {
+      await addGroupToLab(response.id, lab.id);
+    }
 
     if (response) {
       setShowForm(false);
