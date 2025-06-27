@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
 import type { LaboratoryResponse } from '~/types/laboratory';
 import { useRouter } from 'next/navigation';
-import { HardwareFields, HardwareResponse } from '~/types/hardware';
-import { getHardware, getLabHardware } from '~/server/services/hardwareService';
+import { HardwareFields, HardwareRequest, HardwareResponse } from '~/types/hardware';
+import { createHardware, getHardware, getLabHardware } from '~/server/services/hardwareService';
 import { Button, Card, Typography } from 'antd';
 import { List } from 'antd';
+import HardwareInfoForm from '~/app/components/hardware/HardwareInfoForm';
 
 interface ManageHardwareInfoProps {
   lab?: LaboratoryResponse;
@@ -16,6 +17,7 @@ interface ManageHardwareInfoProps {
 export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
   const [allHardware, setAllHardware] = useState<HardwareResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,12 +39,45 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
     void fetchHardware();
   }, [lab]);
 
+  const addHardwareButton = () => {
+    setShowForm(true);
+  };
+
+  const onFinish = async (values: unknown) => {
+    const response = await createHardware(values as HardwareRequest);
+
+    // TODO: Add hardware to laboratory
+
+    if (response) {
+      setShowForm(false);
+    }
+  };
+
+  if (showForm) {
+    return (
+      <div>
+        <Button 
+          type="default" 
+          style={{ marginBottom: 16 }}
+          onClick={() => setShowForm(false)}
+        >
+          <ArrowLeftOutlined />
+          Voltar
+        </Button>
+        <HardwareInfoForm
+          submitButtonText="Adicionar Hardware"
+          onFinish={onFinish}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <Button 
         type="default" 
         style={{ marginBottom: 16, width: "100%" }}
-        onClick={() => {}}
+        onClick={addHardwareButton}
       >
         <PlusOutlined />
         Adicionar Hardware

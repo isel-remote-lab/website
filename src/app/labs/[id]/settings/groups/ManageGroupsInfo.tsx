@@ -44,8 +44,6 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   };
 
   const onFinish = async (values: unknown) => {
-    console.log(values);
-
     const response = await createGroup(values as GroupRequest);
 
     // TODO: Add group to laboratory

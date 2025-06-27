@@ -15,7 +15,7 @@ const labsWidth = 280;
 
 const cardStyle = {
   width: labsWidth,
-  height: 130,
+  height: 160,
   border: "none",
 };
 
