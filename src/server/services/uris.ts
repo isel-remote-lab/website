@@ -119,6 +119,11 @@ export const Uris = {
      * URI for getting a group by ID
      */
     GET_BY_ID: `${GROUPS_URI}/{id}`,
+
+    /**
+     * URI for getting group users
+     */
+    GET_GROUP_USERS: `${GROUPS_URI}/{id}/users`,
   },
 
   /**

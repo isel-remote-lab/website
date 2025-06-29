@@ -1,5 +1,5 @@
 import { getGroupById } from "~/server/services/groupsService";
-import GroupInfo from "./GroupInfo";
+import GroupInfo from "./ManageGroupInfo";
 
 /**
  * This is the page that will be rendered when the user access the URL /lab/:id/settings/groups/:id
@@ -13,7 +13,7 @@ export default async function GroupPage({ params }: { params: Promise<{ groupId:
   // TODO: Add is on queue verification and show a message if the user is not allowed to access the lab
   return (
     <div>
-      <GroupInfo {...group}/>
+      <GroupInfo group={group}/>
     </div>
   );
 }

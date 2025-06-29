@@ -1,5 +1,5 @@
 import { getGroupById } from "~/server/services/groupsService";
-import GroupInfo from "~/app/labs/[id]/settings/groups/[groupId]/GroupInfo";
+import GroupInfo from "~/app/labs/[id]/settings/groups/[groupId]/ManageGroupInfo";
 import { GroupFields } from "~/types/group";
 import DefaultPage from "~/app/components/defaults/DefaultPage";
 

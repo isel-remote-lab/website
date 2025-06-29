@@ -1,6 +1,6 @@
 "use client";
 
-import { List, Typography, Button, Card } from 'antd';
+import { List, Typography, Button, Card, Form, Select } from 'antd';
 import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { addGroupToLab } from '~/server/services/labsService';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,8 @@ interface ManageGroupsInfoProps {
 }
 
 export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
-  const [groups, setGroups] = useState<GroupResponse[]>([]);
+  const [labGroups, setLabGroups] = useState<GroupResponse[]>([]);
+  const [userGroups, setUserGroups] = useState<GroupResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const router = useRouter();
@@ -23,13 +24,14 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        let fetchedGroups: GroupResponse[] = [];
+        const fetchedUserGroups = await getUserGroups();
+        setUserGroups(fetchedUserGroups);
         if (lab) {
-          fetchedGroups = await getLabGroups(lab.id);
+          const fetchedLabGroups = await getLabGroups(lab.id);
+          setLabGroups(fetchedLabGroups);
         } else {
-          fetchedGroups = await getUserGroups();
+          setLabGroups(userGroups);
         }
-        setGroups(fetchedGroups);
       } catch (error) {
         console.error('Error fetching groups:', error);
       } finally {
@@ -55,6 +57,10 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
       setShowForm(false);
     }
   };
+
+  const onAddGroupToLab = async (values: unknown) => {
+    await addGroupToLab(values as number, lab!.id);
+  };  
 
   if (showForm) {
     return (
@@ -85,9 +91,21 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
         <PlusOutlined />
         Criar Grupo
       </Button>
+      {lab && (
+        <Form 
+          onFinish={onAddGroupToLab}
+        >
+          <Form.Item name="group" label="Grupo">
+            <Select options={userGroups.map((group) => ({ label: group[GroupFields.NAME], value: group.id }))} />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">Adicionar</Button>
+          </Form.Item>
+        </Form>
+      )}
       <List
         loading={loading}
-        dataSource={groups}
+        dataSource={labGroups}
         renderItem={(group) => (
           <List.Item>
             <Card

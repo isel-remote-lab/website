@@ -1,6 +1,7 @@
 import type { GroupRequest, GroupResponse } from "~/types/group";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";
+import { UserResponse } from "~/types/user";
 
 /**
  * Get all groups
@@ -56,4 +57,42 @@ export async function updateGroup(groupId: number, group: GroupRequest): Promise
         method: "PATCH",
         data: group
     }) as GroupResponse;
+}
+
+/**
+ * Get group users
+ * @param groupId - Group ID
+ * @returns List of users
+ */
+export async function getGroupUsers(groupId: number): Promise<UserResponse[]> {
+    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri) as UserResponse[];
+}
+
+/**
+ * Add a user to a group
+ * @param groupId - Group ID
+ * @param userId - User ID
+ * @returns Added user
+ */
+export async function addUserToGroup(groupId: number, userId: number): Promise<UserResponse> {
+    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri, {
+        method: "POST",
+        data: { userId: userId }
+    }) as UserResponse;
+}
+
+/**
+ * Remove a user from a group
+ * @param groupId - Group ID
+ * @param userId - User ID
+ * @returns Removed user
+ */
+export async function removeUserFromGroup(groupId: number, userId: number): Promise<UserResponse> {
+    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri, {
+        method: "DELETE",
+        data: { userId: userId }
+    }) as UserResponse;
 }
