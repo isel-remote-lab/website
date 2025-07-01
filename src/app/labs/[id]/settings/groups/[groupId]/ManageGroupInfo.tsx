@@ -1,11 +1,9 @@
 "use client";
 
-import { List, Typography, Button, Card, Form, Select, Input } from 'antd';
-import { addUserToGroup, createGroup, getGroupUsers, removeUserFromGroup } from '~/server/services/groupsService';
+import { List, Typography, Button, Card, Form, Input } from 'antd';
+import { addUserToGroup, getGroupUsers, removeUserFromGroup } from '~/server/services/groupsService';
 import { useEffect, useState } from 'react';
-import { type GroupRequest, type GroupResponse } from '~/types/group';
-import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
-import GroupInfoForm from '~/app/components/groups/GroupInfoForm';
+import { type GroupResponse } from '~/types/group';
 import { useRouter } from 'next/navigation';
 import { type UserResponse } from '~/types/user';
 
@@ -16,7 +14,6 @@ interface ManageGroupInfoProps {
 export default function ManageGroupInfo({ group }: ManageGroupInfoProps) {
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,21 +29,18 @@ export default function ManageGroupInfo({ group }: ManageGroupInfoProps) {
     };
 
     void fetchUsers();
-  }, [group]);
+  }, [loading]);
 
-  const onFinish = async (values: unknown) => {
-    const response = await addUserToGroup(group.id, values as number);
-
-    if (response) {
-      setShowForm(false);
-    }
+  const onAddUser = async (values: unknown) => {
+    const userId = (values as { user: number }).user
+    await addUserToGroup(group.id, userId);
   };
 
   return (
     <>
-      <Form onFinish={onFinish}>
+      <Form onFinish={onAddUser}>
         <Form.Item name="user" label="Usuário">
-          <Input />
+          <Input type="number" placeholder="ID do usuário" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">Adicionar</Button>

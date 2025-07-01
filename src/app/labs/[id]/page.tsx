@@ -1,4 +1,3 @@
-import { getLabById } from "~/server/services/labsService";
 import LabInfo from "./LabInfo";
 
 /**
@@ -8,8 +7,7 @@ import LabInfo from "./LabInfo";
  */
 export default async function LabPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const lab = await getLabById(parseInt(id));
 
   // TODO: Add is on queue verification and show a message if the user is not allowed to access the lab
-  return <LabInfo {...lab} />
+  return <LabInfo/>
 }

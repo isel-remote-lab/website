@@ -10,11 +10,11 @@ import DefaultPage from "~/app/components/defaults/DefaultPage";
  */
 export default async function GroupPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const group = await getGroupById(parseInt(id));
+  const group = await getGroupById(Number(id));
 
   return (
     <DefaultPage title={`Grupo: ${group[GroupFields.NAME]}`}>
-      <GroupInfo {...group}/>
+      <GroupInfo group={group}/>
     </DefaultPage>
   );
 }

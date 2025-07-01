@@ -91,14 +91,9 @@ export const Uris = {
     GET_LABORATORY_GROUPS: `${LABORATORIES_URI}/{id}/groups`,
 
     /**
-     * URI for updating the laboratory groups
+     * URI for getting all hardware from a laboratory
      */
-    ADD_GROUP_TO_LABORATORY: `${LABORATORIES_URI}/{id}/groups`,
-
-    /**
-     * URI for removing a group from a laboratory
-     */
-    REMOVE_GROUP_FROM_LABORATORY: `${LABORATORIES_URI}/{id}/groups`,
+    GET_LABORATORY_HARDWARE: `${LABORATORIES_URI}/{id}/hardware`,
   },
 
   /**
@@ -113,7 +108,7 @@ export const Uris = {
     /**
      * URI for getting all groups from a laboratory
      */
-    GET_ALL_FROM_LABORATORY: `${GROUPS_URI}/laboratory/{id}`,
+    GET_ALL_FROM_LABORATORY: `${LABORATORIES_URI}/{id}/groups`,
 
     /**
      * URI for getting a group by ID

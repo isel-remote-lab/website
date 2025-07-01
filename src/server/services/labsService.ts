@@ -70,10 +70,49 @@ export async function getLabGroups(labId: number): Promise<GroupResponse[]> {
  * @param groupId - Group ID
  */
 export async function addGroupToLab(labId: number, groupId: number): Promise<void> {
-  const uri = await replaceParams(Uris.Laboratories.ADD_GROUP_TO_LABORATORY, { id: labId });
+  const uri = await replaceParams(Uris.Groups.GET_ALL_FROM_LABORATORY, { id: labId });
+  const response = await fetchDataOnServerWithAuthHeader(uri, {
+    method: "PATCH",
+    data: { groupId: groupId },
+  });
+}
+
+/**
+ * Remove a group from a laboratory
+ * @param labId - Laboratory ID
+ * @param groupId - Group ID
+ */
+export async function removeGroupFromLab(labId: number, groupId: number): Promise<void> {
+  const uri = await replaceParams(Uris.Groups.GET_ALL_FROM_LABORATORY, { id: labId });
+  await fetchDataOnServerWithAuthHeader(uri, {
+    method: "DELETE",
+    data: { groupId: groupId },
+  });
+}
+
+/**
+ * Add a hardware to a laboratory
+ * @param labId - Laboratory ID
+ * @param hardwareId - Hardware ID
+ */
+export async function addHardwareToLab(labId: number, hardwareId: number): Promise<void> {
+  const uri = await replaceParams(Uris.Hardware.GET_ALL_FROM_LABORATORY, { id: labId });
   await fetchDataOnServerWithAuthHeader(uri, {
     method: "PATCH",
-    data: { groupId },
+    data: { hardwareId: hardwareId },
+  });
+}
+
+/**
+ * Remove a hardware from a laboratory
+ * @param labId - Laboratory ID
+ * @param hardwareId - Hardware ID
+ */
+export async function removeHardwareFromLab(labId: number, hardwareId: number): Promise<void> {
+  const uri = await replaceParams(Uris.Hardware.GET_ALL_FROM_LABORATORY, { id: labId });
+  await fetchDataOnServerWithAuthHeader(uri, {
+    method: "DELETE",
+    data: { hardwareId: hardwareId },
   });
 }
 
@@ -85,10 +124,6 @@ export async function getAllLabs(): Promise<LaboratoryResponse[]> {
   const uri = Uris.Laboratories.GET_ALL;
   return await fetchDataOnServerWithAuthHeader(uri) as LaboratoryResponse[];
 }
-
-
-
-
 
 /**
  * Delete a laboratory

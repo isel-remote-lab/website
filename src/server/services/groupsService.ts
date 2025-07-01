@@ -29,7 +29,8 @@ export async function getLabGroups(labId: number): Promise<GroupResponse[]> {
  */
 export async function getGroupById(groupId: number): Promise<GroupResponse> {
     const uri = Uris.Groups.GET_BY_ID.replace("{id}", groupId.toString());
-    return await fetchDataOnServerWithAuthHeader(uri) as GroupResponse;
+    const response = await fetchDataOnServerWithAuthHeader(uri) as GroupResponse;
+    return response;
 }
 
 /**
@@ -75,12 +76,13 @@ export async function getGroupUsers(groupId: number): Promise<UserResponse[]> {
  * @param userId - User ID
  * @returns Added user
  */
-export async function addUserToGroup(groupId: number, userId: number): Promise<UserResponse> {
+export async function addUserToGroup(groupId: number, userId: number): Promise<void> {
     const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
-    return await fetchDataOnServerWithAuthHeader(uri, {
-        method: "POST",
+    const response = await fetchDataOnServerWithAuthHeader(uri, {
+        method: "PATCH",
         data: { userId: userId }
-    }) as UserResponse;
+    }) as void;
+    console.log(response)
 }
 
 /**

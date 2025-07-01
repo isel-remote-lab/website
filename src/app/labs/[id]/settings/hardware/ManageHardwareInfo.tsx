@@ -6,67 +6,115 @@ import type { LaboratoryResponse } from '~/types/laboratory';
 import { useRouter } from 'next/navigation';
 import { HardwareFields, HardwareRequest, HardwareResponse } from '~/types/hardware';
 import { createHardware, getHardware, getLabHardware } from '~/server/services/hardwareService';
-import { Button, Card, Typography } from 'antd';
+import { Button, Card, Form, Select, Typography } from 'antd';
 import { List } from 'antd';
 import HardwareInfoForm from '~/app/components/hardware/HardwareInfoForm';
+import { addHardwareToLab, removeHardwareFromLab } from '~/server/services/labsService';
 
 interface ManageHardwareInfoProps {
   lab?: LaboratoryResponse;
 }
 
 export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
-  const [allHardware, setAllHardware] = useState<HardwareResponse[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [hardware, setHardware] = useState<HardwareResponse[]>([]);
+
+  const [loaded, setLoaded] = useState(false);
+  const [createHardwarePage, setCreateHardwarePage] = useState(false);
   const router = useRouter();
+  const createHardwareButtonString = "Adicionar Hardware";
 
-  useEffect(() => {
-    const fetchHardware = async () => {
-      try {
-        let fetchedHardware: HardwareResponse[] = [];
-        if (lab) {
-          fetchedHardware = await getLabHardware(lab.id);
-        } else {
-          fetchedHardware = await getHardware();
-        }
-        setAllHardware(fetchedHardware);
-      } catch (error) {
-        console.error('Error fetching hardware:', error);
-      } finally {
-        setLoading(false);
+  /**
+   * Fetch the hardware from the database
+   * If the user is in a lab, fetch the hardware from the lab
+   * If the user is not in a lab, fetch the hardware from the user
+   */
+  const fetchHardware = async () => {
+    setLoaded(false);
+    try {
+      if (lab) {
+        setHardware(await getLabHardware(lab.id));
+      } else {
+        setHardware(await getHardware());
       }
-    };
-    void fetchHardware();
-  }, [lab]);
-
-  const addHardwareButton = () => {
-    setShowForm(true);
-  };
-
-  const onFinish = async (values: unknown) => {
-    const response = await createHardware(values as HardwareRequest);
-
-    // TODO: Add hardware to laboratory
-
-    if (response) {
-      setShowForm(false);
+    } finally {
+      setLoaded(true);
     }
   };
 
-  if (showForm) {
+  // Use effect to fetch the hardware from the database when the component is mounted
+  useEffect(() => {
+    // Only fetch the hardware if the form is not being shown
+    if (!createHardwarePage) {
+      void fetchHardware();
+    }
+  }, [createHardwarePage]);
+
+  /**
+   * Create a new hardware and add it to the lab or user
+   * @param values - The values of the hardware to be created
+   */
+  const onCreateHardware = async (values: unknown) => {
+    const response = await createHardware(values as HardwareRequest);
+    if (lab) {
+      await addHardwareToLab(lab.id, response.id);
+    }
+    // When the createHardwarePage is false, the useEffect will fetch the hardware again
+    setCreateHardwarePage(false);
+  };
+
+  /**
+   * Add a hardware to the lab
+   * @param values - The values of the hardware to be added to the lab
+   */
+  const onAddHardwareToLab = async (values: unknown) => {
+    const hardwareId = (values as { hardware: number }).hardware;
+    await addHardwareToLab(lab!.id, hardwareId);
+    await fetchHardware();
+  };
+
+  /**
+   * Form to add a hardware to the lab
+   * @returns The form to add a hardware to the lab
+   */
+  const AddHardwareToLabForm = async () => {
+    const allHardware = await getHardware();
+    const filteredHardware = allHardware.filter((hw) => !hardware.some((lab) => lab.id === lab!.id));
+    
+    return (
+      <Form onFinish={onAddHardwareToLab}>
+        <Form.Item name="hardware" label="Hardware">
+          <Select options={filteredHardware.map((hardware) => ({ label: hardware[HardwareFields.NAME], value: hardware.id }))} />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">Adicionar</Button>
+        </Form.Item>
+      </Form>
+    );
+  }
+
+  /**
+   * Remove a hardware from the lab
+   * @param hardwareId - The id of the hardware to be removed from the lab
+   */
+  const onRemoveHardwareFromLab = async (hardwareId: number) => {
+    await removeHardwareFromLab(lab!.id, hardwareId);
+    await fetchHardware();
+  }
+
+  // If the user is creating a new hardware, show the form to create it
+  if (createHardwarePage) {
     return (
       <div>
         <Button 
-          type="default" 
           style={{ marginBottom: 16 }}
-          onClick={() => setShowForm(false)}
+          onClick={() => setCreateHardwarePage(false)}
         >
           <ArrowLeftOutlined />
           Voltar
         </Button>
         <HardwareInfoForm
-          submitButtonText="Adicionar Hardware"
-          onFinish={onFinish}
+          submitButtonText={createHardwareButtonString}
+          onFinish={onCreateHardware}
         />
       </div>
     );
@@ -75,16 +123,16 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
   return (
     <>
       <Button 
-        type="default" 
         style={{ marginBottom: 16, width: "100%" }}
-        onClick={addHardwareButton}
+        onClick={() => setCreateHardwarePage(true)}
       >
         <PlusOutlined />
-        Adicionar Hardware
+        {createHardwareButtonString}
       </Button>
+      {lab && <AddHardwareToLabForm />}
       <List
-        loading={loading}
-        dataSource={allHardware}
+        loading={!loaded}
+        dataSource={hardware}
         renderItem={(hardware) => (
           <List.Item>
             <Card
@@ -94,6 +142,7 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
             >
               <Typography.Title level={5}>{hardware[HardwareFields.NAME]}</Typography.Title>
             </Card>
+            <Button onClick={() => onRemoveHardwareFromLab(hardware.id)}>Remover</Button>
           </List.Item>
         )}
       />
