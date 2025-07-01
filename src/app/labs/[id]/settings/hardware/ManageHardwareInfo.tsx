@@ -17,6 +17,7 @@ interface ManageHardwareInfoProps {
 
 export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
   const [hardware, setHardware] = useState<HardwareResponse[]>([]);
+  const [allHardware, setAllHardware] = useState<HardwareResponse[]>([]);
 
   const [loaded, setLoaded] = useState(false);
   const [createHardwarePage, setCreateHardwarePage] = useState(false);
@@ -33,6 +34,7 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
     try {
       if (lab) {
         setHardware(await getLabHardware(lab.id));
+        setAllHardware(await getHardware());
       } else {
         setHardware(await getHardware());
       }
@@ -76,9 +78,8 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
    * Form to add a hardware to the lab
    * @returns The form to add a hardware to the lab
    */
-  const AddHardwareToLabForm = async () => {
-    const allHardware = await getHardware();
-    const filteredHardware = allHardware.filter((hw) => !hardware.some((lab) => lab.id === lab!.id));
+  const AddHardwareToLabForm = () => {
+    const filteredHardware = allHardware.filter((hw) => !hardware.some((labHw) => labHw.id === hw.id));
     
     return (
       <Form onFinish={onAddHardwareToLab}>
