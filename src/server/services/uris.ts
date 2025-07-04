@@ -103,7 +103,7 @@ export const Uris = {
     /**
      * URI for getting all groups
      */
-    GET_ALL: GROUPS_URI,
+    ALL_GROUPS: GROUPS_URI,
 
     /**
      * URI for getting all groups from a laboratory
@@ -113,12 +113,12 @@ export const Uris = {
     /**
      * URI for getting a group by ID
      */
-    GET_BY_ID: `${GROUPS_URI}/{id}`,
+    GROUP_BY_ID: `${GROUPS_URI}/{id}`,
 
     /**
      * URI for getting group users
      */
-    GET_GROUP_USERS: `${GROUPS_URI}/{id}/users`,
+    GROUP_USERS: `${GROUPS_URI}/{id}/users`,
   },
 
   /**
@@ -138,6 +138,6 @@ export const Uris = {
     /**
      * URI for getting all hardware from a laboratory
      */
-    GET_ALL_FROM_LABORATORY: `${HARDWARE_URI}/laboratory/{id}`,
+    GET_ALL_FROM_LABORATORY: `${LABORATORIES_URI}/{id}/hardware`,
   },
 }

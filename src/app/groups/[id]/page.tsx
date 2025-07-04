@@ -13,7 +13,7 @@ export default async function GroupPage({ params }: { params: Promise<{ id: stri
   const group = await getGroupById(Number(id));
 
   return (
-    <DefaultPage title={`Grupo: ${group[GroupFields.NAME]}`}>
+    <DefaultPage title={`Gerir ${group[GroupFields.NAME]}`}>
       <GroupInfo group={group}/>
     </DefaultPage>
   );

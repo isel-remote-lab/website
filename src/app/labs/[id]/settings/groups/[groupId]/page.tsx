@@ -8,9 +8,7 @@ import GroupInfo from "./ManageGroupInfo";
  */
 export default async function GroupPage({ params }: { params: Promise<{ groupId: string }> }) {
   const { groupId } = await params;
-  console.log("HERE ", groupId)
   const group = await getGroupById(Number(groupId));
-  console.log(group)
 
   // TODO: Add is on queue verification and show a message if the user is not allowed to access the lab
   return (

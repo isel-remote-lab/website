@@ -1,14 +1,15 @@
 "use client";
 
-import { List, Typography, Button, Card, Form, Select } from 'antd';
-import { createGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
+import { List, Typography, Button, Card, Form, Select, Tooltip } from 'antd';
+import { createGroup, deleteGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { addGroupToLab, removeGroupFromLab } from '~/server/services/labsService';
 import { useEffect, useState } from 'react';
 import { GroupFields, type GroupRequest, type GroupResponse } from '~/types/group';
-import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import GroupInfoForm from '~/app/components/groups/GroupInfoForm';
 import type { LaboratoryResponse } from '~/types/laboratory';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface ManageGroupsInfoProps {
   lab?: LaboratoryResponse;
@@ -44,9 +45,9 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
 
   // Use effect to fetch the groups from the database when the component is mounted
   useEffect(() => {
-    // Only fetch the groups if the form is not being shown
+    // Only fetch the groups if the form is not being shown and lab is available
     if (!createGroupPage) {
-      void fetchGroups();
+      fetchGroups();
     }
   }, [createGroupPage]);
 
@@ -97,7 +98,11 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
    * @param groupId - The id of the group to be removed from the lab
    */
   const onRemoveGroupFromLab = async (groupId: number) => {
-    await removeGroupFromLab(lab!.id, groupId);
+    if (lab) {
+      await removeGroupFromLab(lab.id, groupId);
+    } else {
+      await deleteGroup(groupId);
+    }
     await fetchGroups();
   }
 
@@ -106,6 +111,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
     return (
       <div>
         <Button 
+          type="default"
           style={{ marginBottom: 16 }}
           onClick={() => setCreateGroupPage(false)}
         >
@@ -120,9 +126,29 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
     );
   }
 
+  /**
+   * Get the actions for the card
+   * @param groupId - The id of the group
+   * @returns The actions for the card
+   */
+  function cardActions(groupId: number) {
+    const title = lab ? "Remover Grupo do Laboratório" : "Eliminar Grupo";
+    const icon = lab ? <MinusOutlined /> : <DeleteOutlined />;
+    const onClick = lab ? () => onRemoveGroupFromLab(groupId) : () => deleteGroup(groupId);
+    const key = lab ? "removeGroupFromLab" : "deleteGroup";
+    return [
+        <Tooltip title={title} key={key}>
+          <Button type="link" onClick={onClick} danger={!lab}>
+            {icon}
+          </Button>
+        </Tooltip>
+    ].filter(Boolean);
+  }
+
   return (
     <>
       <Button 
+        type="default"
         style={{ marginBottom: 16, width: "100%" }}
         onClick={() => setCreateGroupPage(true)}
       >
@@ -135,15 +161,12 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
         dataSource={groups}
         renderItem={(group) => (
           <List.Item>
-            <Card
-              hoverable
-              onClick={() => router.push(`/groups/${group.id}`)}
-              style={{ width: '100%' }}
-            >
-              <Typography.Title level={5}>{group[GroupFields.NAME]}</Typography.Title>
-              <Typography.Paragraph>{group[GroupFields.DESCRIPTION]}</Typography.Paragraph>
+            <Card actions={cardActions(group.id)} style={{ width: "100%" }}>
+              <Link href={`/groups/${group.id}`}>
+                <Typography.Title level={5}>{group[GroupFields.NAME]}</Typography.Title>
+                <Typography.Paragraph>{group[GroupFields.DESCRIPTION]}</Typography.Paragraph>
+              </Link>
             </Card>
-            <Button onClick={() => onRemoveGroupFromLab(group.id)}>Remover</Button>
           </List.Item>
         )}
       />

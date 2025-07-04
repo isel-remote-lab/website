@@ -14,7 +14,7 @@ export default async function GroupModal({ params }: { params: Promise<{ id: str
 
   return (
     <DefaultModal title={`Grupo: ${group[GroupFields.NAME]}`}>
-      <GroupInfo {...group}/>
+      <GroupInfo group={group}/>
     </DefaultModal>
   );
 }

@@ -15,7 +15,7 @@ export type UserInfo = {
  * User data interface
  */
 export type User = {
-  userId: number;
+  id: number;
 } & UserInfo;
 
 /**

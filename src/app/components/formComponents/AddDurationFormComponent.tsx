@@ -15,7 +15,7 @@ interface DurationFormComponentProps {
 /**
  * Duration form component
  */
-export default function addDurationFormComponent({ restrictions, formItem }: DurationFormComponentProps) {
+export default function AddDurationFormComponent({ restrictions, formItem }: DurationFormComponentProps) {
   // Ensure minimum duration is at least 1 minute
   const minDuration = Math.max(restrictions.min || 0, 1);
   const maxDuration = restrictions.max;

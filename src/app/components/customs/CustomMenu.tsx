@@ -11,6 +11,7 @@ import RoleDropdown from "../dropdowns/RoleDropdown";
 import type { LaboratoryResponse } from "~/types/laboratory";
 import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
 import type { GroupResponse } from "~/types/group";
+import ManageHardwareTopButton from "../buttons/topButtons/ManageHardwareTopButton";
 
 interface CustomMenuProps {
   labs: LaboratoryResponse[];
@@ -71,13 +72,13 @@ export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
     {
       key: "breadcrumb",
       label: <CustomBreadcrumb labs={labs} groups={groups} />,
-      style: { fontSize: 18, fontWeight: "bold" },
+      style: { fontSize: 18, fontWeight: "bold"},
     },
     {
       key: "search",
       label: (
         <div
-          style={{ width: "100%", display: "f<lex", justifyContent: "center" }}
+          style={{ width: "100%", display: "flex", justifyContent: "center" }}
         >
           <Search
             placeholder="Pesquisar..."
@@ -90,8 +91,14 @@ export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
         left: "50%",
         transform: "translateX(-50%)",
         top: "25%",
+        zIndex: 20,
       },
     },
+    /*{
+      key: "manage-hardware",
+      label: <ManageHardwareTopButton />,
+      style: { marginLeft: "auto" },
+    },*/
     {
       key: "manage-groups",
       label: <ManageGroupsTopButton />,

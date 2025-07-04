@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { getDomainConfig } from "~/server/services/domain";
 import type { FormItemConfig } from "~/types/form";
 import type { DomainConfig, Restrictions, RestrictionsObjects as RestrictionObjects } from "~/types/domain";
-import addDurationFormComponent from "../formComponents/addDurationFormComponent";
+import AddDurationFormComponent from "../formComponents/AddDurationFormComponent";
 import React from "react";
 import { formatLaboratory, formatNumberToDayjs, LaboratoryFields } from "~/types/laboratory";
 import type { LaboratoryRequest } from "~/types/laboratory";
@@ -140,7 +140,7 @@ const getFormItems = async ({ config }: GetFormItemsProps): Promise<FormItemConf
       // Determine the appropriate component based on the field type
       switch (fieldName) {
         case LaboratoryFields.DURATION:
-          addDurationFormComponent({ restrictions, formItem });
+          AddDurationFormComponent({ restrictions, formItem });
           break;
         case LaboratoryFields.QUEUE_LIMIT:
           formItem.component = <InputNumber autoSave="true" min={min} max={max}/>;

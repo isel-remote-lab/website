@@ -8,7 +8,7 @@ import { UserResponse } from "~/types/user";
  * @returns List of groups
  */
 export async function getUserGroups(): Promise<GroupResponse[]> {
-    const uri = Uris.Groups.GET_ALL;
+    const uri = Uris.Groups.ALL_GROUPS;
     return await fetchDataOnServerWithAuthHeader(uri) as GroupResponse[];
 }
 
@@ -28,7 +28,7 @@ export async function getLabGroups(labId: number): Promise<GroupResponse[]> {
  * @returns Group
  */
 export async function getGroupById(groupId: number): Promise<GroupResponse> {
-    const uri = Uris.Groups.GET_BY_ID.replace("{id}", groupId.toString());
+    const uri = Uris.Groups.GROUP_BY_ID.replace("{id}", groupId.toString());
     const response = await fetchDataOnServerWithAuthHeader(uri) as GroupResponse;
     return response;
 }
@@ -39,7 +39,7 @@ export async function getGroupById(groupId: number): Promise<GroupResponse> {
  * @returns Created group
  */
 export async function createGroup(group: GroupRequest): Promise<GroupResponse> {
-    const uri = Uris.Groups.GET_ALL;
+    const uri = Uris.Groups.ALL_GROUPS;
     return await fetchDataOnServerWithAuthHeader(uri, {
         method: "POST",
         data: group
@@ -53,7 +53,7 @@ export async function createGroup(group: GroupRequest): Promise<GroupResponse> {
  * @returns Updated group
  */
 export async function updateGroup(groupId: number, group: GroupRequest): Promise<GroupResponse> {
-    const uri = Uris.Groups.GET_BY_ID.replace("{id}", groupId.toString());
+    const uri = Uris.Groups.GROUP_BY_ID.replace("{id}", groupId.toString());
     return await fetchDataOnServerWithAuthHeader(uri, {
         method: "PATCH",
         data: group
@@ -66,7 +66,7 @@ export async function updateGroup(groupId: number, group: GroupRequest): Promise
  * @returns List of users
  */
 export async function getGroupUsers(groupId: number): Promise<UserResponse[]> {
-    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    const uri = Uris.Groups.GROUP_USERS.replace("{id}", groupId.toString());
     return await fetchDataOnServerWithAuthHeader(uri) as UserResponse[];
 }
 
@@ -77,12 +77,12 @@ export async function getGroupUsers(groupId: number): Promise<UserResponse[]> {
  * @returns Added user
  */
 export async function addUserToGroup(groupId: number, userId: number): Promise<void> {
-    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    const uri = Uris.Groups.GROUP_USERS.replace("{id}", groupId.toString());
     const response = await fetchDataOnServerWithAuthHeader(uri, {
         method: "PATCH",
         data: { userId: userId }
     }) as void;
-    console.log(response)
+    console.log(response);
 }
 
 /**
@@ -92,9 +92,22 @@ export async function addUserToGroup(groupId: number, userId: number): Promise<v
  * @returns Removed user
  */
 export async function removeUserFromGroup(groupId: number, userId: number): Promise<UserResponse> {
-    const uri = Uris.Groups.GET_GROUP_USERS.replace("{id}", groupId.toString());
+    const uri = Uris.Groups.GROUP_USERS.replace("{id}", groupId.toString());
+    console.log("USER ID", userId);
     return await fetchDataOnServerWithAuthHeader(uri, {
         method: "DELETE",
         data: { userId: userId }
     }) as UserResponse;
+}
+
+/**
+ * Delete a group
+ * @param groupId - Group ID
+ * @returns Deleted group
+ */
+export async function deleteGroup(groupId: number): Promise<void> {
+    const uri = Uris.Groups.GROUP_BY_ID.replace("{id}", groupId.toString());
+    return await fetchDataOnServerWithAuthHeader(uri, {
+        method: "DELETE"
+    }) as void;
 }

@@ -128,7 +128,7 @@ export const authConfig = {
       const userToken = token.userToken as string;
 
       if (dbUser) {
-        sessionUser.userId = dbUser.userId;
+        sessionUser.id = dbUser.id;
         sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
         sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString(
           "pt-PT",

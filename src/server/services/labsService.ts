@@ -84,10 +84,11 @@ export async function addGroupToLab(labId: number, groupId: number): Promise<voi
  */
 export async function removeGroupFromLab(labId: number, groupId: number): Promise<void> {
   const uri = await replaceParams(Uris.Groups.GET_ALL_FROM_LABORATORY, { id: labId });
-  await fetchDataOnServerWithAuthHeader(uri, {
+  const response = await fetchDataOnServerWithAuthHeader(uri, {
     method: "DELETE",
     data: { groupId: groupId },
   });
+  console.log("REMOVE GROUP FROM LAB ", response)
 }
 
 /**

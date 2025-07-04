@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { ArrowLeftOutlined, PlusOutlined } from '@ant-design/icons';
+import { List } from 'antd';
+import { ArrowLeftOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import type { LaboratoryResponse } from '~/types/laboratory';
-import { useRouter } from 'next/navigation';
 import { HardwareFields, HardwareRequest, HardwareResponse } from '~/types/hardware';
 import { createHardware, getHardware, getLabHardware } from '~/server/services/hardwareService';
-import { Button, Card, Form, Select, Typography } from 'antd';
-import { List } from 'antd';
+import { Button, Card, Form, Select, Tooltip, Typography } from 'antd';
 import HardwareInfoForm from '~/app/components/hardware/HardwareInfoForm';
 import { addHardwareToLab, removeHardwareFromLab } from '~/server/services/labsService';
+import Link from 'next/link';
 
 interface ManageHardwareInfoProps {
-  lab?: LaboratoryResponse;
+  lab: LaboratoryResponse;
 }
 
 export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
@@ -21,7 +21,6 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
 
   const [loaded, setLoaded] = useState(false);
   const [createHardwarePage, setCreateHardwarePage] = useState(false);
-  const router = useRouter();
   const createHardwareButtonString = "Adicionar Hardware";
 
   /**
@@ -45,9 +44,9 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
 
   // Use effect to fetch the hardware from the database when the component is mounted
   useEffect(() => {
-    // Only fetch the hardware if the form is not being shown
+    // Only fetch the hardware if the form is not being shown and lab is available
     if (!createHardwarePage) {
-      void fetchHardware();
+      fetchHardware();
     }
   }, [createHardwarePage]);
 
@@ -107,6 +106,7 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
     return (
       <div>
         <Button 
+          type="default"
           style={{ marginBottom: 16 }}
           onClick={() => setCreateHardwarePage(false)}
         >
@@ -121,9 +121,29 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
     );
   }
 
+  /**
+   * Get the actions for the card
+   * @param hardwareId - The id of the hardware
+   * @returns The actions for the card
+   */
+    function cardActions(hardwareId: number) {
+      const title = "Remover Hardware do Laboratório";
+      const icon = <MinusOutlined />;
+      const onClick = () => onRemoveHardwareFromLab(hardwareId);
+      const key = "removeHardwareFromLab";
+      return [
+          <Tooltip title={title} key={key}>
+            <Button type="link" onClick={onClick}>
+              {icon}
+            </Button>
+          </Tooltip>
+      ].filter(Boolean);
+    }
+
   return (
     <>
       <Button 
+        type="default"
         style={{ marginBottom: 16, width: "100%" }}
         onClick={() => setCreateHardwarePage(true)}
       >
@@ -136,14 +156,11 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
         dataSource={hardware}
         renderItem={(hardware) => (
           <List.Item>
-            <Card
-              hoverable
-              onClick={() => router.push(`/hardware/${hardware.id}`)}
-              style={{ width: '100%' }}
-            >
-              <Typography.Title level={5}>{hardware[HardwareFields.NAME]}</Typography.Title>
+            <Card actions={cardActions(hardware.id)} style={{ width: "100%" }}>
+              <Link href={`/hardware/${hardware.id}`}>
+                <Typography.Title level={5}>{hardware[HardwareFields.NAME]}</Typography.Title>
+              </Link>
             </Card>
-            <Button onClick={() => onRemoveHardwareFromLab(hardware.id)}>Remover</Button>
           </List.Item>
         )}
       />
