@@ -94,15 +94,15 @@ export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
         zIndex: 20,
       },
     },
-    /*{
+    {
       key: "manage-hardware",
       label: <ManageHardwareTopButton />,
       style: { marginLeft: "auto" },
-    },*/
+    },
     {
       key: "manage-groups",
       label: <ManageGroupsTopButton />,
-      style: { marginLeft: "auto" },
+      //style: { marginLeft: "auto" },
     },
     {
       key: "create-lab",

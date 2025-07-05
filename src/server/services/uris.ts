@@ -140,4 +140,14 @@ export const Uris = {
      */
     GET_ALL_FROM_LABORATORY: `${LABORATORIES_URI}/{id}/hardware`,
   },
+
+  /**
+   * URI for lab session endpoint
+   */
+  LabSession: {
+    /**
+     * URI for creating a lab session
+     */
+    CREATE: `${LABORATORIES_URI}/{id}/sessions`,
+  } 
 }

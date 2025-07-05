@@ -9,5 +9,5 @@ export default async function LabPage({ params }: { params: Promise<{ id: string
   const { id } = await params;
 
   // TODO: Add is on queue verification and show a message if the user is not allowed to access the lab
-  return <LabInfo/>
+  return <LabInfo id={id}/>
 }
