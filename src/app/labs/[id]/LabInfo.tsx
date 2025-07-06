@@ -34,7 +34,7 @@ export default function LabInfo({ id }: LabInfoProps) {
 
   return (
     <div>
-      <LabTerminal websocketURI={websocketURI} />
+      {websocketURI && <LabTerminal websocketURI={websocketURI} />}
     </div>
   )
 }
