@@ -26,11 +26,16 @@ export default function CreateLabInfo() {
       <Result
         status="success"
         title="Laboratório criado com sucesso"
-        subTitle="Clique no botão abaixo para continuar para o gerenciamento de grupos e hardware"
+        subTitle="Clique para ver o laboratório ou gerenciar grupos e hardware"
         extra={[
+          <Link href={`/labs/${labId}`}>
+            <Button type="primary" style={{ marginLeft: 8 }}> 
+              Ver laboratório
+            </Button>
+          </Link>,
           <Link href={`/labs/${labId}/settings`}>
             <Button type="primary" style={{ marginLeft: 8 }}> 
-              Continuar
+              Gerenciar grupos e hardware
             </Button>
           </Link>
         ]}
