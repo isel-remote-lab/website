@@ -1,17 +1,19 @@
-import { getGroupById } from "~/server/services/groupsService";
+import { getHardwareById } from "~/server/services/hardwareService";
+import HardwareInfo from "~/app/labs/[id]/settings/hardware/[hardwareId]/EditHardwareInfo";
+import DefaultModal from "~/app/components/defaults/DefaultModal";
 
 /**
- * This is the page that will be rendered when the user access the URL /lab/:id/settings/groups/:id
+ * This is the page that will be rendered when the user access the URL /hardware/:id
  * @param param0 The parameters of the page
  * @returns The page content
  */
-export default async function GroupPage({ params }: { params: Promise<{ groupId: string }> }) {
-  const { groupId } = await params;
-  const group = await getGroupById(parseInt(groupId));
+export default async function HardwareModal({ params }: { params: Promise<{ hardwareId: string }> }) {
+  const { hardwareId } = await params;
+  const hardware = await getHardwareById(parseInt(hardwareId));
   
   return (
-    <div>
-      <GroupInfo {...group}/>
-    </div>
+    <DefaultModal title="Editar hardware">
+      <HardwareInfo hardwareId={parseInt(hardwareId)} initialValues={hardware}/>
+    </DefaultModal>
   );
 }
