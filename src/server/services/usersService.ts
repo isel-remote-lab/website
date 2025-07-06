@@ -2,6 +2,8 @@ import { Uris } from "~/server/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
 import { fetchDataWithApiKey, fetchDataOnServerWithAuthHeader, replaceParams } from "./services";
+import { setCookies } from "../auth/config";
+import { AxiosResponse } from "axios";
 
 /**
  * Sign in a user
@@ -10,7 +12,9 @@ import { fetchDataWithApiKey, fetchDataOnServerWithAuthHeader, replaceParams } f
  */
 export async function signIn(userData: UserRequest): Promise<SignInResponse> {
   const uri = Uris.LOGIN;
-  return (await fetchDataWithApiKey(uri, userData)) as SignInResponse;
+  const response = await fetchDataWithApiKey(uri, userData) as SignInResponse;
+  setCookies(response as unknown as AxiosResponse);
+  return response;
 }
 
 /**

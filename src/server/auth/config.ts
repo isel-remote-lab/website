@@ -3,7 +3,11 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import "../../env.js";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { UserRequest, UserResponse } from "~/types/user.js";
-import { signIn, signOut } from "../services/usersService";
+import { signOut } from "../services/usersService";
+import { AxiosResponse } from "axios";
+import { parse } from "cookie";
+import { cookies } from "next/headers";
+import { signIn } from "../services/clientUsersService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -128,7 +132,7 @@ export const authConfig = {
       const userToken = token.userToken as string;
 
       if (dbUser) {
-        sessionUser.id = dbUser.id;
+        sessionUser.id = dbUser.id as never;
         sessionUser.role = roleLetterToRole(dbUser.role as unknown as RoleLetter)
         sessionUser.createdAt = new Date(dbUser.createdAt).toLocaleDateString(
           "pt-PT",
@@ -158,7 +162,6 @@ export const authConfig = {
  * Set cookies from the response
  * @param response - The response from the fetch request
  */
-/*
 export const setCookies = async (response: AxiosResponse) => {
   const headerCookies = response.headers["set-cookie"];
   if (headerCookies && headerCookies.length > 0) {
@@ -178,4 +181,3 @@ export const setCookies = async (response: AxiosResponse) => {
     });
   }
 }
-*/

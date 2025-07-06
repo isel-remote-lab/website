@@ -13,7 +13,6 @@ export default function SearchPage() {
   };
 
   const onSearch = (value: string) => {
-    // Here you can implement the actual search by ID
     console.log("Searching for ID:", value);
     // TODO: Implement the actual search logic here
   };

@@ -1,7 +1,7 @@
 // Base API prefix
-const BASE_URL = "http://nginx";
+const INTERNAL_URI = "http://nginx";
 
-const API_PREFIX = `${BASE_URL}/api/v1`;
+const API_PREFIX = `${INTERNAL_URI}/api/v1`;
 
 const PRIVATE_PREFIX = `${API_PREFIX}/_private`;
 
@@ -14,6 +14,7 @@ const LOGOUT_URI = `${AUTH_PREFIX}/logout`;
 
 const USERS_URI = `${API_PREFIX}/users`;
 const LABORATORIES_URI = `${API_PREFIX}/laboratories`;
+const RELATIVE_LABORATORIES_URI = `api/v1/laboratories`;
 const GROUPS_URI = `${API_PREFIX}/groups`;
 const HARDWARE_URI = `${API_PREFIX}/hardware`;
 
@@ -148,6 +149,6 @@ export const Uris = {
     /**
      * URI for creating a lab session
      */
-    CREATE: `${LABORATORIES_URI}/{id}/sessions`,
+    CREATE: `${RELATIVE_LABORATORIES_URI}/{id}/sessions`,
   } 
 }

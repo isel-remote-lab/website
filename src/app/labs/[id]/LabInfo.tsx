@@ -1,21 +1,25 @@
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Uris } from "~/server/services/uris";
-//import LabTerminal from "./LabTerminal";
+import LabTerminal from "./LabTerminal";
 
 interface LabInfoProps {
   id: string
 }
 
-export default async function LabInfo({ id }: LabInfoProps) {
-  //const websocketURI = "ws://localhost:1906"
+export default function LabInfo({ id }: LabInfoProps) {
+  const [websocketURI, setWebsocketURI] = useState<string>("")
 
   useEffect(() => {
-    const sse = new EventSource(Uris.LabSession.CREATE.replace("{id}", id))
-    sse.onmessage = (event) => {
-      console.log(event.data)
-    }
+    const sse = new EventSource(Uris.LabSession.CREATE.replace("{id}", id), {
+      withCredentials: true,
+    })
+
+    sse.addEventListener("labSessionStarting", (event) => {
+      const data = JSON.parse(event.data)
+      setWebsocketURI(data.websocketURI)
+    })
 
     return () => {
       sse.close()
@@ -24,7 +28,7 @@ export default async function LabInfo({ id }: LabInfoProps) {
 
   return (
     <div>
-      {/*<LabTerminal websocketURI={websocketURI} />*/}
+      <LabTerminal websocketURI={websocketURI} />
     </div>
   )
 }
