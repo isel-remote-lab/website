@@ -16,6 +16,15 @@ export enum HardwareFields {
 }
 
 /**
+ * Hardware status options
+ */
+export const HardwareStatusOptions = [
+  { label: "Disponível", value: "A" },
+  { label: "Em uso", value: "U" },
+  { label: "Manutenção", value: "M" }
+];
+
+/**
  * Hardware request data interface
  */
 export interface HardwareRequest {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, InputNumber } from "antd";
+import { Button, Form, InputNumber, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react";
 import { getDomainConfig } from "~/server/services/domain";
@@ -12,6 +12,7 @@ import { formatLaboratory, formatNumberToDayjs, LaboratoryFields } from "~/types
 import type { LaboratoryRequest } from "~/types/laboratory";
 import type { GroupRequest } from "~/types/group";
 import type { HardwareRequest } from "~/types/hardware";
+import { HardwareFields, HardwareStatusOptions } from "~/types/hardware";
 
 /**
  * Type for the request objects
@@ -144,6 +145,13 @@ const getFormItems = async ({ config }: GetFormItemsProps): Promise<FormItemConf
           break;
         case LaboratoryFields.QUEUE_LIMIT:
           formItem.component = <InputNumber autoSave="true" min={min} max={max}/>;
+          break;
+        case HardwareFields.STATUS:
+          formItem.component = <Select options={HardwareStatusOptions}/>;
+          formItem.rules.push({
+            required: true,
+            message: "Por favor selecione um estado!",
+          });
           break;
         default:
           // Get the min and max messages for the component
