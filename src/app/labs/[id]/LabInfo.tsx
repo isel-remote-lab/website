@@ -12,11 +12,12 @@ export default function LabInfo({ id }: LabInfoProps) {
   const [websocketURI, setWebsocketURI] = useState<string>("")
 
   useEffect(() => {
-    const sse = new EventSource(Uris.LabSession.CREATE.replace("{id}", id), {
+    const sse = new EventSource(Uris.LabSession.LAB_SESSION.replace("{id}", id), {
       withCredentials: true,
     })
 
     sse.addEventListener("labSessionStarting", (event) => {
+      console.log("labSessionStarting", event)
       const data = JSON.parse(event.data)
       setWebsocketURI(data.websocketURI)
     })

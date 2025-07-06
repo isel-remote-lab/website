@@ -20,7 +20,7 @@ export enum HardwareFields {
  */
 export const HardwareStatusOptions = [
   { label: "Disponível", value: "A" },
-  { label: "Em uso", value: "U" },
+  { label: "Em uso", value: "O" },
   { label: "Manutenção", value: "M" }
 ];
 
