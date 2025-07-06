@@ -16,10 +16,15 @@ export default function LabInfo({ id }: LabInfoProps) {
       withCredentials: true,
     })
 
+    sse.onmessage = (event) => {
+      console.log("New event, event name: ", event.data)
+    }
+
     sse.addEventListener("labSessionStarting", (event) => {
-      console.log("labSessionStarting", event)
       const data = JSON.parse(event.data)
-      setWebsocketURI(data.websocketURI)
+      const hwIpAddress = data.hwIpAddress
+      const websocketURI = `ws://${hwIpAddress}/ws`
+      setWebsocketURI(websocketURI)
     })
 
     return () => {
