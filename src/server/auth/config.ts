@@ -7,7 +7,7 @@ import { signOut } from "../services/usersService";
 import { AxiosResponse } from "axios";
 import { parse } from "cookie";
 import { cookies } from "next/headers";
-import { signIn } from "../services/clientUsersService";
+import { signIn } from "../services/usersService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

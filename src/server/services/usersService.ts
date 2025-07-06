@@ -1,9 +1,9 @@
 import { Uris } from "~/server/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
-import { fetchDataWithApiKey, fetchDataOnServerWithAuthHeader, replaceParams } from "./services";
+import { fetchDataOnServerWithAuthHeader, replaceParams } from "./services";
 import { setCookies } from "../auth/config";
-import { AxiosResponse } from "axios";
+import axios from "axios";
 
 /**
  * Sign in a user
@@ -12,10 +12,20 @@ import { AxiosResponse } from "axios";
  */
 export async function signIn(userData: UserRequest): Promise<SignInResponse> {
   const uri = Uris.LOGIN;
-  const response = await fetchDataWithApiKey(uri, userData) as SignInResponse;
-  setCookies(response as unknown as AxiosResponse);
-  return response;
-}
+    try {
+      const response = await axios.post(uri, userData, {
+        headers: {
+          'X-API-Key': process.env.API_KEY || '',
+        },
+      });
+    
+      await setCookies(response);
+      return response.data.data;
+    } catch (error: any) {
+      console.error('Error signing in:', error);
+      throw new Error(`Failed to sign in: ${error.message}`);
+    }
+} 
 
 /**
  * Sign out the current user
