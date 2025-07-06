@@ -12,7 +12,7 @@ import { addHardwareToLab, removeHardwareFromLab } from '~/server/services/labsS
 import Link from 'next/link';
 
 interface ManageHardwareInfoProps {
-  lab: LaboratoryResponse;
+  lab?: LaboratoryResponse;
 }
 
 export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
