@@ -79,6 +79,7 @@ export default function LabInfo({ id }: LabInfoProps) {
               duration: 5,
               ...messageArgs
             });
+            setWaitingQueuePos(0)
             break;
           case "session_ending":
             /*api.warning({
