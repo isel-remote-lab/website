@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface LabTerminalProps {
   websocketURI: string
@@ -10,8 +10,6 @@ export default function LabTerminal(props: LabTerminalProps) {
   const terminalRef = useRef<HTMLDivElement>(null)
   const terminal = useRef<any>(null)
   const socket = useRef<WebSocket | null>(null)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [isConnected, setIsConnected] = useState(false)
   const isInitialized = useRef(false)
 
   useEffect(() => {
@@ -42,17 +40,11 @@ export default function LabTerminal(props: LabTerminalProps) {
 
           const { Terminal } = await import('@xterm/xterm')
 
-          console.log('Creating terminal instance')
           terminal.current = new Terminal()
-          
-          console.log('Opening terminal')
           terminal.current.open(terminalRef.current)
           
           // Initialize WebSocket connection
           initWebSocket()
-          
-          setIsLoaded(true)
-          console.log('Terminal opened successfully')
           
           // Handle terminal input - send to WebSocket
           terminal.current.onData((data: string) => {
@@ -71,12 +63,9 @@ export default function LabTerminal(props: LabTerminalProps) {
     }
 
     const initWebSocket = () => {
-      console.log('Creating WebSocket connection')
       socket.current = new WebSocket(props.websocketURI)
       
       socket.current.onopen = () => {
-        console.log('WebSocket connected')
-        setIsConnected(true)
         if (terminal.current) {
           terminal.current.write('\r\nConnected to server\r\n')
         }
@@ -97,8 +86,6 @@ export default function LabTerminal(props: LabTerminalProps) {
       }
       
       socket.current.onclose = () => {
-        console.log('WebSocket disconnected')
-        setIsConnected(false)
         if (terminal.current) {
           terminal.current.write('\r\nDisconnected from server\r\n')
         }
@@ -112,8 +99,6 @@ export default function LabTerminal(props: LabTerminalProps) {
       }
     }
 
-    
-
     initTerminal()
 
     return () => {
@@ -121,27 +106,10 @@ export default function LabTerminal(props: LabTerminalProps) {
         socket.current.close()
       }
       if (terminal.current) {
-        console.log('Disposing terminal')
         terminal.current.dispose()
       }
     }
   }, [])
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ marginBottom: '10px' }}>
-        <span>Terminal Status: {isLoaded ? 'Loaded' : 'Loading...'}</span>
-        <span style={{ marginLeft: '20px' }}>
-          Connection: {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
-        </span>
-      </div>
-      <div 
-        ref={terminalRef} 
-        style={{
-          border: '1px solid #ccc',
-          backgroundColor: '#000'
-        }} 
-      />
-    </div>
-  )
+  return <div ref={terminalRef}/>
 }
