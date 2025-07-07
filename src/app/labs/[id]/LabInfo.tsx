@@ -24,6 +24,7 @@ export default function LabInfo({ id }: LabInfoProps) {
   const [api, contextHolder] = notification.useNotification()
   const [remainingTime, setRemainingTime] = useState<number>(0)
   const [timeText, setTimeText] = useState<string>("")
+  const [waitingQueuePos, setWaitingQueuePos] = useState<number>(0)
   const router = useRouter()
   
   useEffect(() => {
@@ -44,7 +45,8 @@ export default function LabInfo({ id }: LabInfoProps) {
 
     // Waiting queue messages
     sse.addEventListener("waitingQueue", (event) => {
-      console.log("Waiting queue: ", event)
+      const data = JSON.parse(event.data)
+      setWaitingQueuePos(data.waitingQueuePos)
     })
 
     // Lab session starting messages
@@ -108,8 +110,12 @@ export default function LabInfo({ id }: LabInfoProps) {
   return (
     <>
       {contextHolder}
-      {remainingTime > 0 && <Text>Remaining time: {remainingTime} {timeText}</Text>}
-      {websocketURI && <LabTerminal websocketURI={websocketURI} />}
+      {waitingQueuePos > 0 ? <Text>You are on the waiting queue on position {waitingQueuePos}</Text> :
+        <>
+          {remainingTime > 0 && <Text>Remaining time: {remainingTime} {timeText}</Text>}
+          {websocketURI && <LabTerminal websocketURI={websocketURI} />}
+        </>
+      }
     </>
   )
 }

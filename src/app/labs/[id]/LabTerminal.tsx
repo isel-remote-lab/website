@@ -111,5 +111,9 @@ export default function LabTerminal(props: LabTerminalProps) {
     }
   }, [])
 
-  return <div ref={terminalRef}/>
+  return (
+    <div>
+      <div ref={terminalRef}/>
+    </div>
+  )
 }
