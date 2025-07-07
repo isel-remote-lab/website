@@ -255,11 +255,15 @@ export default function DefaultForm({
     void loadFormData();
   }, [configType, form, initialValues]);
 
+  const onFinishWithMessage = (values: unknown) => {
+    onFinish(values)
+  }
+
   return (
     <>
       <Form
         form={form}
-        onFinish={onFinish}
+        onFinish={onFinishWithMessage}
       >
         {formItems.map((item) => (
           <Form.Item
