@@ -11,12 +11,13 @@ export default function LabTerminal(props: LabTerminalProps) {
   const terminal = useRef<any>(null)
   const socket = useRef<WebSocket | null>(null)
   const isInitialized = useRef(false)
+  
 
   useEffect(() => {
-
     if (isInitialized.current) return
 
     const initTerminal = async () => {
+      const { Terminal } = await import('@xterm/xterm')
       if (terminalRef.current && !terminal.current) {
         try {
 
@@ -37,8 +38,6 @@ export default function LabTerminal(props: LabTerminalProps) {
           const hardware = await response.json()
           console.log(hardware)
           */
-
-          const { Terminal } = await import('@xterm/xterm')
 
           terminal.current = new Terminal()
           terminal.current.open(terminalRef.current)
