@@ -9,10 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import Menu from "./components/customs/CustomMenu";
 import TempRoleProvider from "~/contexts/TempRoleContext";
 import { auth } from "~/server/auth";
-import { getAllLabs } from "~/server/services/labsService";
 import { redirect } from "next/navigation";
-import { getUserGroups } from "~/server/services/groupsService";
-import { getHardware } from "~/server/services/hardwareService";
 
 /**
  * Metadata for the Remote Lab application
@@ -43,9 +40,6 @@ export default async function RootLayout({
     redirect("/api/auth/signin");
   }
   const role = session.user.role;
-  const labMap = new Map((await getAllLabs()).map((lab) => [lab.id, lab]));
-  const groups = new Map((await getUserGroups()).map((group) => [group.id, group]));
-  const hardware = new Map((await getHardware()).map((hardware) => [hardware.id, hardware]));
 
   return (
     <html>
@@ -53,7 +47,7 @@ export default async function RootLayout({
         <SessionProvider>
           <CheckLogin>
             <TempRoleProvider role={role}>
-                <Menu labs={labMap} groups={groups} hardware={hardware} />
+                <Menu />
                 <Content style={{ padding: 24 }}>
                   {children}
                   {modal}

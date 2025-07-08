@@ -8,23 +8,14 @@ import Image from "next/image";
 import Search from "antd/es/input/Search";
 import CrateLabTopButton from "../buttons/topButtons/CreateLabTopButton";
 import RoleDropdown from "../dropdowns/RoleDropdown";
-import type { LaboratoryResponse } from "~/types/laboratory";
 import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
-import type { GroupResponse } from "~/types/group";
 import ManageHardwareTopButton from "../buttons/topButtons/ManageHardwareTopButton";
-import type { HardwareResponse } from "~/types/hardware";
-
-interface CustomMenuProps {
-  labs: Map<number, LaboratoryResponse>;
-  groups: Map<number, GroupResponse>;
-  hardware: Map<number, HardwareResponse>;
-}
 
 /**
  * Client menu component
  * @returns The client menu component
  */
-export default async function CustomMenu({ labs, groups, hardware }: CustomMenuProps) {
+export default async function CustomMenu() {
   const session = await auth();
 
   const { role } = session!.user;
@@ -73,7 +64,7 @@ export default async function CustomMenu({ labs, groups, hardware }: CustomMenuP
     },
     {
       key: "breadcrumb",
-      label: <CustomBreadcrumb labs={labs} groups={groups} hardware={hardware} />,
+      label: <CustomBreadcrumb />,
       style: { fontSize: 18, fontWeight: "bold"},
     },
     {

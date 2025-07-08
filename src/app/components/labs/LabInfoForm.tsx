@@ -42,14 +42,14 @@ export default function LabInfoForm({
     >
       {initialValues && (
         <>
-          <Tooltip title="Gerir Grupos" key="groups">
+          <Tooltip title="Gerir grupos" key="groups">
             <Link href={`/labs/${initialValues?.id}/settings/groups`}>
               <Button type="default" style={{ marginLeft: 8 }}> 
                 <UsergroupAddOutlined />
               </Button>
             </Link>
           </Tooltip>
-          <Tooltip title="Gerir Hardware" key="hardware">
+          <Tooltip title="Gerir hardware" key="hardware">
             <Link href={`/labs/${initialValues?.id}/settings/hardware`}>
               <Button type="default" style={{ marginLeft: 8 }}> 
                 <LaptopOutlined />
