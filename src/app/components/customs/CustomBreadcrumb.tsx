@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { itemRender } from "~/server/browserHistoryItemRender";
 import { GroupFields, type GroupResponse } from "~/types/group";
 import { LaboratoryFields, type LaboratoryResponse } from "~/types/laboratory";
+import type { HardwareResponse } from "~/types/hardware";
 /**
  * The breadcrumb item for the dashboard
  * @type {Breadcrumb.Item}
@@ -44,6 +45,7 @@ interface generateBreadcrumbItemsProps {
   pathname: string;
   labs: Map<number, LaboratoryResponse>;
   groups: Map<number, GroupResponse>;
+  hardware: Map<number, HardwareResponse>;
 }
 
 /**
@@ -51,7 +53,7 @@ interface generateBreadcrumbItemsProps {
  * @param {string} pathname - The current pathname
  * @returns {Breadcrumb.Item[]} - The breadcrumb items
  */
-function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbItemsProps): BreadcrumbItemType[] {
+function generateBreadcrumbItems({ pathname, labs, groups, hardware }: generateBreadcrumbItemsProps): BreadcrumbItemType[] {
   // Split the pathname into an array of path segments
   const pathnames = pathname.split("/").filter((x) => x);
 
@@ -76,6 +78,10 @@ function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbI
             const groupName = groups.get(parseInt(id!))?.[GroupFields.NAME];
             items[items.length - 1]!.title = groupName ?? `${id}`;
             break;
+          case "hardware":
+            const hardwareName = hardware.get(parseInt(id!))?.name;
+            items[items.length - 1]!.title = hardwareName ?? `${id}`;
+            break;
           default:
             const name = labs.get(parseInt(id!))?.[LaboratoryFields.NAME];
             items[items.length - 1]!.title = name ?? `${id}`;
@@ -99,9 +105,10 @@ function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbI
 interface CustomBreadcrumbProps {
   labs: Map<number, LaboratoryResponse>;
   groups: Map<number, GroupResponse>;
+  hardware: Map<number, HardwareResponse>;
 }
 
-export default function CustomBreadcrumb({ labs, groups }: CustomBreadcrumbProps) {
+export default function CustomBreadcrumb({ labs, groups, hardware }: CustomBreadcrumbProps) {
   const pathname = usePathname();
   if (!pathname) return null;
 
@@ -113,7 +120,7 @@ export default function CustomBreadcrumb({ labs, groups }: CustomBreadcrumbProps
   return (
     <Breadcrumb
       itemRender={itemRender}
-      items={generateBreadcrumbItems({pathname, labs, groups})}
+      items={generateBreadcrumbItems({pathname, labs, groups, hardware})}
       style={{ padding: 24 }}
     />
   );

@@ -12,17 +12,19 @@ import type { LaboratoryResponse } from "~/types/laboratory";
 import ManageGroupsTopButton from "../buttons/topButtons/ManageGroupsTopButton";
 import type { GroupResponse } from "~/types/group";
 import ManageHardwareTopButton from "../buttons/topButtons/ManageHardwareTopButton";
+import type { HardwareResponse } from "~/types/hardware";
 
 interface CustomMenuProps {
   labs: Map<number, LaboratoryResponse>;
   groups: Map<number, GroupResponse>;
+  hardware: Map<number, HardwareResponse>;
 }
 
 /**
  * Client menu component
  * @returns The client menu component
  */
-export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
+export default async function CustomMenu({ labs, groups, hardware }: CustomMenuProps) {
   const session = await auth();
 
   const { role } = session!.user;
@@ -71,7 +73,7 @@ export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
     },
     {
       key: "breadcrumb",
-      label: <CustomBreadcrumb labs={labs} groups={groups} />,
+      label: <CustomBreadcrumb labs={labs} groups={groups} hardware={hardware} />,
       style: { fontSize: 18, fontWeight: "bold"},
     },
     {
