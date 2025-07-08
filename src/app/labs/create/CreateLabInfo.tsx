@@ -24,7 +24,7 @@ export default function CreateLabInfo() {
     if (response) {
       api.success({
         message: "Laboratório criado com sucesso",
-        description: "Clique para ver o laboratório ou gerenciar grupos e hardware",
+        description: "Vai ser redirecionado para a página de configurações do laboratório em 5 segundos para gerir grupos e hardware",
         ...argsProps
       })
 

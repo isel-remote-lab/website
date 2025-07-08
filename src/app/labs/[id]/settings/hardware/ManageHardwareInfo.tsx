@@ -6,7 +6,8 @@ import { ArrowLeftOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icon
 import type { LaboratoryResponse } from '~/types/laboratory';
 import { HardwareFields, HardwareRequest, HardwareResponse } from '~/types/hardware';
 import { createHardware, getHardware, getLabHardware } from '~/server/services/hardwareService';
-import { Button, Card, Form, Select, Tooltip, Typography } from 'antd';
+import { Button, Card, Form, Select, Tooltip, Typography, notification } from 'antd';
+import type { NotificationPlacement } from 'antd/es/notification/interface';
 import HardwareInfoForm from '~/app/components/hardware/HardwareInfoForm';
 import { addHardwareToLab, removeHardwareFromLab } from '~/server/services/labsService';
 import Link from 'next/link';
@@ -22,6 +23,12 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
   const [loaded, setLoaded] = useState(false);
   const [createHardwarePage, setCreateHardwarePage] = useState(false);
   const createHardwareButtonString = "Adicionar Hardware";
+  const [api, contextHolder] = notification.useNotification()
+
+  const argsProps = {
+    placement: "top" as NotificationPlacement,
+    duration: 5
+  }
 
   /**
    * Fetch the hardware from the database
@@ -56,11 +63,26 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
    */
   const onCreateHardware = async (values: unknown) => {
     const response = await createHardware(values as HardwareRequest);
-    if (lab) {
-      await addHardwareToLab(lab.id, response.id);
+    if (response) {
+      if (lab) {
+        await addHardwareToLab(lab.id, response.id);
+      }
+      
+      api.success({
+        message: "Hardware criado com sucesso",
+        description: lab ? "O hardware foi criado e adicionado ao laboratório" : "O hardware foi criado com sucesso",
+        ...argsProps
+      })
+      
+      // When the createHardwarePage is false, the useEffect will fetch the hardware again
+      setCreateHardwarePage(false);
+    } else {
+      api.error({
+        message: "Erro ao criar hardware",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
     }
-    // When the createHardwarePage is false, the useEffect will fetch the hardware again
-    setCreateHardwarePage(false);
   };
 
   /**
@@ -68,9 +90,23 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
    * @param values - The values of the hardware to be added to the lab
    */
   const onAddHardwareToLab = async (values: unknown) => {
-    const hardwareId = (values as { hardware: number }).hardware;
-    await addHardwareToLab(lab!.id, hardwareId);
-    await fetchHardware();
+    try {
+      const hardwareId = (values as { hardware: number }).hardware;
+      await addHardwareToLab(lab!.id, hardwareId);
+      
+      api.success({
+        message: "Hardware adicionado com sucesso",
+        description: "O hardware foi adicionado ao laboratório",
+        ...argsProps
+      })
+      await fetchHardware();
+    } catch (error) {
+      api.error({
+        message: "Erro ao adicionar hardware",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
+    }
   };
 
   /**
@@ -97,27 +133,44 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
    * @param hardwareId - The id of the hardware to be removed from the lab
    */
   const onRemoveHardwareFromLab = async (hardwareId: number) => {
-    await removeHardwareFromLab(lab!.id, hardwareId);
-    await fetchHardware();
+    try {
+      await removeHardwareFromLab(lab!.id, hardwareId);
+      
+      api.success({
+        message: "Hardware removido com sucesso",
+        description: "O hardware foi removido do laboratório",
+        ...argsProps
+      })
+      await fetchHardware();
+    } catch (error) {
+      api.error({
+        message: "Erro ao remover hardware",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
+    }
   }
 
   // If the user is creating a new hardware, show the form to create it
   if (createHardwarePage) {
     return (
-      <div>
-        <Button 
-          type="default"
-          style={{ marginBottom: 16 }}
-          onClick={() => setCreateHardwarePage(false)}
-        >
-          <ArrowLeftOutlined />
-          Voltar
-        </Button>
-        <HardwareInfoForm
-          submitButtonText={createHardwareButtonString}
-          onFinish={onCreateHardware}
-        />
-      </div>
+      <>
+        {contextHolder}
+        <div>
+          <Button 
+            type="default"
+            style={{ marginBottom: 16 }}
+            onClick={() => setCreateHardwarePage(false)}
+          >
+            <ArrowLeftOutlined />
+            Voltar
+          </Button>
+          <HardwareInfoForm
+            submitButtonText={createHardwareButtonString}
+            onFinish={onCreateHardware}
+          />
+        </div>
+      </>
     );
   }
 
@@ -142,6 +195,7 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
 
   return (
     <>
+      {contextHolder}
       <Button 
         type="default"
         style={{ marginBottom: 16, width: "100%" }}

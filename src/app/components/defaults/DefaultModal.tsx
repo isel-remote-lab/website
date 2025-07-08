@@ -33,7 +33,11 @@ export default function DefaultModal({
   const router = useRouter();
 
   function handleCancel() { 
-    router.back()
+    try {
+      router.back()
+    } catch (error) {
+      router.push("/")
+    }
   }
 
   return (

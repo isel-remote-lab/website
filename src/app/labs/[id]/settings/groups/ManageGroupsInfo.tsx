@@ -1,6 +1,7 @@
 "use client";
 
-import { List, Typography, Button, Card, Form, Select, Tooltip } from 'antd';
+import { List, Typography, Button, Card, Form, Select, Tooltip, notification } from 'antd';
+import type { NotificationPlacement } from 'antd/es/notification/interface';
 import { createGroup, deleteGroup, getLabGroups, getUserGroups } from '~/server/services/groupsService';
 import { addGroupToLab, removeGroupFromLab } from '~/server/services/labsService';
 import { useEffect, useState } from 'react';
@@ -23,6 +24,12 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   const [createGroupPage, setCreateGroupPage] = useState(false);
   const router = useRouter();
   const createGroupButtonString = "Criar Grupo";
+  const [api, contextHolder] = notification.useNotification()
+
+  const argsProps = {
+    placement: "top" as NotificationPlacement,
+    duration: 5
+  }
 
   /**
    * Fetch the groups from the database
@@ -57,11 +64,26 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
    */
   const onCreateGroup = async (values: unknown) => {
     const response = await createGroup(values as GroupRequest);
-    if (lab) {
-      await addGroupToLab(response.id, lab.id);
+    if (response) {
+      if (lab) {
+        await addGroupToLab(response.id, lab.id);
+      }
+      
+      api.success({
+        message: "Grupo criado com sucesso",
+        description: lab ? "O grupo foi criado e adicionado ao laboratório" : "O grupo foi criado com sucesso",
+        ...argsProps
+      })
+      
+      // When the showForm is false, the useEffect will fetch the groups again
+      setCreateGroupPage(false);
+    } else {
+      api.error({
+        message: "Erro ao criar grupo",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
     }
-    // When the showForm is false, the useEffect will fetch the groups again
-    setCreateGroupPage(false);
   };
 
   /**
@@ -69,9 +91,23 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
    * @param values - The values of the group to be added to the lab
    */
   const onAddGroupToLab = async (values: unknown) => {
-    const groupId = (values as { group: number }).group;
-    await addGroupToLab(lab!.id, groupId);
-    await fetchGroups();
+    try {
+      const groupId = (values as { group: number }).group;
+      await addGroupToLab(lab!.id, groupId);
+      
+      api.success({
+        message: "Grupo adicionado com sucesso",
+        description: "O grupo foi adicionado ao laboratório",
+        ...argsProps
+      })
+      await fetchGroups();
+    } catch (error) {
+      api.error({
+        message: "Erro ao adicionar grupo",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
+    }
   };
 
   /**
@@ -98,31 +134,48 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
    * @param groupId - The id of the group to be removed from the lab
    */
   const onRemoveGroupFromLab = async (groupId: number) => {
-    if (lab) {
-      await removeGroupFromLab(lab.id, groupId);
-    } else {
-      await deleteGroup(groupId);
+    try {
+      if (lab) {
+        await removeGroupFromLab(lab.id, groupId);
+      } else {
+        await deleteGroup(groupId);
+      }
+      
+      api.success({
+        message: lab ? "Grupo removido com sucesso" : "Grupo eliminado com sucesso",
+        description: lab ? "O grupo foi removido do laboratório" : "O grupo foi eliminado permanentemente",
+        ...argsProps
+      })
+      await fetchGroups();
+    } catch (error) {
+      api.error({
+        message: lab ? "Erro ao remover grupo" : "Erro ao eliminar grupo",
+        description: "Por favor, tente novamente mais tarde",
+        ...argsProps
+      })
     }
-    await fetchGroups();
   }
 
   // If the user is creating a new group, show the form to create it
   if (createGroupPage) {
     return (
-      <div>
-        <Button 
-          type="default"
-          style={{ marginBottom: 16 }}
-          onClick={() => setCreateGroupPage(false)}
-        >
-          <ArrowLeftOutlined />
-          Voltar
-        </Button>
-        <GroupInfoForm
-          submitButtonText={createGroupButtonString}
-          onFinish={onCreateGroup}
-        />
-      </div>
+      <>
+        {contextHolder}
+        <div>
+          <Button 
+            type="default"
+            style={{ marginBottom: 16 }}
+            onClick={() => setCreateGroupPage(false)}
+          >
+            <ArrowLeftOutlined />
+            Voltar
+          </Button>
+          <GroupInfoForm
+            submitButtonText={createGroupButtonString}
+            onFinish={onCreateGroup}
+          />
+        </div>
+      </>
     );
   }
 
@@ -134,7 +187,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   function cardActions(groupId: number) {
     const title = lab ? "Remover Grupo do Laboratório" : "Eliminar Grupo";
     const icon = lab ? <MinusOutlined /> : <DeleteOutlined />;
-    const onClick = lab ? () => onRemoveGroupFromLab(groupId) : () => deleteGroup(groupId);
+    const onClick = lab ? () => onRemoveGroupFromLab(groupId) : () => onRemoveGroupFromLab(groupId);
     const key = lab ? "removeGroupFromLab" : "deleteGroup";
     return [
         <Tooltip title={title} key={key}>
@@ -147,6 +200,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
 
   return (
     <>
+      {contextHolder}
       <Button 
         type="default"
         style={{ marginBottom: 16, width: "100%" }}

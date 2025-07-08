@@ -50,11 +50,10 @@ export default function DashboardInfo({ labs }: DashboardInfoProps) {
       <Title level={2}>Os meus laboratórios</Title>
       <Divider />
       <Flex wrap gap="small">
-        {labs.map((lab, index) => {
-          const labId = index + 1;
+        {labs.map((lab) => {
           return (
-            <Card key={labId} style={cardStyle} actions={getLabActions(labId)}>
-              <Link href={`/labs/${labId}`} key={labId}>
+            <Card key={lab.id} style={cardStyle} actions={getLabActions(lab.id)}>
+              <Link href={`/labs/${lab.id}`} key={lab.id}>
                 <Title level={4} style={{ textAlign: "center" }}>
                   {lab[LaboratoryFields.NAME]}
                 </Title>

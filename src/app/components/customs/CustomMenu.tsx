@@ -95,13 +95,13 @@ export default async function CustomMenu({ labs, groups }: CustomMenuProps) {
       },
     },
     {
-      key: "manage-hardware",
-      label: <ManageHardwareTopButton />,
+      key: "manage-groups",
+      label: <ManageGroupsTopButton />,
       style: { marginLeft: "auto" },
     },
     {
-      key: "manage-groups",
-      label: <ManageGroupsTopButton />,
+      key: "manage-hardware",
+      label: <ManageHardwareTopButton />,
       //style: { marginLeft: "auto" },
     },
     {
