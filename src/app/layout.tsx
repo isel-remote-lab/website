@@ -42,8 +42,8 @@ export default async function RootLayout({
     redirect("/api/auth/signin");
   }
   const role = session.user.role;
-  const labs = await getAllLabs();
-  const groups = await getUserGroups();
+  const labMap = new Map((await getAllLabs()).map((lab) => [lab.id, lab]));
+  const groups = new Map((await getUserGroups()).map((group) => [group.id, group]));
 
   return (
     <html>
@@ -51,7 +51,7 @@ export default async function RootLayout({
         <SessionProvider>
           <CheckLogin>
             <TempRoleProvider role={role}>
-                <Menu labs={labs} groups={groups} />
+                <Menu labs={labMap} groups={groups} />
                 <Content style={{ padding: 24 }}>
                   {children}
                   {modal}

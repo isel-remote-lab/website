@@ -14,8 +14,8 @@ import type { GroupResponse } from "~/types/group";
 import ManageHardwareTopButton from "../buttons/topButtons/ManageHardwareTopButton";
 
 interface CustomMenuProps {
-  labs: LaboratoryResponse[];
-  groups: GroupResponse[];
+  labs: Map<number, LaboratoryResponse>;
+  groups: Map<number, GroupResponse>;
 }
 
 /**

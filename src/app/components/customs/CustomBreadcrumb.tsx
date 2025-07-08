@@ -42,8 +42,8 @@ const translations: Record<string, string> = {
 
 interface generateBreadcrumbItemsProps {
   pathname: string;
-  labs: LaboratoryResponse[];
-  groups: GroupResponse[];
+  labs: Map<number, LaboratoryResponse>;
+  groups: Map<number, GroupResponse>;
 }
 
 /**
@@ -73,12 +73,12 @@ function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbI
 
         switch (pathnames[i - 1]) {
           case "groups":
-            const groupName = groups[parseInt(id!) - 1]?.[GroupFields.NAME];
-            items[items.length - 1]!.title = groupName ?? `Grupo ${id}`;
+            const groupName = groups.get(parseInt(id!))?.[GroupFields.NAME];
+            items[items.length - 1]!.title = groupName ?? `${id}`;
             break;
           default:
-            const name = labs[parseInt(id!) - 1]?.[LaboratoryFields.NAME];
-            items[items.length - 1]!.title = name ?? `Lab ${id}`;
+            const name = labs.get(parseInt(id!))?.[LaboratoryFields.NAME];
+            items[items.length - 1]!.title = name ?? `${id}`;
             break;
         }
       } else {
@@ -97,11 +97,11 @@ function generateBreadcrumbItems({ pathname, labs, groups }: generateBreadcrumbI
 }
 
 interface CustomBreadcrumbProps {
-  labs: LaboratoryResponse[];
-  groups: GroupResponse[];
+  labs: Map<number, LaboratoryResponse>;
+  groups: Map<number, GroupResponse>;
 }
 
-export default function CustomBreadcrumb({ labs = [], groups = [] }: CustomBreadcrumbProps) {
+export default function CustomBreadcrumb({ labs, groups }: CustomBreadcrumbProps) {
   const pathname = usePathname();
   if (!pathname) return null;
 
