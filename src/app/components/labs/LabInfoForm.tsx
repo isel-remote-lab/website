@@ -2,7 +2,7 @@ import type { LaboratoryResponse } from "~/types/laboratory";
 import DefaultForm from "../defaults/DefaultForm";
 import Link from "next/link";
 import { Button, Tooltip } from "antd";
-import { LaptopOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LaptopOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 
 interface LabInfoFormProps {
   initialValues?: LaboratoryResponse;
@@ -37,6 +37,13 @@ export default function LabInfoForm({
                 <LaptopOutlined />
               </Button>
             </Link>
+          </Tooltip>
+          <Tooltip title="Eliminar laboratório" key="delete">
+            <Button type="default" style={{ marginLeft: 8 }} danger onClick={() => {
+              console.log("delete")
+            }}> 
+              <DeleteOutlined />
+            </Button>
           </Tooltip>
         </>
       )}

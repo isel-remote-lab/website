@@ -28,7 +28,7 @@ export default function EditLabInfo({ labId, initialValues }: EditLabInfoProps) 
     <LabInfoForm
       initialValues={initialValues}
       onFinish={onFinish}
-      submitButtonText="Atualizar laboratório"
+      submitButtonText="Atualizar"
     />
   );
 }
