@@ -1,11 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { notification } from "antd";
+import { Card, notification, Result, Typography } from "antd";
 import type { NotificationPlacement } from "antd/es/notification/interface";
 import { Uris } from "~/server/services/uris";
 import LabTerminal from "./LabTerminal";
-import Text from "antd/es/typography/Text";
 import { useRouter } from "next/navigation";
 
 interface LabInfoProps {
@@ -35,8 +34,8 @@ export default function LabInfo({ id }: LabInfoProps) {
     // On error, show an error notification
     sse.onerror = () => {
       api.error({
-        message: "Error",
-        description: "Error connecting to the lab session, please try again later",
+        message: "Erro ao conectar",
+        description: "Erro ao conectar ao laboratório, por favor tente novamente mais tarde.",
         placement: "top",
         onClose: () => router.push("/")
       })
@@ -59,47 +58,37 @@ export default function LabInfo({ id }: LabInfoProps) {
     
     // New messages with the remaining time
     sse.addEventListener("message", (event) => {
-      try {
-        const data: RemainingTimeData = JSON.parse(event.data)
-        const timeUnit = data.timeUnit.toLowerCase()
-        const timeText = data.remainingTime === 1 ? timeUnit.slice(0, -1) : timeUnit
-        setTimeText(timeText)
-        
-        const messageArgs = {
-          placement: "top" as NotificationPlacement,
-        }
+      const data: RemainingTimeData = JSON.parse(event.data)
+      const timeUnit = data.timeUnit.toLowerCase()
+      const timeText = data.remainingTime === 1 ? timeUnit.slice(0, -1) : timeUnit
+      setTimeText(timeText)
+      
+      const messageArgs = {
+        placement: "top" as NotificationPlacement,
+      }
 
-        setRemainingTime(data.remainingTime)
+      setRemainingTime(data.remainingTime)
 
-        switch (data.type) {
-          case "session_warning":
+      switch (data.type) {
+        case "session_warning":
+          if (data.remainingTime > 0) {
             api.info({
-              message: "Session Time Warning",
-              description: `Your lab session will end in ${data.remainingTime} ${timeText}`,
+              message: "Aviso de tempo de sessão",
+              description: `A sessão irá terminar em ${data.remainingTime} ${timeText}. Não saia ou recarregue a página.`,
               duration: 5,
               ...messageArgs
             });
             setWaitingQueuePos(0)
-            break;
-          case "session_ending":
-            /*api.warning({
-              message: "Session Ending Soon",
-              description: `Your lab session will end in ${data.remainingTime} ${timeText}`,
-              ...messageArgs
-            });*/
-            break;
-          case "session_ended":
+          } else {
             api.error({
-              message: "Session Ended",
-              description: "Your lab session has ended",
+              message: "Sessão encerrada",
+              description: "A sessão foi encerrada",
               ...messageArgs
             });
-            break;
-          default:
-            break;
-        }
-      } catch (error) {
-        console.error("Error parsing message data:", error)
+          }
+          break;
+        default:
+          break;
       }
     })
 
@@ -111,10 +100,22 @@ export default function LabInfo({ id }: LabInfoProps) {
   return (
     <>
       {contextHolder}
-      {waitingQueuePos > 0 ? <Text>You are on the waiting queue on position {waitingQueuePos}</Text> :
+      {waitingQueuePos > 0 ? (
+        <Result
+          status="info"
+          title="Está na fila de espera"
+          subTitle={`Está na fila de espera na posição ${waitingQueuePos}. Por favor aguarde e não saia ou recarregue a página.`}
+        />
+      ) :
         <>
-          {remainingTime > 0 && <Text>Remaining time: {remainingTime} {timeText}</Text>}
-          {websocketURI && <LabTerminal websocketURI={websocketURI} />}
+          {remainingTime > 0 && (
+            <Typography.Title level={5}>Tempo restante: {remainingTime} {timeText}</Typography.Title>
+          )}
+          {websocketURI && (
+            <Card style={{ margin: "auto", padding: 20 }}>
+              <LabTerminal websocketURI={websocketURI} />
+            </Card>
+          )}
         </>
       }
     </>
