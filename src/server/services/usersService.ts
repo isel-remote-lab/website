@@ -1,31 +1,7 @@
 import { Uris } from "~/server/services/uris";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
-import type { SignInResponse, UpdateUserRoleRequest, UserRequest, UserResponse } from "~/types/user";
-import { fetchDataOnServerWithAuthHeader, replaceParams } from "./services";
-import { setCookies } from "../auth/config";
-import axios from "axios";
-
-/**
- * Sign in a user
- * @param userData - User data
- * @returns User data
- */
-export async function signIn(userData: UserRequest): Promise<SignInResponse> {
-  const uri = Uris.LOGIN;
-    try {
-      const response = await axios.post(uri, userData, {
-        headers: {
-          'X-API-Key': process.env.API_KEY || '',
-        },
-      });
-    
-      await setCookies(response);
-      return response.data.data;
-    } catch (error: any) {
-      console.error('Error signing in:', error);
-      throw new Error(`Failed to sign in: ${error.message}`);
-    }
-} 
+import type { UpdateUserRoleRequest, UserResponse } from "~/types/user";
+import { fetchDataOnServerWithAuthHeader, replaceParams } from "./services"; 
 
 /**
  * Sign out the current user
@@ -62,15 +38,17 @@ export async function getUserByEmail(email: string): Promise<UserResponse> {
 
 /**
  * Update a user's role
- * @param data - User email and new role
- * @returns Updated user data
+ * @param userId - User ID
+ * @param data - User role data
+ * @returns Success response
  */
 export async function updateUserRole(
+  userId: string,
   data: UpdateUserRoleRequest,
-): Promise<UserResponse> {
-  const uri = Uris.Users.UPDATE_ROLE;
-  return (await fetchDataOnServerWithAuthHeader(uri, {
-    method: "PUT",
+): Promise<void> {
+  const uri = await replaceParams(Uris.Users.UPDATE_ROLE, { id: userId });
+  await fetchDataOnServerWithAuthHeader(uri, {
+    method: "PATCH",
     data,
-  })) as UserResponse;
+  });
 }

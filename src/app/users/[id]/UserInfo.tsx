@@ -12,7 +12,7 @@ import { Role } from "~/types/role";
 import ChangeRoleDropdown from "~/app/components/dropdowns/ChangeRoleDropdown";
 import { useTempRole } from "~/contexts/TempRoleContext";
 import { useSession } from "next-auth/react";
-import { type UserInfo } from "~/types/user";
+import { type User } from "~/types/user";
 
 export const avatarSize = 250;
 
@@ -20,9 +20,10 @@ export default function UserInfo({
   name,
   email,
   role,
+  id,
   image,
   createdAt,
-}: UserInfo) {
+}: User) {
   const titles = {
     [Role.STUDENT]: "Aluno",
     [Role.TEACHER]: "Professor",
@@ -64,7 +65,7 @@ export default function UserInfo({
           </Title>
           {isAdminAndNotOwnProfile && (
             <Tooltip title="Mudar role">
-              <ChangeRoleDropdown role={role} onRoleChange={() => console.log("role changed")} />
+              <ChangeRoleDropdown role={role} id={id.toString()} userName={name}/>
             </Tooltip>
           )}
         </Flex>

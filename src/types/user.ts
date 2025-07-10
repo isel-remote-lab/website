@@ -1,4 +1,4 @@
-import type { Role } from "./role";
+import type { Role, RoleLetter } from "./role";
 
 /**
  * User info interface
@@ -43,6 +43,5 @@ export type SignInResponse = {
  * Update user role request data interface
  */
 export type UpdateUserRoleRequest = {
-  email: string;
-  role: Role;
+  role: RoleLetter;
 };

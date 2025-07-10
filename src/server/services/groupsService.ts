@@ -1,3 +1,5 @@
+"use server";
+
 import type { GroupRequest, GroupResponse } from "~/types/group";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";

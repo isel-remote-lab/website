@@ -1,3 +1,5 @@
+"use server";
+
 import type { HardwareRequest, HardwareResponse } from "~/types/hardware";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";

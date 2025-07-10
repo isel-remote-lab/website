@@ -4,10 +4,7 @@ import "../../env.js";
 import { type RoleLetter, roleLetterToRole } from "~/types/role";
 import type { UserRequest, UserResponse } from "~/types/user.js";
 import { signOut } from "../services/usersService";
-import { AxiosResponse } from "axios";
-import { parse } from "cookie";
-import { cookies } from "next/headers";
-import { signIn } from "../services/usersService";
+import { signIn } from "../services/authService";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -157,27 +154,3 @@ export const authConfig = {
     },
   },
 } satisfies NextAuthConfig;
-
-/**
- * Set cookies from the response
- * @param response - The response from the fetch request
- */
-export const setCookies = async (response: AxiosResponse) => {
-  const headerCookies = response.headers["set-cookie"];
-  if (headerCookies && headerCookies.length > 0) {
-    headerCookies.forEach(async (cookie: string) => {
-      const parsedCookie = parse(cookie);
-      const [cookieName, cookieValue] = Object.entries(parsedCookie)[0] as [
-        string,
-        string,
-      ];
-      const httpOnly = cookie.includes("httponly;");
-
-      (await cookies()).set({
-        name: cookieName,
-        value: cookieValue,
-        httpOnly: httpOnly,
-      });
-    });
-  }
-}

@@ -4,7 +4,7 @@ import { IdcardOutlined, ToolOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { useTempRole } from "~/contexts/TempRoleContext";
 import { Role } from "~/types/role";
-import { RoleDropdownMenu } from "./RoleDropdownMenu";
+import { TempRoleDropdownMenu } from "./RoleDropdownMenu";
 
 interface RoleDropdownProps {
   role: Role;
@@ -20,11 +20,11 @@ export default function RoleDropdown({ role }: RoleDropdownProps) {
       {role !== Role.STUDENT && (
         <Dropdown
           menu={{
-            items: RoleDropdownMenu({
+            items: TempRoleDropdownMenu({
               currentRole: tempRole,
               userRole: role,
+              id: "",
               onRoleChange: setTempRole,
-              isTemporary: true,
             }),
           }}
           trigger={["hover"]}

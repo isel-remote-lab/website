@@ -1,3 +1,5 @@
+"use server";
+
 import { fetchDataOnServerWithAuthHeader } from "~/server/services/services";
 import { Uris } from "~/server/services/uris";
 import { replaceParams } from "~/server/services/services";

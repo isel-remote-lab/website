@@ -63,7 +63,7 @@ export const Uris = {
     /**
      * URI for updating a user's role
      */
-    UPDATE_ROLE: `${USERS_URI}/role`,
+    UPDATE_ROLE: `${USERS_URI}/{id}/role`,
   },
 
   /**

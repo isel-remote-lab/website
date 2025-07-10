@@ -2,10 +2,9 @@
 
 import { updateHardware } from "~/server/services/hardwareService";
 import { HardwareRequest, type HardwareResponse } from "~/types/hardware";
-import { notification } from "antd";
-import type { NotificationPlacement } from "antd/es/notification/interface";
 import { useRouter } from "next/navigation";
 import HardwareInfoForm from "~/app/components/hardware/HardwareInfoForm";
+import { useNotifications } from "~/hooks/useNotifications";
 
 interface EditHardwareInfoProps {
   hardwareId: number;
@@ -13,13 +12,8 @@ interface EditHardwareInfoProps {
 }
 
 export default function EditHardwareInfo({ hardwareId, initialValues }: EditHardwareInfoProps) {
-  const [api, contextHolder] = notification.useNotification()
+  const { contextHolder, showSuccess, showError } = useNotifications();
   const router = useRouter();
-
-  const argsProps = {
-    placement: "top" as NotificationPlacement,
-    duration: 5
-  }
 
   const onFinish = async (values: unknown) => {
     const hardwareData = values as HardwareRequest;
@@ -27,18 +21,16 @@ export default function EditHardwareInfo({ hardwareId, initialValues }: EditHard
     const response = await updateHardware(hardwareId, hardwareData);
 
     if (response) {
-      api.success({
+      showSuccess({
         message: "Hardware atualizado com sucesso",
-        description: "As alterações foram aplicadas com sucesso",
-        ...argsProps
+        description: "As alterações foram aplicadas com sucesso"
       })
       // TODO: Close modal when the lab is updated
       router.back();
     } else {
-      api.error({
+      showError({
         message: "Erro ao atualizar hardware",
-        description: "Por favor, tente novamente mais tarde",
-        ...argsProps
+        description: "Por favor, tente novamente mais tarde"
       })
     }
   };

@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { Card, notification, Result, Typography } from "antd";
-import type { NotificationPlacement } from "antd/es/notification/interface";
+import { Card, Result, Typography } from "antd";
 import { Uris } from "~/server/services/uris";
 import LabTerminal from "./LabTerminal";
 import { useRouter } from "next/navigation";
+import { useNotifications } from "~/hooks/useNotifications";
 
 interface LabInfoProps {
   id: string
@@ -20,7 +20,7 @@ interface RemainingTimeData {
 
 export default function LabInfo({ id }: LabInfoProps) {
   const [websocketURI, setWebsocketURI] = useState<string>("")
-  const [api, contextHolder] = notification.useNotification()
+  const { contextHolder, showError, showInfo } = useNotifications();
   const [remainingTime, setRemainingTime] = useState<number>(0)
   const [timeText, setTimeText] = useState<string>("")
   const [waitingQueuePos, setWaitingQueuePos] = useState<number>(0)
@@ -33,11 +33,11 @@ export default function LabInfo({ id }: LabInfoProps) {
   
     // On error, show an error notification
     sse.onerror = () => {
-      api.error({
+      showError({
         message: "Erro ao conectar",
         description: "Erro ao conectar ao laboratório, por favor tente novamente mais tarde.",
-        placement: "top",
-        onClose: () => router.push("/")
+        onClose: () => router.refresh(),
+        onClick: () => router.push("/")
       })
       sse.close()
     }
@@ -60,30 +60,36 @@ export default function LabInfo({ id }: LabInfoProps) {
     sse.addEventListener("message", (event) => {
       const data: RemainingTimeData = JSON.parse(event.data)
       const timeUnit = data.timeUnit.toLowerCase()
-      const timeText = data.remainingTime === 1 ? timeUnit.slice(0, -1) : timeUnit
+      
+      // Translate time units to Portuguese
+      let timeText = ""
+      if (timeUnit === "minutes" || timeUnit === "minute") {
+        timeText = data.remainingTime === 1 ? "minuto" : "minutos"
+      } else if (timeUnit === "seconds" || timeUnit === "second") {
+        timeText = data.remainingTime === 1 ? "segundo" : "segundos"
+      } else if (timeUnit === "hours" || timeUnit === "hour") {
+        timeText = data.remainingTime === 1 ? "hora" : "horas"
+      } else {
+        // Fallback to original logic if unit is not recognized
+        timeText = data.remainingTime === 1 ? timeUnit.slice(0, -1) : timeUnit
+      }
+      
       setTimeText(timeText)
       
-      const messageArgs = {
-        placement: "top" as NotificationPlacement,
-      }
-
       setRemainingTime(data.remainingTime)
 
       switch (data.type) {
         case "session_warning":
           if (data.remainingTime > 0) {
-            api.info({
+            showInfo({
               message: "Aviso de tempo de sessão",
-              description: `A sessão irá terminar em ${data.remainingTime} ${timeText}. Não saia ou recarregue a página.`,
-              duration: 5,
-              ...messageArgs
+              description: `A sessão irá terminar em ${data.remainingTime} ${timeText}. Não saia ou recarregue a página.`
             });
             setWaitingQueuePos(0)
           } else {
-            api.error({
+            showError({
               message: "Sessão encerrada",
-              description: "A sessão foi encerrada",
-              ...messageArgs
+              description: "A sessão foi encerrada"
             });
           }
           break;
@@ -95,7 +101,7 @@ export default function LabInfo({ id }: LabInfoProps) {
     return () => {
       sse.close()
     }
-  }, [api])
+  }, [showError, showInfo])
 
   return (
     <>
