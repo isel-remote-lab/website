@@ -1,10 +1,9 @@
 import { Button, Form, Select } from "antd";
-import { FormItemConfig } from "~/types/form";
-import { GroupFields } from "~/types/group";
+import { GroupFields, type Group } from "~/types/group";
 
 interface AddElementFormProps {
-  elements: any[];
-  allElements: any[];
+  elements: Group[];
+  allElements: Group[];
   onFinish: (values: unknown) => Promise<void>;
 }
 
@@ -12,7 +11,7 @@ interface AddElementFormProps {
    * Form to add a group to the lab
    * @returns The form to add a group to the lab
    */
-export default function AddElementForm({ onFinish, elements, allElements, elementName }: AddElementFormProps) {
+export default function AddElementForm({ onFinish, elements, allElements }: AddElementFormProps) {
     const filteredElements = elements.filter((element) => !allElements.some((e) => e.id === element.id));
 
     return (

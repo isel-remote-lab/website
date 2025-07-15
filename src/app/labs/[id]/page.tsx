@@ -1,4 +1,3 @@
-import DefaultPage from "~/app/components/defaults/DefaultPage";
 import LabInfo from "./LabInfo";
 
 /**

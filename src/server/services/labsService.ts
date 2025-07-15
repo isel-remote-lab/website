@@ -4,7 +4,7 @@ import { fetchDataOnServerWithAuthHeader } from "~/server/services/services";
 import { Uris } from "~/server/services/uris";
 import { replaceParams } from "~/server/services/services";
 import type { LaboratoryRequest, LaboratoryResponse } from "~/types/laboratory";
-import { GroupResponse } from "~/types/group";
+import type { GroupResponse } from "~/types/group";
 
 /**
  * Create a new laboratory
@@ -73,7 +73,7 @@ export async function getLabGroups(labId: number): Promise<GroupResponse[]> {
  */
 export async function addGroupToLab(labId: number, groupId: number): Promise<void> {
   const uri = await replaceParams(Uris.Groups.GET_ALL_FROM_LABORATORY, { id: labId });
-  const response = await fetchDataOnServerWithAuthHeader(uri, {
+  await fetchDataOnServerWithAuthHeader(uri, {
     method: "PATCH",
     data: { groupId: groupId },
   });
@@ -86,11 +86,10 @@ export async function addGroupToLab(labId: number, groupId: number): Promise<voi
  */
 export async function removeGroupFromLab(labId: number, groupId: number): Promise<void> {
   const uri = await replaceParams(Uris.Groups.GET_ALL_FROM_LABORATORY, { id: labId });
-  const response = await fetchDataOnServerWithAuthHeader(uri, {
+  await fetchDataOnServerWithAuthHeader(uri, {
     method: "DELETE",
     data: { groupId: groupId },
   });
-  console.log("REMOVE GROUP FROM LAB ", response)
 }
 
 /**

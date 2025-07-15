@@ -5,8 +5,8 @@ import { addGroupToLab, removeGroupFromLab, getLabById } from '~/server/services
 import { addUserToGroup, getGroupUsers, removeUserFromGroup } from '~/server/services/groupsService';
 import { createHardware, getHardware, getLabHardware, getHardwareById } from '~/server/services/hardwareService';
 import { addHardwareToLab, removeHardwareFromLab } from '~/server/services/labsService';
-import { GroupFields, type GroupRequest, type GroupResponse } from '~/types/group';
-import { HardwareFields, type HardwareRequest, type HardwareResponse } from '~/types/hardware';
+import { type GroupRequest, type GroupResponse } from '~/types/group';
+import { type HardwareRequest, type HardwareResponse } from '~/types/hardware';
 import { type UserResponse } from '~/types/user';
 import { type LaboratoryResponse } from '~/types/laboratory';
 

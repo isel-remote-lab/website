@@ -11,7 +11,7 @@ import { cookies } from "next/headers";
 export const setCookies = async (response: AxiosResponse) => {
   const headerCookies = response.headers["set-cookie"];
   if (headerCookies && headerCookies.length > 0) {
-    headerCookies.forEach(async (cookie: string) => {
+    for (const cookie of headerCookies) {
       const parsedCookie = parse(cookie);
       const [cookieName, cookieValue] = Object.entries(parsedCookie)[0] as [
         string,
@@ -24,7 +24,7 @@ export const setCookies = async (response: AxiosResponse) => {
         value: cookieValue,
         httpOnly: httpOnly,
       });
-    });
+    }
   }
 }
 
@@ -36,16 +36,22 @@ export const setCookies = async (response: AxiosResponse) => {
 export async function signIn(userData: UserRequest): Promise<SignInResponse> {
   const uri = Uris.LOGIN;
     try {
-      const response = await axios.post(uri, userData, {
+      const response = await axios.post<{
+        data: SignInResponse;
+      }>(uri, userData, {
         headers: {
-          'X-API-Key': process.env.API_KEY || '',
+          'X-API-Key': process.env.API_KEY ?? '',
         },
       });
     
       await setCookies(response);
       return response.data.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error signing in:', error);
-      throw new Error(`Failed to sign in: ${error.message}`);
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        throw new Error(`Failed to sign in: ${(error as { message: string }).message}`);
+      } else {
+        throw new Error('Failed to sign in: Unknown error');
+      }
     }
 } 

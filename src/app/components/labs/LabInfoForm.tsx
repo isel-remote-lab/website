@@ -42,7 +42,7 @@ async function onDeleteLab(
       description: "O laboratório foi eliminado permanentemente"
     });
     router.push("/");
-  } catch (error) {
+  } catch {
     showError({
       message: "Erro ao eliminar laboratório",
       description: "Por favor, tente novamente mais tarde"

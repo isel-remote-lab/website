@@ -1,16 +1,9 @@
 import DefaultFormSkeleton from "../defaults/DefaultFormSkeleton";
 
-interface HardwareInfoFormProps {
-  submitButtonText: string;
-}
-
-export default function HardwareInfoFormSkeleton({
-  submitButtonText,
-}: HardwareInfoFormProps) {
+export default function HardwareInfoFormSkeleton() {
   return (
     <DefaultFormSkeleton
       configType="hardware"
-      submitButtonText={submitButtonText}
     />
   );
 }

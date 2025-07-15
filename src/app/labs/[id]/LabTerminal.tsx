@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from 'react'
+import type { Terminal as XTermTerminal } from '@xterm/xterm'
 
 interface LabTerminalProps {
   websocketURI: string
@@ -8,7 +9,7 @@ interface LabTerminalProps {
 
 export default function LabTerminal(props: LabTerminalProps) {
   const terminalRef = useRef<HTMLDivElement>(null)
-  const terminal = useRef<any>(null)
+  const terminal = useRef<XTermTerminal | null>(null)
   const socket = useRef<WebSocket | null>(null)
   const isInitialized = useRef(false)
   
@@ -72,14 +73,14 @@ export default function LabTerminal(props: LabTerminalProps) {
       
       socket.current.onmessage = (event) => {
         try {
-          const message = JSON.parse(event.data)
+          const message = JSON.parse(event.data) as { type: string, data: string }
           if (message.type === 'output' && terminal.current) {
-            terminal.current.write(message.data)
+            terminal.current.write(String(message.data))
           }
-        } catch (e) {
+        } catch {
           // If it's not JSON, treat as raw data
           if (terminal.current) {
-            terminal.current.write(event.data)
+            terminal.current.write(typeof event.data === 'string' ? event.data : String(event.data))
           }
         }
       }
@@ -98,7 +99,7 @@ export default function LabTerminal(props: LabTerminalProps) {
       }
     }
 
-    initTerminal()
+    void initTerminal()
 
     return () => {
       if (socket.current) {
@@ -108,7 +109,7 @@ export default function LabTerminal(props: LabTerminalProps) {
         terminal.current.dispose()
       }
     }
-  }, [])
+  }, [props.websocketURI])
 
   return (
     <div>

@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { List } from 'antd';
 import { ArrowLeftOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import type { LaboratoryResponse } from '~/types/laboratory';
-import { HardwareFields, HardwareRequest, HardwareResponse } from '~/types/hardware';
+import { HardwareFields } from '~/types/hardware';
+import type { HardwareRequest, HardwareResponse } from '~/types/hardware';
 import { createHardware, getHardware, getLabHardware } from '~/server/services/hardwareService';
 import { Button, Card, Form, Select, Tooltip, Typography, notification } from 'antd';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
@@ -53,7 +54,7 @@ export default function ManageHardwareInfo({ lab }: ManageHardwareInfoProps) {
   useEffect(() => {
     // Only fetch the hardware if the form is not being shown and lab is available
     if (!createHardwarePage) {
-      fetchHardware();
+      void fetchHardware();
     }
   }, [createHardwarePage]);
 

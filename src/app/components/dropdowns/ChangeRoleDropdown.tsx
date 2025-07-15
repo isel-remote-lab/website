@@ -33,7 +33,7 @@ export default function ChangeRoleDropdown({
       
       // Refresh the page to show the updated role
       router.refresh();
-    } catch (error) {
+    } catch {
       showError({
         message: "Erro ao atualizar role",
         description: "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde"

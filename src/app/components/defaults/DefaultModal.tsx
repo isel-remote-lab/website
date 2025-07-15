@@ -35,7 +35,7 @@ export default function DefaultModal({
   function handleCancel() { 
     try {
       router.back()
-    } catch (error) {
+    } catch {
       router.push("/")
     }
   }

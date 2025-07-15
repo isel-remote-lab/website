@@ -3,7 +3,7 @@
 import type { GroupRequest, GroupResponse } from "~/types/group";
 import { fetchDataOnServerWithAuthHeader } from "./services";
 import { Uris } from "./uris";
-import { UserResponse } from "~/types/user";
+import type { UserResponse } from "~/types/user";
 
 /**
  * Get all groups
@@ -80,11 +80,10 @@ export async function getGroupUsers(groupId: number): Promise<UserResponse[]> {
  */
 export async function addUserToGroup(groupId: number, userId: number): Promise<void> {
     const uri = Uris.Groups.GROUP_USERS.replace("{id}", groupId.toString());
-    const response = await fetchDataOnServerWithAuthHeader(uri, {
+    await fetchDataOnServerWithAuthHeader(uri, {
         method: "PATCH",
         data: { userId: userId }
     }) as void;
-    console.log(response);
 }
 
 /**
@@ -95,7 +94,6 @@ export async function addUserToGroup(groupId: number, userId: number): Promise<v
  */
 export async function removeUserFromGroup(groupId: number, userId: number): Promise<UserResponse> {
     const uri = Uris.Groups.GROUP_USERS.replace("{id}", groupId.toString());
-    console.log("USER ID", userId);
     return await fetchDataOnServerWithAuthHeader(uri, {
         method: "DELETE",
         data: { userId: userId }

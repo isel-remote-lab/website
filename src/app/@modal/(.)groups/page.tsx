@@ -1,12 +1,11 @@
 import ManageGroupsInfo from "~/app/labs/[id]/settings/groups/ManageGroupsInfo";
 import DefaultModal from "~/app/components/defaults/DefaultModal";
-import { LaboratoryFields, type LaboratoryResponse } from "~/types/laboratory";
+import { LaboratoryFields } from "~/types/laboratory";
+import { getLabById } from "~/server/services/labsService";
 
-interface ManageGroupsModalProps {
-  lab?: LaboratoryResponse;
-}
-
-export default async function ManageGroupsModal({ lab }: ManageGroupsModalProps) {
+export default async function ManageGroupsModal({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const lab = id ? await getLabById(Number(id)) : undefined;
   const title = `Gerir Grupos${lab ? ` de ${lab[LaboratoryFields.NAME]}` : ""}`;
 
   return (

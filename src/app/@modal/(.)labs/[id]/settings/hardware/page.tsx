@@ -4,7 +4,7 @@ import ManageHardwareModal from "./ManageHardwareModal";
 
 export default async function ManageLabHardwareModal({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const initialValues = await getLabById(Number(id));
+  const initialValues = id ? await getLabById(Number(id)) : undefined;
 
   return (
     <div>

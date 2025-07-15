@@ -1,3 +1,5 @@
+"use client";
+
 import GroupInfoForm from "~/app/components/groups/GroupInfoForm";
 import { createGroupAction, addGroupToLabAction } from "~/app/components/defaults/entityServerActions";
 import { type GroupRequest } from "~/types/group";
@@ -34,7 +36,7 @@ export default function CreateGroupInfo({
       }
 
       // Show success message
-      const description = successDescription || 
+      const description = successDescription ?? 
         (labId 
           ? "O grupo foi criado e adicionado ao laboratório"
           : "O grupo foi criado e adicionado à sua lista"

@@ -1,16 +1,9 @@
 import DefaultFormSkeleton from "../defaults/DefaultFormSkeleton";
 
-interface GroupInfoFormProps {
-  submitButtonText: string;
-}
-
-export default function GroupInfoFormSkeleton({
-  submitButtonText,
-}: GroupInfoFormProps) {
+export default function GroupInfoFormSkeleton() {
   return (
     <DefaultFormSkeleton
       configType="group"
-      submitButtonText={submitButtonText}
     />
   );
 }

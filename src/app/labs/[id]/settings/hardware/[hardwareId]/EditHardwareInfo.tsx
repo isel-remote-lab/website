@@ -1,7 +1,8 @@
 "use client";
 
 import { updateHardware } from "~/server/services/hardwareService";
-import { HardwareRequest, type HardwareResponse } from "~/types/hardware";
+import type { HardwareResponse } from "~/types/hardware";
+import { HardwareRequest } from "~/types/hardware";
 import { useRouter } from "next/navigation";
 import HardwareInfoForm from "~/app/components/hardware/HardwareInfoForm";
 import { useNotifications } from "~/hooks/useNotifications";

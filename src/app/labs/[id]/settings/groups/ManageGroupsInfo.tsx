@@ -9,7 +9,6 @@ import { GroupFields, type GroupRequest, type GroupResponse } from '~/types/grou
 import { ArrowLeftOutlined, DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import GroupInfoForm from '~/app/components/groups/GroupInfoForm';
 import type { LaboratoryResponse } from '~/types/laboratory';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface ManageGroupsInfoProps {
@@ -22,7 +21,6 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
 
   const [loaded, setLoaded] = useState(false);
   const [createGroupPage, setCreateGroupPage] = useState(false);
-  const router = useRouter();
   const createGroupButtonString = "Criar Grupo";
   const [api, contextHolder] = notification.useNotification()
 
@@ -54,7 +52,7 @@ export default function ManageGroupsInfo({ lab }: ManageGroupsInfoProps) {
   useEffect(() => {
     // Only fetch the groups if the form is not being shown and lab is available
     if (!createGroupPage) {
-      fetchGroups();
+      void fetchGroups();
     }
   }, [createGroupPage]);
 

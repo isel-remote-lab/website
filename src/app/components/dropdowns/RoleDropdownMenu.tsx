@@ -21,7 +21,6 @@ interface ChangeRoleDropdownMenuProps {
 export function TempRoleDropdownMenu({
   currentRole,
   userRole,
-  id,
   onRoleChange,
 }: TempRoleDropdownMenuProps): MenuProps["items"] {
   const items: MenuProps["items"] = [];
@@ -66,7 +65,6 @@ export function TempRoleDropdownMenu({
 }
 
 export function ChangeRoleDropdownMenu({
-  currentRole,
   userRole,
   id,
   onRoleChange,

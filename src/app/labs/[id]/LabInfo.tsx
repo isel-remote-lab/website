@@ -43,22 +43,22 @@ export default function LabInfo({ id }: LabInfoProps) {
     }
 
     // Waiting queue messages
-    sse.addEventListener("waitingQueue", (event) => {
-      const data = JSON.parse(event.data)
-      setWaitingQueuePos(data.waitingQueuePos)
+    sse.addEventListener("waitingQueue", (event: MessageEvent) => {
+      const data = JSON.parse(event.data) as { waitingQueuePos: number };
+      setWaitingQueuePos(data.waitingQueuePos);
     })
 
     // Lab session starting messages
-    sse.addEventListener("labSessionStarting", (event) => {
-      const data = JSON.parse(event.data)
-      const hwIpAddress = data.hwIpAddress
-      const websocketURI = `ws://${hwIpAddress}/ws`
-      setWebsocketURI(websocketURI)
+    sse.addEventListener("labSessionStarting", (event: MessageEvent) => {
+      const data = JSON.parse(event.data) as { hwIpAddress: string };
+      const hwIpAddress = data.hwIpAddress;
+      const websocketURI = `ws://${hwIpAddress}/ws`;
+      setWebsocketURI(websocketURI);
     })
     
     // New messages with the remaining time
-    sse.addEventListener("message", (event) => {
-      const data: RemainingTimeData = JSON.parse(event.data)
+    sse.addEventListener("message", (event: MessageEvent) => {
+      const data = JSON.parse(event.data) as RemainingTimeData;
       const timeUnit = data.timeUnit.toLowerCase()
       
       // Translate time units to Portuguese
@@ -101,7 +101,7 @@ export default function LabInfo({ id }: LabInfoProps) {
     return () => {
       sse.close()
     }
-  }, [showError, showInfo])
+  }, [showError, showInfo, id, router])
 
   return (
     <>

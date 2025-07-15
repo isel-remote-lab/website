@@ -1,23 +1,13 @@
 import { Form, Skeleton } from "antd";
 import type { DomainConfig } from "~/types/domain";
-import React from "react";
+import type React from "react";
 
 /**
  * Default form props
  */
 interface DefaultFormSkeletonProps {
   configType: keyof DomainConfig;
-  submitButtonText: string;
-  children?: React.ReactNode;
-}
-
-/**
- * Default form skeleton props
- */
-interface DefaultFormSkeletonProps {
-  configType: keyof DomainConfig;
-  submitButtonText: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 /**
@@ -26,7 +16,6 @@ interface DefaultFormSkeletonProps {
  */
 export default function DefaultFormSkeleton({
   configType,
-  submitButtonText,
   children
 }: DefaultFormSkeletonProps) {
   // Get the number of fields to show
