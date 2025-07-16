@@ -40,7 +40,15 @@ export default function LabTerminal(props: LabTerminalProps) {
           console.log(hardware)
           */
 
-          terminal.current = new Terminal()
+          // Set white background and black text
+          terminal.current = new Terminal({
+            theme: {
+              background: '#ffffff',
+              foreground: '#000000',
+            },
+            cursorBlink: true, // Cursor should blink
+            cursorStyle: 'block', // Block cursor for visibility
+          })
           terminal.current.open(terminalRef.current)
           
           // Initialize WebSocket connection

@@ -6,6 +6,7 @@ import { Uris } from "~/server/services/uris";
 import LabTerminal from "./LabTerminal";
 import { useRouter } from "next/navigation";
 import { useNotifications } from "~/hooks/useNotifications";
+import DefaultPage from "~/app/components/defaults/DefaultPage";
 
 interface LabInfoProps {
   id: string
@@ -107,11 +108,13 @@ export default function LabInfo({ id }: LabInfoProps) {
     <>
       {contextHolder}
       {waitingQueuePos > 0 ? (
-        <Result
-          status="info"
-          title="Está na fila de espera"
-          subTitle={`Está na fila de espera na posição ${waitingQueuePos}. Por favor aguarde e não saia ou recarregue a página.`}
-        />
+        <DefaultPage>
+          <Result
+            status="info"
+            title="Está na fila de espera"
+            subTitle={`Está na fila de espera na posição ${waitingQueuePos}. Por favor aguarde e não saia ou recarregue a página.`}
+          />
+        </DefaultPage>
       ) :
         <>
           {remainingTime > 0 && (
