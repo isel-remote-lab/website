@@ -37,7 +37,7 @@ export default function ManageGroupInfo({ group }: ManageGroupInfoProps) {
   // Use effect to fetch the users from the database when the component is mounted
   useEffect(() => {
     void fetchUsers();
-  }, [fetchUsers]);
+  }, []);
 
   /**
    * Add a user to the group
