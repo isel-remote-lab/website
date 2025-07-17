@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { Card, Result, Typography } from "antd";
 import { Uris } from "~/server/services/uris";
-import LabTerminal from "./LabTerminal";
 import { useRouter } from "next/navigation";
 import { useNotifications } from "~/hooks/useNotifications";
 import DefaultPage from "~/app/components/defaults/DefaultPage";
+import dynamic from "next/dynamic";
+import LabTerminal from "./LabTerminal";
 
 interface LabInfoProps {
   id: string
@@ -106,7 +107,13 @@ export default function LabInfo({ id }: LabInfoProps) {
     }
   }, [])
 
-  return (
+  
+  const LabTerminal = dynamic(() => import ("./LabTerminal"), {
+    ssr: false, // This disables server-side rendering for the import
+  });
+  
+
+  return (  
     <>
       {contextHolder}
       {waitingQueuePos > 0 ? (
