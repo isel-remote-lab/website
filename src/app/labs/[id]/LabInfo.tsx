@@ -6,7 +6,6 @@ import { Uris } from "~/server/services/uris";
 import { useRouter } from "next/navigation";
 import { useNotifications } from "~/hooks/useNotifications";
 import DefaultPage from "~/app/components/defaults/DefaultPage";
-import dynamic from "next/dynamic";
 import LabTerminal from "./LabTerminal";
 
 interface LabInfoProps {

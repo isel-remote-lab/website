@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { Terminal as XTermTerminal } from '@xterm/xterm'
+import { Terminal } from '@xterm/xterm'
 
 interface LabTerminalProps {
   websocketURI: string
@@ -18,7 +19,7 @@ export default function LabTerminal(props: LabTerminalProps) {
     let disposed = false
 
     const createTerminal = async () => {
-      const { Terminal } = await import('@xterm/xterm')
+      
       terminalInstance = new Terminal({
         theme: {
           background: '#ffffff',
