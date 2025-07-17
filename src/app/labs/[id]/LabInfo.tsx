@@ -32,15 +32,16 @@ export default function LabInfo({ id }: LabInfoProps) {
       withCredentials: true,
     })
   
-    // On error, show an error notification
     sse.onerror = () => {
+      if (remainingTime === 0) {
+        router.push("/")
+      }
       showError({
         message: "Erro ao conectar",
         description: "Erro ao conectar ao laboratório, por favor tente novamente mais tarde.",
         onClose: () => router.refresh(),
         onClick: () => router.push("/")
       })
-      sse.close()
     }
 
     // Waiting queue messages
@@ -92,6 +93,7 @@ export default function LabInfo({ id }: LabInfoProps) {
               message: "Sessão encerrada",
               description: "A sessão foi encerrada"
             });
+            router.back()
           }
           break;
         default:
@@ -102,7 +104,7 @@ export default function LabInfo({ id }: LabInfoProps) {
     return () => {
       sse.close()
     }
-  }, [showError, showInfo, id, router])
+  }, [])
 
   return (
     <>
