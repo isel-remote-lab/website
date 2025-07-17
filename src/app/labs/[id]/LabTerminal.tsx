@@ -23,9 +23,9 @@ export default function LabTerminal(props: LabTerminalProps) {
         theme: {
           background: '#ffffff',
           foreground: '#000000',
+          cursor: '#000000'
         },
-        cursorBlink: true,
-        cursorStyle: 'block',
+        cursorBlink: true
       })
       if (!disposed) setTerm(terminalInstance)
     }
