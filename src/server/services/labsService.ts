@@ -38,12 +38,12 @@ export async function getLabById(labId: number): Promise<LaboratoryResponse> {
 export async function updateLab(
   labId: number,
   labData: LaboratoryRequest,
-): Promise<LaboratoryResponse> {
+) {
   const uri = await replaceParams(Uris.Laboratories.GET_BY_ID, { id: labId });
-  return await fetchDataOnServerWithAuthHeader(uri, {
+  const response = await fetchDataOnServerWithAuthHeader(uri, {
     method: "PATCH",
     data: labData,
-  }) as LaboratoryResponse;
+  });
 }
 
 /**

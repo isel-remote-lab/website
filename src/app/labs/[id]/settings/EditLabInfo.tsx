@@ -18,21 +18,14 @@ export default function EditLabInfo({ labId, initialValues }: EditLabInfoProps) 
   const onFinish = async (values: unknown) => {
     const labData = formatLaboratoryRequest(values as Laboratory);
 
-    const response = await updateLab(labId, labData);
+    await updateLab(labId, labData);
 
-    if (response) {
-      showSuccess({
-        message: "Laboratório atualizado com sucesso",
-        description: "As alterações foram aplicadas com sucesso"
-      })
-      // TODO: Close modal when the lab is updated
-      router.back();
-    } else {
-      showError({
-        message: "Erro ao atualizar laboratório",
-        description: "Por favor, tente novamente mais tarde"
-      })
-    }
+    showSuccess({
+      message: "Laboratório atualizado com sucesso",
+      description: "As alterações foram aplicadas com sucesso"
+    })
+    // TODO: Close modal when the lab is updated
+    router.back();
   };
 
   return (

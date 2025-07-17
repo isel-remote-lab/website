@@ -52,10 +52,10 @@ export async function createHardware(hardware: HardwareRequest): Promise<Hardwar
  * @param hardware - Updated hardware data
  * @returns Updated hardware
  */
-export async function updateHardware(hardwareId: number, hardware: HardwareRequest): Promise<HardwareResponse> {
+export async function updateHardware(hardwareId: number, hardware: HardwareRequest) {
     const uri = Uris.Hardware.GET_BY_ID.replace("{id}", hardwareId.toString());
-    return await fetchDataOnServerWithAuthHeader(uri, {
+    await fetchDataOnServerWithAuthHeader(uri, {
         method: "PATCH",
         data: hardware
-    }) as HardwareResponse;
+    });
 }
