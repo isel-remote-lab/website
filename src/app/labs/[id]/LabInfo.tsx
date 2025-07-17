@@ -107,11 +107,12 @@ export default function LabInfo({ id }: LabInfoProps) {
     }
   }, [])
 
-  
+ 
+  /*
   const LabTerminal = dynamic(() => import ("./LabTerminal"), {
     ssr: false, // This disables server-side rendering for the import
   });
-  
+  */
 
   return (  
     <>
