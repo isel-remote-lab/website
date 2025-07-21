@@ -7,5 +7,5 @@ import { getUserOwnImage } from "~/server/services/microsoft/microsoftApiService
  */
 export default async function UserImage() {
   const userImage = await getUserOwnImage();
-  return <Image src={userImage} alt="User Avatar" width="0" height="0" />;
+  return <Image src={userImage ?? ""} alt="User Avatar" width="0" height="0" />;
 }
