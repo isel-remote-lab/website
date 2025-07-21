@@ -47,7 +47,7 @@ export default function LabTerminal(props: LabTerminalProps) {
     }
 
     // WebSocket connection
-    socket.current = new WebSocket(props.websocketURI)
+    socket.current = new WebSocket(props.websocketURI)  
     socket.current.onopen = () => term.write('\r\nConnected to server\r\n')
     socket.current.onmessage = (event) => {
       try {
@@ -64,7 +64,7 @@ export default function LabTerminal(props: LabTerminalProps) {
       console.error('WebSocket error:', error)
       term.write('\r\nConnection error\r\n')
     }
-
+  
     // Terminal input handler
     const disposable = term.onData((data) => {
       if (socket.current && socket.current.readyState === WebSocket.OPEN) {

@@ -54,7 +54,8 @@ export default function LabInfo({ id }: LabInfoProps) {
     sse.addEventListener("labSessionStarting", (event: MessageEvent) => {
       const data = JSON.parse(event.data) as { hwIpAddress: string };
       const hwIpAddress = data.hwIpAddress;
-      const websocketURI = `ws://${hwIpAddress}/ws`;
+      const websocketURI = `wss://${hwIpAddress}:443`;
+      console.log("WEBSOCKET URI: " + websocketURI)
       setWebsocketURI(websocketURI);
     })
     
