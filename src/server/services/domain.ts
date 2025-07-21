@@ -8,7 +8,6 @@ let domainConfig: DomainConfig | null = null;
 
 export const getDomainConfig = async (): Promise<DomainConfig> => {
   if (!domainConfig) {
-    console.log("Fetching domain configuration...");
     try {
       domainConfig = await fetchDataWithApiKey(Uris.DOMAIN, {}, {
         method: "GET",

@@ -37,7 +37,6 @@ export function formatLaboratory(laboratory: LaboratoryRequest): Laboratory {
  * @returns The formatted laboratory request
  */ 
 export function formatLaboratoryRequest(laboratory: Laboratory): LaboratoryRequest {
-  console.log(laboratory);
   return {
     ...laboratory,
     duration: formatDayjsToNumber(laboratory.duration)

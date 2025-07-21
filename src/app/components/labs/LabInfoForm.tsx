@@ -69,20 +69,20 @@ export default function LabInfoForm({
       >
       {initialValues && (
         <>
-          <Tooltip title="Gerir grupos" key="groups">
-            <Link href={`/labs/${initialValues?.id}/settings/groups`}>
-              <Button type="default" style={{ marginLeft: 8 }}> 
-                <UsergroupAddOutlined />
-              </Button>
-            </Link>
-          </Tooltip>
-          <Tooltip title="Gerir hardware" key="hardware">
-            <Link href={`/labs/${initialValues?.id}/settings/hardware`}>
-              <Button type="default" style={{ marginLeft: 8 }}> 
-                <LaptopOutlined />
-              </Button>
-            </Link>
-          </Tooltip>
+          <Link href={`/labs/${initialValues?.id}/settings/groups`}>
+            <Tooltip title="Gerir grupos" key="groups">
+                <Button type="default" style={{ marginLeft: 8 }}> 
+                  <UsergroupAddOutlined />
+                </Button>
+            </Tooltip>
+          </Link>
+          <Link href={`/labs/${initialValues?.id}/settings/hardware`}>
+            <Tooltip title="Gerir hardware" key="hardware">
+                <Button type="default" style={{ marginLeft: 8 }}> 
+                  <LaptopOutlined />
+                </Button>
+            </Tooltip>
+          </Link>
           <Tooltip title="Eliminar laboratório" key="delete">
             <Button type="default" style={{ marginLeft: 8 }} danger onClick={() => onDeleteLab(initialValues?.id, router, showSuccess, showError)}> 
               <DeleteOutlined />
