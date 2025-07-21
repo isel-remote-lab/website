@@ -31,8 +31,10 @@ export async function getUserOwnImage() {
     responseType: "arraybuffer",
   }) as unknown as ArrayBuffer;
 
-  const base64 = Buffer.from(data).toString("base64");
-  return `data:image/jpeg;base64,${base64}`;
+  if (data) {
+    const base64 = Buffer.from(data).toString("base64");
+    return `data:image/jpeg;base64,${base64}`;
+  }
 }
 
 /**
