@@ -11,9 +11,7 @@ import { fetchOnServerWithErrorHandling } from "../services";
 export async function fetchMicrosoftApi(uri: string, options: AxiosRequestConfig = {}) {
   const session = await auth();
   const accessToken = session!.user.oauthUserToken;
-
-  console.log("ACCESS TOKEN:\n", accessToken)
-
+  
   return (await fetchOnServerWithErrorHandling(uri, {
     ...options,
     headers: {
