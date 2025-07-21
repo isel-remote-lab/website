@@ -54,8 +54,7 @@ export default function LabInfo({ id }: LabInfoProps) {
     sse.addEventListener("labSessionStarting", (event: MessageEvent) => {
       const data = JSON.parse(event.data) as { hwIpAddress: string };
       const hwIpAddress = data.hwIpAddress;
-      const websocketURI = `wss://${hwIpAddress}:443`;
-      console.log("WEBSOCKET URI: " + websocketURI)
+      const websocketURI = `wss://${hwIpAddress}`;
       setWebsocketURI(websocketURI);
     })
     
@@ -106,13 +105,6 @@ export default function LabInfo({ id }: LabInfoProps) {
       sse.close()
     }
   }, [])
-
- 
-  /*
-  const LabTerminal = dynamic(() => import ("./LabTerminal"), {
-    ssr: false, // This disables server-side rendering for the import
-  });
-  */
 
   return (  
     <>
