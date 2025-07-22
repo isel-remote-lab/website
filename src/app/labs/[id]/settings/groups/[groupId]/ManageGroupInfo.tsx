@@ -56,8 +56,8 @@ export default function ManageGroupInfo({ group }: ManageGroupInfoProps) {
   const AddUserToGroupForm = () => {
     return (
       <Form onFinish={onAddUserToGroup}>
-        <Form.Item name="user" label="Usuário">
-          <Input type="number" placeholder="ID do usuário" />
+        <Form.Item name="user" label="Utilizador">
+          <Input type="number" placeholder="ID do utilizador (Número de aluno)" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">Adicionar</Button>
