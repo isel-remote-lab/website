@@ -10,7 +10,7 @@ export default async function AccountInfo() {
     redirect("/api/auth/signin");
   }
   const user = session.user;
-  const userImage = await getUserOwnImage() ?? "";
+  const userImage = await getUserOwnImage() ?? user.image;
 
   const userInfo: User = {
     id: user.id,

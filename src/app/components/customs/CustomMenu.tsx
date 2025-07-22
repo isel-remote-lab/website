@@ -84,7 +84,7 @@ export default async function CustomMenu() {
         left: "50%",
         transform: "translateX(-50%)",
         top: "25%",
-        zIndex: 20,
+        zIndex: 2,
       },
     },
     {

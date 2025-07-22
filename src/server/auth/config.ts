@@ -87,6 +87,7 @@ export const authConfig = {
           // Store the user data in the user object to be used in jwt callback
           user.dbUser = signInResponse.user;
           user.userToken = signInResponse.token;
+
           return true;
         }
       } catch (error) {
@@ -127,6 +128,7 @@ export const authConfig = {
       // Add the user data to the session
       const dbUser = token.user as UserResponse;
       const userToken = token.userToken as string;
+      const image = token.image as string;
 
       if (dbUser) {
         sessionUser.id = dbUser.id as never;
@@ -135,6 +137,7 @@ export const authConfig = {
           "pt-PT",
         );
         sessionUser.userToken = userToken;
+        sessionUser.image = image;
       }
 
       return session;
