@@ -42,14 +42,13 @@ export const authConfig = {
           scope: "openid profile email offline_access User.ReadBasic.All User.Read",
         },
       },
-      /*profile(profile) {
+      profile(profile) {
         return {
           name: profile.name as string,
           email: profile.email,
-          image: profile.picture,
+          //image: profile.picture,
         };
       },
-      */
     }),
     /**
      * ...add more providers here.
