@@ -79,6 +79,22 @@ export default function LabTerminal(props: LabTerminalProps) {
     }
   }, [term, props.websocketURI])
 
+  useEffect(() => {
+    // If there's no active WebSocket connection, do nothing
+    if (!socket.current) return
+
+    // Send a "ping" every 60 seconds to keep
+    // the WebSocket connection alive (e.g., when behind Cloudflare)
+    const pingInterval = setInterval(() => {
+      if (socket.current!.readyState === WebSocket.OPEN) {
+        socket.current!.send(JSON.stringify({ type: 'ping' }))
+      }
+    }, 60 * 1000)
+
+    // Clean up the interval when the component unmounts or the socket changes
+    return () => clearInterval(pingInterval)
+  }, [socket.current])
+
   return (
     <div>
       <div ref={terminalRef}/>
