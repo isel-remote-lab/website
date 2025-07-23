@@ -39,15 +39,17 @@ export const authConfig = {
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
       authorization: {
         params: {
-          scope: "openid profile email offline_access User.ReadBasic.All",
+          scope: "openid profile email offline_access User.ReadBasic.All User.Read",
         },
       },
-      profile(profile) {
+      /*profile(profile) {
         return {
           name: profile.name as string,
           email: profile.email,
+          image: profile.picture,
         };
       },
+      */
     }),
     /**
      * ...add more providers here.
@@ -60,7 +62,7 @@ export const authConfig = {
      */
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, profile }) {
       // If API mocking is enabled, simulate a successful sign in
       if (process.env.API_MOCKING === "1") {
         return true;
@@ -109,8 +111,10 @@ export const authConfig = {
       if (user) {
         token.user = user.dbUser;
         token.userToken = user.userToken;
+        token.picture = user.image;
       }
 
+      console.log(token)
       return token;
     },
 
@@ -124,11 +128,13 @@ export const authConfig = {
 
       // Add the access token to the session
       sessionUser.oauthUserToken = token.oauthUserToken as string;
+      sessionUser.image = token.picture as string;
+
+      console.log(sessionUser.image)
 
       // Add the user data to the session
       const dbUser = token.user as UserResponse;
       const userToken = token.userToken as string;
-      const image = token.image as string;
 
       if (dbUser) {
         sessionUser.id = dbUser.id as never;
@@ -137,7 +143,6 @@ export const authConfig = {
           "pt-PT",
         );
         sessionUser.userToken = userToken;
-        sessionUser.image = image;
       }
 
       return session;
