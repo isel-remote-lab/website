@@ -46,7 +46,6 @@ export const authConfig = {
         return {
           name: profile.name as string,
           email: profile.email,
-          //image: profile.picture,
         };
       },
     }),
@@ -110,10 +109,8 @@ export const authConfig = {
       if (user) {
         token.user = user.dbUser;
         token.userToken = user.userToken;
-        token.picture = user.image;
       }
-
-      console.log(token)
+      
       return token;
     },
 
@@ -127,9 +124,6 @@ export const authConfig = {
 
       // Add the access token to the session
       sessionUser.oauthUserToken = token.oauthUserToken as string;
-      sessionUser.image = token.picture as string;
-
-      console.log(sessionUser.image)
 
       // Add the user data to the session
       const dbUser = token.user as UserResponse;
