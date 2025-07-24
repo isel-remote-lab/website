@@ -29,7 +29,7 @@ export async function createGroupAction(values: unknown): Promise<GroupResponse 
 }
 
 export async function addGroupToLabAction(groupId: number, labId: number): Promise<void> {
-  await addGroupToLab(groupId, labId);
+  await addGroupToLab(labId, groupId);
 }
 
 export async function removeGroupFromLabAction(groupId: number, labId: number): Promise<void> {
